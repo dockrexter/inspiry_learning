@@ -6,6 +6,7 @@ import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/assets_path.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/user/authentication_pages/login_page.dart';
 
@@ -19,7 +20,7 @@ class SignUpPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.22,
+            height: MediaQuery.of(context).size.height * 0.20,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Align(
@@ -52,6 +53,10 @@ class SignUpPage extends StatelessWidget {
                       scale: 3.5,
                     ),
                   ),
+                  Text(
+                    AppStrings.needAssignmentHelp,
+                    style: AppStyle.textstylerobotoromanmedium14,
+                  ),
                   InputTextField(
                     AppStrings.enterEmailAddress,
                     icon: const Icon(Icons.email),
@@ -78,14 +83,22 @@ class SignUpPage extends StatelessWidget {
                     controller: TextEditingController(),
                   ),
                   InputTextField(
-                    AppStrings.enterPassword,
+                    AppStrings.password,
+                    icon: const Icon(Icons.lock),
+                    controller: TextEditingController(),
+                  ),
+                  InputTextField(
+                    AppStrings.confirmPassword,
                     icon: const Icon(Icons.lock),
                     controller: TextEditingController(),
                   ),
                   CustomButton(
                     AppStrings.signUp,
                     color: AppColors.yellow701,
-                    onPressed: () {},
+                    onPressed: () => AppRouter.push(
+                      context,
+                      const HomePage(),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

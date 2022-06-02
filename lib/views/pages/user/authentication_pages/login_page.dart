@@ -6,8 +6,10 @@ import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/assets_path.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/user/authentication_pages/signup_page.dart';
+import 'package:inspiry_learning/views/pages/user/authentication_pages/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -26,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.22,
+            height: MediaQuery.of(context).size.height * 0.20,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Align(
@@ -58,6 +60,10 @@ class _LoginPageState extends State<LoginPage> {
                       AppAssets.frame,
                       scale: 3.5,
                     ),
+                  ),
+                  Text(
+                    AppStrings.needAssignmentHelp,
+                    style: AppStyle.textstylerobotoromanmedium14,
                   ),
                   InputTextField(
                     AppStrings.enterEmailAddress,
@@ -103,11 +109,17 @@ class _LoginPageState extends State<LoginPage> {
                           )
                         ],
                       ),
-                      Text(
-                        AppStrings.forgotPassword,
-                        style: TextStyle(
-                          color: AppColors.black1e1100.withOpacity(0.3),
-                          fontWeight: FontWeight.w400,
+                      GestureDetector(
+                        onTap: () => AppRouter.push(
+                          context,
+                          const ForgotPasswordPage(),
+                        ),
+                        child: Text(
+                          AppStrings.forgotPassword,
+                          style: TextStyle(
+                            color: AppColors.black1e1100.withOpacity(0.3),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       )
                     ],
@@ -115,7 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                   CustomButton(
                     AppStrings.login,
                     color: AppColors.yellow701,
-                    onPressed: () {},
+                    onPressed: () => AppRouter.push(
+                      context,
+                      const HomePage(),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -142,11 +157,11 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -136,11 +136,25 @@ class AppStyle {
     fontWeight: FontWeight.w700,
   );
 
+  static TextStyle textstylepoppinsbold10t = const TextStyle(
+    color: AppColors.yellow701,
+    fontSize: 10,
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w700,
+  );
+
   static TextStyle textstylepoppinssemibold12 = const TextStyle(
     color: AppColors.teal400,
     fontSize: 12,
     fontFamily: 'Poppins',
     fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle textstylepoppinsbold10 = const TextStyle(
+    color: AppColors.teal400,
+    fontSize: 10,
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w700,
   );
 
   static TextStyle textstylepoppinsbold12 = const TextStyle(
