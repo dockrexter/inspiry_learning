@@ -35,7 +35,28 @@ class AppStrings {
   static const String marley = "Marley!";
   static const String dueDate = "Due Date";
   static const String startingDate = "Starting Date";
-  static const String submitNewAssignment = "Submit New Assignment Form";
-  static const String assignmentsList = "List of assignments forms submitted";
+  static const String submitNewAssignmentForm = "Submit New Assignment Form";
   static const String submittedFormList = "List of assignments forms submitted";
+
+  // Submission Page
+  static const String subject = "Subject";
+  static const String summary = "Summary";
+  static const String thankyou = "Thank You!";
+  static const String attachments = "Attachments";
+  static const String submitAndProceed = "Submit & Proceed";
+  static const String viewAllForms = "View All Submitted Assignments Forms";
+  static const String assignmentSubmissionForm = "Assignment Submission Form";
+  static const String contactedTime = "You will be contacted within 2-3 hours";
+
+  // Account Setting Page
+  static const String save = "Save";
+  static const String questionMark = "?";
+  static const String changePassword = "Change Password";
+  static const String accountSetting = "Account Settings";
+
+  // Change Password Page
+  static const String done = "Done";
+  static const String newPassword = "Enter New Password";
+  static const String currentPassword = "Enter Current Password";
+  static const String confirmNewPassword = "Confirm New Password";
 }

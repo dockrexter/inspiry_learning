@@ -68,65 +68,36 @@ class CustomCard extends StatelessWidget {
                   assignment.title!,
                   style: AppStyle.textstylepoppinssemibold14,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      getStatus(assignment.workStatus),
-                      style: AppStyle.textstylepoppinsmedium8,
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.04),
-                    MyCheckBox(isChecked: assignment.isChecked),
-                    const SizedBox(width: 6),
-                    if (assignment.workStatus == WorkStatus.compleated)
-                      GestureDetector(
-                        onTap: () {},
-                        child: Image.asset(
-                          AppAssets.askRevision,
-                          scale: 4,
-                        ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.52,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        getStatus(assignment.workStatus),
+                        style: AppStyle.textstylepoppinsmedium8,
                       ),
-                  ],
+                      Icon(
+                        assignment.workStatus == WorkStatus.compleated
+                            ? Icons.check_circle
+                            : Icons.circle_outlined,
+                        color: AppColors.teal400,
+                      ),
+                      if (assignment.workStatus == WorkStatus.compleated)
+                        GestureDetector(
+                          onTap: () {},
+                          child: Image.asset(
+                            AppAssets.askRevision,
+                            scale: 4,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class MyCheckBox extends StatefulWidget {
-  MyCheckBox({Key? key, required this.isChecked}) : super(key: key);
-
-  bool isChecked;
-
-  @override
-  State<MyCheckBox> createState() => _MyCheckBoxState();
-}
-
-class _MyCheckBoxState extends State<MyCheckBox> {
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 10.0,
-      child: Checkbox(
-        value: widget.isChecked,
-        checkColor: Colors.white,
-        activeColor: AppColors.teal400,
-        shape: const CircleBorder(),
-        side: const BorderSide(
-          width: 1.2,
-          color: AppColors.teal400,
-        ),
-        onChanged: (bool? value) {
-          setState(() {
-            widget.isChecked = value!;
-          });
-        },
       ),
     );
   }

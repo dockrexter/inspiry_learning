@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/colors.dart';
 import 'package:inspiry_learning/globals/strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/assets_path.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/pages/user/setting/account_setting_page.dart';
+import 'package:inspiry_learning/views/pages/user/submission/assignment_submission_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final assignments = getAssingments();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: Column(
         children: [
           SafeArea(
@@ -54,9 +58,14 @@ class _HomePageState extends State<HomePage> {
                           scale: 4,
                         ),
                         const SizedBox(width: 18),
-                        Image.asset(
-                          AppAssets.settingIcon,
-                          scale: 4,
+                        InkWell(
+                          onTap: () {
+                            AppRouter.push(context, const AccountSettingsPage());
+                          },
+                          child: Image.asset(
+                            AppAssets.settingIcon,
+                            scale: 4,
+                          ),
                         ),
                       ],
                     ),
@@ -73,7 +82,6 @@ class _HomePageState extends State<HomePage> {
           Text(AppStrings.submittedFormList,
               style: AppStyle.textstylepoppinsmedium11),
           Expanded(
-            
             child: ListView.builder(
               itemCount: assignments.length,
               shrinkWrap: true,
@@ -84,6 +92,19 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.82,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 3.0),
+          child: CustomButton(
+            AppStrings.submitNewAssignmentForm,
+            outlineBoarder: true,
+            onPressed: () =>
+                AppRouter.push(context, const AssignmentFormSubmissionPage()),
+          ),
+        ),
       ),
     );
   }

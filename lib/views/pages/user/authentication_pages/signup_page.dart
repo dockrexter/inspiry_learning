@@ -16,7 +16,7 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: AppColors.primary,
       body: Column(
         children: [
           SizedBox(
@@ -38,95 +38,95 @@ class SignUpPage extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(40),
                   topLeft: Radius.circular(40),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: Image.asset(
-                      AppAssets.frame,
-                      scale: 3.5,
-                    ),
-                  ),
-                  Text(
-                    AppStrings.needAssignmentHelp,
-                    style: AppStyle.textstylerobotoromanmedium14,
-                  ),
-                  InputTextField(
-                    AppStrings.enterEmailAddress,
-                    icon: const Icon(Icons.email),
-                    controller: TextEditingController(),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(AppStrings.regexEmailValidation),
-                      ),
-                    ],
-                  ),
-                  InputTextField(
-                    AppStrings.firstName,
-                    icon: const Icon(Icons.person),
-                    controller: TextEditingController(),
-                  ),
-                  InputTextField(
-                    AppStrings.lastName,
-                    icon: const Icon(Icons.person),
-                    controller: TextEditingController(),
-                  ),
-                  InputTextField(
-                    AppStrings.phoneNumber,
-                    icon: const Icon(Icons.phone),
-                    controller: TextEditingController(),
-                  ),
-                  InputTextField(
-                    AppStrings.password,
-                    icon: const Icon(Icons.lock),
-                    controller: TextEditingController(),
-                  ),
-                  InputTextField(
-                    AppStrings.confirmPassword,
-                    icon: const Icon(Icons.lock),
-                    controller: TextEditingController(),
-                  ),
-                  CustomButton(
-                    AppStrings.signUp,
-                    color: AppColors.yellow701,
-                    onPressed: () => AppRouter.push(
-                      context,
-                      const HomePage(),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.80,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      Center(
+                        child: Image.asset(
+                          AppAssets.frame,
+                          scale: 3.5,
+                        ),
+                      ),
                       Text(
-                        AppStrings.haveAnAccount,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black1e1100.withOpacity(0.75),
-                        ),
+                        AppStrings.needAssignmentHelp,
+                        style: AppStyle.textstylerobotoromanmedium14,
                       ),
-                      const SizedBox(width: 6.0),
-                      GestureDetector(
-                        onTap: () =>
-                            AppRouter.makeFirst(context, const LoginPage()),
-                        child: Text(
-                          AppStrings.signIn,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.yellow701.withOpacity(0.75),
+                      InputTextField(
+                        AppStrings.enterEmailAddress,
+                        icon: const Icon(Icons.email),
+                        controller: TextEditingController(),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(AppStrings.regexEmailValidation),
                           ),
+                        ],
+                      ),
+                      InputTextField(
+                        AppStrings.firstName,
+                        icon: const Icon(Icons.person),
+                        controller: TextEditingController(),
+                      ),
+                      InputTextField(
+                        AppStrings.lastName,
+                        icon: const Icon(Icons.person),
+                        controller: TextEditingController(),
+                      ),
+                      InputTextField(
+                        AppStrings.phoneNumber,
+                        icon: const Icon(Icons.phone),
+                        controller: TextEditingController(),
+                      ),
+                      InputTextField(
+                        obscureText: true,
+                        AppStrings.password,
+                        icon: const Icon(Icons.lock),
+                        controller: TextEditingController(),
+                      ),
+                      InputTextField(
+                        AppStrings.confirmPassword,
+                        icon: const Icon(Icons.lock),
+                        controller: TextEditingController(),
+                      ),
+                      CustomButton(
+                        AppStrings.signUp,
+                        onPressed: () => AppRouter.push(
+                          context,
+                          const HomePage(),
                         ),
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppStrings.haveAnAccount,
+                            style: AppStyle.textstylepoppinsmedium14,
+                          ),
+                          const SizedBox(width: 6.0),
+                          GestureDetector(
+                            onTap: () =>
+                                AppRouter.makeFirst(context, const LoginPage()),
+                            child: Text(
+                              AppStrings.signIn,
+                              style: AppStyle.textstylepoppinsbold14,
+                            ),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
           )

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspiry_learning/globals/app_style.dart';
 
 class InputTextField extends StatefulWidget {
   const InputTextField(
@@ -7,13 +8,19 @@ class InputTextField extends StatefulWidget {
     Key? key,
     this.icon,
     this.controller,
+    this.maxLines = 1,
+    this.initialValue,
+    this.enabled = true,
     this.inputFormatters,
     this.obscureText = false,
   }) : super(key: key);
 
   final String lable;
   final Widget? icon;
+  final bool enabled;
+  final int? maxLines;
   final bool obscureText;
+  final String? initialValue;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -33,7 +40,10 @@ class _InputTextFieldState extends State<InputTextField> {
         color: const Color(0xFF38A585).withOpacity(0.12),
         child: TextFormField(
           autofocus: false,
+          enabled: widget.enabled,
+          maxLines: widget.maxLines,
           controller: widget.controller,
+          initialValue: widget.initialValue,
           obscureText: widget.obscureText && !isShow,
           inputFormatters: widget.inputFormatters,
           validator: (String? val) =>
@@ -46,9 +56,10 @@ class _InputTextFieldState extends State<InputTextField> {
                   )
                 : null,
             hintText: widget.lable,
+            hintStyle: AppStyle.textstylerobotoromanregular13,
             border: InputBorder.none,
-            contentPadding: EdgeInsets.fromLTRB(
-                (widget.icon == null ? 15.0 : 0.0), 6.0, 10.0, 6.0),
+            contentPadding:
+                widget.icon == null ? const EdgeInsets.only(left: 10) : null,
             suffixIcon: widget.obscureText
                 ? IconButton(
                     onPressed: () => setState(() => isShow = !isShow),

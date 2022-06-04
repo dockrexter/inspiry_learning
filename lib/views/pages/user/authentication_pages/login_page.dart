@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: AppColors.primary,
       body: Column(
         children: [
           SizedBox(
@@ -46,119 +46,113 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(40),
                   topLeft: Radius.circular(40),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: Image.asset(
-                      AppAssets.frame,
-                      scale: 3.5,
-                    ),
-                  ),
-                  Text(
-                    AppStrings.needAssignmentHelp,
-                    style: AppStyle.textstylerobotoromanmedium14,
-                  ),
-                  InputTextField(
-                    AppStrings.enterEmailAddress,
-                    icon: const Icon(Icons.email),
-                    controller: TextEditingController(),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(AppStrings.regexEmailValidation),
-                      ),
-                    ],
-                  ),
-                  InputTextField(
-                    AppStrings.enterPassword,
-                    icon: const Icon(Icons.lock),
-                    controller: TextEditingController(),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.80,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: rememberMe,
-                            onChanged: (value) {
-                              setState(
-                                () {
-                                  rememberMe = value ?? false;
-                                },
-                              );
-                            },
-                            activeColor: AppColors.yellow701,
-                            side: const BorderSide(
-                              width: 1.5,
-                              color: AppColors.yellow701,
-                            ),
+                      Center(
+                        child: Image.asset(
+                          AppAssets.frame,
+                          scale: 3.5,
+                        ),
+                      ),
+                      Text(
+                        AppStrings.needAssignmentHelp,
+                        style: AppStyle.textstylerobotoromanmedium14,
+                      ),
+                      InputTextField(
+                        AppStrings.enterEmailAddress,
+                        icon: const Icon(Icons.email),
+                        controller: TextEditingController(),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(AppStrings.regexEmailValidation),
                           ),
-                          Text(
-                            AppStrings.rememberMe,
-                            style: TextStyle(
-                              color: AppColors.black1e1100.withOpacity(0.3),
-                              fontWeight: FontWeight.w400,
+                        ],
+                      ),
+                      InputTextField(
+                        obscureText: true,
+                        AppStrings.enterPassword,
+                        icon: const Icon(Icons.lock),
+                        controller: TextEditingController(),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: rememberMe,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      rememberMe = value ?? false;
+                                    },
+                                  );
+                                },
+                                activeColor: AppColors.yellow701,
+                                side: const BorderSide(
+                                  width: 1.5,
+                                  color: AppColors.yellow701,
+                                ),
+                              ),
+                              Text(
+                                AppStrings.rememberMe,
+                                style: AppStyle.textstylerobotoromanregular12,
+                              )
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () => AppRouter.push(
+                              context,
+                              const ForgotPasswordPage(),
+                            ),
+                            child: Text(
+                              AppStrings.forgotPassword,
+                              style: AppStyle.textstylerobotoromanregular10,
                             ),
                           )
                         ],
                       ),
-                      GestureDetector(
-                        onTap: () => AppRouter.push(
+                      CustomButton(
+                        AppStrings.login,
+                        onPressed: () => AppRouter.push(
                           context,
-                          const ForgotPasswordPage(),
-                        ),
-                        child: Text(
-                          AppStrings.forgotPassword,
-                          style: TextStyle(
-                            color: AppColors.black1e1100.withOpacity(0.3),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  CustomButton(
-                    AppStrings.login,
-                    color: AppColors.yellow701,
-                    onPressed: () => AppRouter.push(
-                      context,
-                      const HomePage(),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        AppStrings.dontHaveAnAccount,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black1e1100.withOpacity(0.75),
+                          const HomePage(),
                         ),
                       ),
-                      const SizedBox(width: 6.0),
-                      GestureDetector(
-                        onTap: () =>
-                            AppRouter.makeFirst(context, const SignUpPage()),
-                        child: Text(
-                          AppStrings.signUp,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.yellow701.withOpacity(0.75),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppStrings.dontHaveAnAccount,
+                            style: AppStyle.textstylepoppinsmedium14,
                           ),
-                        ),
+                          const SizedBox(width: 6.0),
+                          GestureDetector(
+                            onTap: () => AppRouter.makeFirst(
+                                context, const SignUpPage()),
+                            child: Text(
+                              AppStrings.signUp,
+                              style: AppStyle.textstylepoppinsbold14,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
