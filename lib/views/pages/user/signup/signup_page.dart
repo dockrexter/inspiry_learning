@@ -8,7 +8,7 @@ import 'package:inspiry_learning/globals/assets_path.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
-import 'package:inspiry_learning/views/pages/user/authentication_pages/login_page.dart';
+import 'package:inspiry_learning/views/pages/common/authentication_pages/login_page.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -56,7 +56,7 @@ class SignUpPage extends StatelessWidget {
                       Center(
                         child: Image.asset(
                           AppAssets.frame,
-                          scale: 3.5,
+                          scale: 3,
                         ),
                       ),
                       Text(

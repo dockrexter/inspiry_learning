@@ -8,17 +8,18 @@ import 'package:inspiry_learning/globals/assets_path.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
-import 'package:inspiry_learning/views/pages/user/authentication_pages/signup_page.dart';
-import 'package:inspiry_learning/views/pages/user/authentication_pages/forgot_password_page.dart';
+import 'package:inspiry_learning/views/pages/user/signup/signup_page.dart';
+import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
+import 'package:inspiry_learning/views/pages/common/authentication_pages/forgot_password_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class AddSubAdminPage extends StatefulWidget {
+  const AddSubAdminPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AddSubAdminPage> createState() => _AddSubAdminPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AddSubAdminPageState extends State<AddSubAdminPage> {
   bool rememberMe = false;
 
   @override
@@ -28,17 +29,27 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.20,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  AppStrings.loginAsUser,
-                  style: AppStyle.textstyleinterbold23.copyWith(
-                    color: AppColors.white,
+            height: MediaQuery.of(context).size.height * 0.18,
+            child: SafeArea(
+              child: Row(
+                children: [
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_outlined,
+                      color: AppColors.white,
+                    ),
+                    onPressed: () => AppRouter.pop(context),
                   ),
-                ),
+                  const Spacer(),
+                  Text(
+                    AppStrings.addSubAdmin,
+                    style: AppStyle.textstyleinterbold23.copyWith(
+                      color: AppColors.white,
+                    ),
+                  ),
+                  const Spacer(flex: 3),
+                ],
               ),
             ),
           ),
@@ -57,19 +68,20 @@ class _LoginPageState extends State<LoginPage> {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.80,
+                  height: MediaQuery.of(context).size.height * 0.82,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Center(
                         child: Image.asset(
                           AppAssets.frame,
-                          scale: 3.5,
+                          scale: 3,
                         ),
                       ),
-                      Text(
-                        AppStrings.needAssignmentHelp,
-                        style: AppStyle.textstylerobotoromanmedium14,
+                      InputTextField(
+                        AppStrings.fullName,
+                        icon: const Icon(Icons.person),
+                        controller: TextEditingController(),
                       ),
                       InputTextField(
                         AppStrings.enterEmailAddress,
@@ -113,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                               )
                             ],
                           ),
-                          GestureDetector(
+                          InkWell(
                             onTap: () => AppRouter.push(
                               context,
                               const ForgotPasswordPage(),
@@ -126,29 +138,11 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       CustomButton(
-                        AppStrings.login,
+                        AppStrings.registerSubAdmin,
                         onPressed: () => AppRouter.push(
                           context,
                           const HomePage(),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            AppStrings.dontHaveAnAccount,
-                            style: AppStyle.textstylepoppinsmedium14,
-                          ),
-                          const SizedBox(width: 6.0),
-                          GestureDetector(
-                            onTap: () => AppRouter.makeFirst(
-                                context, const SignUpPage()),
-                            child: Text(
-                              AppStrings.signUp,
-                              style: AppStyle.textstylepoppinsbold14,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspiry_learning/globals/strings.dart';
-import 'package:inspiry_learning/views/pages/user/authentication_pages/login_page.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       title: AppStrings.appTitle,
-      home: const LoginPage(),
+      home: const UserInfoPage(),
     );
   }
 }

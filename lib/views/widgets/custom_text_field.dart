@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspiry_learning/globals/colors.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 
 class InputTextField extends StatefulWidget {
@@ -7,7 +8,9 @@ class InputTextField extends StatefulWidget {
     this.lable, {
     Key? key,
     this.icon,
+    this.textColor,
     this.controller,
+    this.cursorColor,
     this.maxLines = 1,
     this.initialValue,
     this.enabled = true,
@@ -20,6 +23,8 @@ class InputTextField extends StatefulWidget {
   final bool enabled;
   final int? maxLines;
   final bool obscureText;
+  final Color? textColor;
+  final Color? cursorColor;
   final String? initialValue;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
@@ -37,15 +42,17 @@ class _InputTextFieldState extends State<InputTextField> {
       alignment: Alignment.center,
       child: Material(
         borderRadius: BorderRadius.circular(8.0),
-        color: const Color(0xFF38A585).withOpacity(0.12),
+        color: AppColors.teal400.withOpacity(0.12),
         child: TextFormField(
           autofocus: false,
           enabled: widget.enabled,
           maxLines: widget.maxLines,
           controller: widget.controller,
+          cursorColor: widget.cursorColor,
           initialValue: widget.initialValue,
-          obscureText: widget.obscureText && !isShow,
           inputFormatters: widget.inputFormatters,
+          style: TextStyle(color: widget.textColor),
+          obscureText: widget.obscureText && !isShow,
           validator: (String? val) =>
               val!.isEmpty ? '${widget.lable} Cannot be Empty' : null,
           decoration: InputDecoration(
@@ -56,7 +63,9 @@ class _InputTextFieldState extends State<InputTextField> {
                   )
                 : null,
             hintText: widget.lable,
-            hintStyle: AppStyle.textstylerobotoromanregular13,
+            hintStyle: AppStyle.textstylerobotoromanregular13.copyWith(
+              color: widget.textColor ?? AppColors.gray9007a,
+            ),
             border: InputBorder.none,
             contentPadding:
                 widget.icon == null ? const EdgeInsets.only(left: 10) : null,

@@ -4,9 +4,11 @@ import 'package:inspiry_learning/globals/strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/assets_path.dart';
+import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
-import 'package:inspiry_learning/views/pages/user/setting/change_password_page.dart';
+import 'package:inspiry_learning/views/pages/admin/subadmin/add_sub_admin_page.dart';
+import 'package:inspiry_learning/views/pages/common/setting/change_password_page.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({Key? key}) : super(key: key);
@@ -16,6 +18,8 @@ class AccountSettingsPage extends StatefulWidget {
 }
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
+  bool isAdmin = UserTypeHelper.isAdmin();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +70,40 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      if (isAdmin)
+                        Center(
+                            child: InkWell(
+                          onTap: () =>
+                              AppRouter.push(context, const AddSubAdminPage()),
+                          child: Container(
+                            height: 48,
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              border: Border.all(
+                                width: 2,
+                                color: AppColors.teal400,
+                              ),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const CircleAvatar(
+                                  maxRadius: 14,
+                                  backgroundColor: AppColors.teal400,
+                                  child:
+                                      Icon(Icons.add, color: AppColors.white),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  AppStrings.addSubAdmin,
+                                  style: AppStyle.textstylepoppinsbold17,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
                       Center(
                         child: Image.asset(
                           AppAssets.frame,
@@ -137,10 +175,14 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             controller: controller,
           ),
         ),
-        IconButton(
-          onPressed: onPressed,
-          icon: const Icon(
-            Icons.drive_file_rename_outline_sharp,
+        SizedBox(
+          width: 26,
+          child: IconButton(
+            onPressed: onPressed,
+            icon: const Icon(
+              Icons.drive_file_rename_outline_sharp,
+              size: 20,
+            ),
           ),
         ),
       ],

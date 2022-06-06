@@ -1,6 +1,6 @@
 class AppStrings {
   // App Title
-  static const String appTitle = "inspiry_learning";
+  static const String appTitle = "Inspiry Learning";
 
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
 
@@ -9,6 +9,7 @@ class AppStrings {
   static const String signUp = "Sign Up";
   static const String rememberMe = "Remember Me";
   static const String loginAsUser = "Login as User";
+  static const String loginAsAdmin = "Login as Admin";
   static const String enterPassword = "Enter Password";
   static const String forgotPassword = "Forgot Password?";
   static const String enterEmailAddress = "Enter Email Address";
@@ -51,6 +52,7 @@ class AppStrings {
   // Account Setting Page
   static const String save = "Save";
   static const String questionMark = "?";
+  static const String addSubAdmin = "Add Sub Admin";
   static const String changePassword = "Change Password";
   static const String accountSetting = "Account Settings";
 
@@ -59,4 +61,16 @@ class AppStrings {
   static const String newPassword = "Enter New Password";
   static const String currentPassword = "Enter Current Password";
   static const String confirmNewPassword = "Confirm New Password";
+
+  // Chat Page
+  static const String typeYourMessage = "Type Your Message";
+  static const String chatWithProfessionals = "Chat with Professional";
+
+  // User Info Page
+  static const String continueAsUser = "Continue as User";
+  static const String continueAsAdmin = "Continue as Admin";
+
+  // Sub Admin Page
+  static const String fullName = "Full Name";
+  static const String registerSubAdmin = "Register Sub Admin";
 }
