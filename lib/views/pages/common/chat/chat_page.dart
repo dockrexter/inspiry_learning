@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/colors.dart';
 import 'package:inspiry_learning/globals/strings.dart';
+import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/pages/admin/details/assignment_details_page.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -14,6 +17,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  bool isAdmin = UserTypeHelper.isAdmin();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +40,9 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   const Spacer(),
                   Text(
-                    AppStrings.chatWithProfessionals,
+                    isAdmin
+                        ? AppStrings.chatWithUser
+                        : AppStrings.chatWithProfessionals,
                     style: AppStyle.textstyleinterbold23.copyWith(
                       color: AppColors.white,
                     ),
@@ -47,7 +54,8 @@ class _ChatPageState extends State<ChatPage> {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              padding:
+                  const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 6),
               decoration: BoxDecoration(
                 color: AppColors.gray100,
                 boxShadow: [
@@ -62,18 +70,59 @@ class _ChatPageState extends State<ChatPage> {
                   topLeft: Radius.circular(40),
                 ),
               ),
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: 50,
-                itemBuilder: (context, index) {
-                  return MessageWidget(
-                    isMe: [true, false][index % 2],
-                    message: [
-                      "I need proper assignment according to my requirements which i have added bellow in aattched document. What type of requirements from me you need in this assignment?",
-                      "Hello Marley, everything is ok? What type of help you needin this assignment? \n\nClick Here to make the payment"
-                    ][index % 2],
-                  );
-                },
+              child: Column(
+                children: [
+                  if (isAdmin)
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(right: 16, left: 16, top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () => AppRouter.push(
+                                context, const AssignmentDetailsPage()),
+                            child: Text(
+                              AppStrings.assignmentDetails,
+                              textAlign: TextAlign.center,
+                              style:
+                                  AppStyle.textstylepoppinssemibold12.copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: _showBottomQuatationSheet,
+                            child: Text(
+                              AppStrings.sendQuatation,
+                              textAlign: TextAlign.center,
+                              style:
+                                  AppStyle.textstylepoppinssemibold12.copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (isAdmin)
+                    const Divider(color: AppColors.teal400, height: 12),
+                  Expanded(
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: 50,
+                      itemBuilder: (context, index) {
+                        return MessageWidget(
+                          isMe: [true, false][index % 2],
+                          message: [
+                            "I need proper assignment according to my requirements which i have added bellow in aattched document. What type of requirements from me you need in this assignment?",
+                            "Hello Marley, everything is ok? What type of help you needin this assignment? \n\nClick Here to make the payment"
+                          ][index % 2],
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -84,6 +133,48 @@ class _ChatPageState extends State<ChatPage> {
         child: _buildFloatingActionButton(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  void _showBottomQuatationSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              AppStrings.priceQuatation,
+              style: AppStyle.textstylepoppinssemibold12.copyWith(
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const InputTextField(
+              AppStrings.price,
+              controller: null,
+            ),
+            const SizedBox(height: 10),
+            const InputTextField(
+              AppStrings.discription,
+              maxLines: 6,
+              controller: null,
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: CustomButton(
+                AppStrings.done,
+                onPressed: () => Navigator.pop(context),
+                color: AppColors.teal400,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

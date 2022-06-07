@@ -8,8 +8,6 @@ import 'package:inspiry_learning/globals/assets_path.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
-import 'package:inspiry_learning/views/pages/user/signup/signup_page.dart';
-import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/forgot_password_page.dart';
 
 class AddSubAdminPage extends StatefulWidget {

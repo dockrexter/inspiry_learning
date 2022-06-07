@@ -4,6 +4,19 @@ enum WorkStatus {
   pendingPayment,
 }
 
+WorkStatus getWorkStatus(String status) {
+  switch (status) {
+    case 'Work Completed':
+      return WorkStatus.compleated;
+    case 'Work in Progress':
+      return WorkStatus.inProgress;
+    case 'Pending Payment':
+      return WorkStatus.pendingPayment;
+    default:
+      return WorkStatus.inProgress;
+  }
+}
+
 String getStatus(WorkStatus status) {
   switch (status) {
     case WorkStatus.compleated:

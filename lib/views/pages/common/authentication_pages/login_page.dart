@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspiry_learning/globals/colors.dart';
 import 'package:inspiry_learning/globals/strings.dart';
+import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/assets_path.dart';
-import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/user/signup/signup_page.dart';
-import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                         AppStrings.login,
                         onPressed: () => AppRouter.push(
                           context,
-                          isAdmin ? const AccountSettingsPage() : const HomePage(),
+                          isAdmin ? const AdminHomePage() : const HomePage(),
                         ),
                       ),
                       if (!isAdmin)

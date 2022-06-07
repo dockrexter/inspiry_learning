@@ -33,7 +33,10 @@ class AppStrings {
 
   // Home Page
   static const String hello = "Hello";
+  static const String arrowDown = "  ↓";
+  static const String status = "Status";
   static const String marley = "Marley!";
+  static const String triangleDown = "  ▼";
   static const String dueDate = "Due Date";
   static const String startingDate = "Starting Date";
   static const String submitNewAssignmentForm = "Submit New Assignment Form";
@@ -63,7 +66,13 @@ class AppStrings {
   static const String confirmNewPassword = "Confirm New Password";
 
   // Chat Page
+  static const String price = "Price";
+  static const String discription = "Discription";
+  static const String chatWithUser = "Chat with User";
+  static const String sendQuatation = "Send Quatation";
+  static const String priceQuatation = "Price Quatation";
   static const String typeYourMessage = "Type Your Message";
+  static const String assignmentDetails = "Assignment Details";
   static const String chatWithProfessionals = "Chat with Professional";
 
   // User Info Page
@@ -73,4 +82,7 @@ class AppStrings {
   // Sub Admin Page
   static const String fullName = "Full Name";
   static const String registerSubAdmin = "Register Sub Admin";
+
+  // Assignment Details Page
+  static const String assignmentDetailsTitle = "Assignment Details";
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspiry_learning/globals/utils.dart';
 import 'package:inspiry_learning/globals/colors.dart';
 import 'package:inspiry_learning/globals/strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
@@ -6,24 +7,22 @@ import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/assets_path.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
-import 'package:inspiry_learning/views/pages/user/submission/assignment_submission_form.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class AdminHomePage extends StatefulWidget {
+  const AdminHomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AdminHomePageState extends State<AdminHomePage> {
+  static final assignments = getAssingments();
   @override
   Widget build(BuildContext context) {
-    final assignments = getAssingments();
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.teal400,
       body: Column(
         children: [
           SafeArea(
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           AppStrings.marley,
                           style: AppStyle.textstylepoppinsbold24.copyWith(
-                            color: AppColors.black,
+                            color: AppColors.white,
                           ),
                         ),
                       ],
@@ -56,6 +55,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Image.asset(
                           AppAssets.bellIcon,
+                          color: AppColors.white,
                           scale: 4,
                         ),
                         const SizedBox(width: 18),
@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Image.asset(
                             AppAssets.settingIcon,
+                            color: AppColors.white,
                             scale: 4,
                           ),
                         ),
@@ -80,34 +81,25 @@ class _HomePageState extends State<HomePage> {
             color: AppColors.black.withOpacity(0.08),
             thickness: 1,
           ),
-          const SizedBox(height: 12),
-          Text(AppStrings.submittedFormList,
-              style: AppStyle.textstylepoppinsmedium11),
           Expanded(
-            child: ListView.builder(
-              itemCount: assignments.length,
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => CustomCard(
-                assignment: assignments[index],
-                onPressed: () => AppRouter.push(context, const ChatPage()),
+            child: Container(
+              color: AppColors.white,
+              child: ListView.builder(
+                itemCount: assignments.length,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => CustomCard2(
+                  assignment: assignments[index],
+                  onSelected: (String status) {
+                    assignments[index].workStatus = getWorkStatus(status);
+                    setState(() {});
+                  },
+                  onPressed: () => AppRouter.push(context, const ChatPage()),
+                ),
               ),
             ),
           ),
         ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.82,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 3.0),
-          child: CustomButton(
-            AppStrings.submitNewAssignmentForm,
-            outlineBoarder: true,
-            onPressed: () =>
-                AppRouter.push(context, const AssignmentFormSubmissionPage()),
-          ),
-        ),
       ),
     );
   }
