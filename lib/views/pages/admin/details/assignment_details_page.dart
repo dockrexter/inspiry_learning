@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:inspiry_learning/globals/utils.dart';
 import 'package:inspiry_learning/globals/colors.dart';
 import 'package:inspiry_learning/globals/strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
-import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 
@@ -38,7 +38,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                   Text(
                     AppStrings.assignmentDetails,
                     style: AppStyle.textstyleinterbold23.copyWith(
-                      color: AppColors.black,
+                      color: AppColors.white,
                     ),
                   ),
                   const Spacer(flex: 3),
@@ -49,7 +49,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
           Expanded(
             child: Container(
               padding:
-                  const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 6),
+                  const EdgeInsets.only(left: 0, right: 0, top: 12, bottom: 6),
               decoration: BoxDecoration(
                 color: AppColors.gray100,
                 boxShadow: [
@@ -65,16 +65,37 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                 ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomCard2(assignment: getAssingments()[0], onSelected: (_){}),
+                  CustomCard2(
+                      assignment: Utils.getAssignments()[0], onSelected: (_) {}),
                   const SizedBox(height: 20),
-                  Text(
-                    AppStrings.discription,
-                    style: AppStyle.textstyleinterbold23.copyWith(
-                      color: AppColors.black,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppStrings.discription,
+                          style: AppStyle.textstyleinterbold23.copyWith(
+                            color: AppColors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'I need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment i need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment',
+                          style: AppStyle.textstylepoppinsregular10,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          AppStrings.attachments,
+                          style: AppStyle.textstylepoppinssemibold12.copyWith(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  
                 ],
               ),
             ),
@@ -89,7 +110,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
     );
   }
 
-  Widget _buildFloatingActionButton(BuildContext context){
+  Widget _buildFloatingActionButton(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
       child: CustomButton(

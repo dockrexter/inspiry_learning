@@ -42,7 +42,7 @@ class CustomCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  assignment.dueDate!,
+                  Utils.convertDateToString(assignment.dueDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
@@ -52,7 +52,7 @@ class CustomCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  assignment.startDate!,
+                  Utils.convertDateToString(assignment.startDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
               ],
@@ -78,7 +78,7 @@ class CustomCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          getStatus(assignment.workStatus),
+                          Utils.getStatus(assignment.workStatus),
                           style: AppStyle.textstylepoppinsmedium8,
                         ),
                         Icon(
@@ -157,7 +157,7 @@ class CustomCard2 extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  assignment.dueDate!,
+                  Utils.convertDateToString(assignment.dueDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
@@ -167,7 +167,7 @@ class CustomCard2 extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  assignment.startDate!,
+                  Utils.convertDateToString(assignment.startDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
               ],
@@ -207,7 +207,7 @@ class CustomCard2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          getStatus(assignment.workStatus),
+                          Utils.getStatus(assignment.workStatus),
                           style: AppStyle.textstylepoppinsmedium8,
                         ),
                         InkWell(

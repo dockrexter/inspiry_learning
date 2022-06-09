@@ -1,10 +1,13 @@
 import 'package:inspiry_learning/globals/utils.dart';
 
 class Assignment {
+  int id;
+  String? title;
   WorkStatus workStatus;
-  String? startDate, dueDate, title;
+  DateTime? startDate, dueDate;
 
   Assignment({
+    required this.id,
     this.title,
     this.dueDate,
     this.startDate,
@@ -13,81 +16,21 @@ class Assignment {
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
     return Assignment(
+      id: json['id'] as int,
       title: json['title'] as String?,
-      dueDate: json['dueDate'] as String?,
-      startDate: json['startDate'] as String?,
+      dueDate: DateTime.parse(json['dueDate']),
+      startDate: DateTime.parse(json['startDate']),
       workStatus: WorkStatus.values[json['workStatus']],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
-      'dueDate': dueDate,
-      'startDate': startDate,
       'workStatus': workStatus.index,
+      'dueDate': dueDate!.millisecondsSinceEpoch,
+      'startDate': startDate!.millisecondsSinceEpoch,
     };
   }
-}
-
-List<Assignment> getAssingments() {
-  return [
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "History of Graphic Design",
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Art and Culture",
-      workStatus: WorkStatus.compleated,
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Information Design",
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Food Sciences",
-      workStatus: WorkStatus.pendingPayment,
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Infrastructure Studies",
-      workStatus: WorkStatus.pendingPayment,
-    ),
-    // Duplicated
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "History of Graphic Design",
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Art and Culture",
-      workStatus: WorkStatus.compleated,
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Information Design",
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Food Sciences",
-      workStatus: WorkStatus.pendingPayment,
-    ),
-    Assignment(
-      dueDate: "10-6-22",
-      startDate: "2-6-22",
-      title: "Infrastructure Studies",
-      workStatus: WorkStatus.pendingPayment,
-    ),
-  ];
 }

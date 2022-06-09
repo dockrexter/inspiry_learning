@@ -31,6 +31,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  table_calendar: ^3.0.6
   pull_to_refresh: ^2.0.0
   shared_preferences: ^2.0.15
   cached_network_image: ^3.2.1
