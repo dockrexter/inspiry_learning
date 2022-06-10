@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
@@ -26,10 +27,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final filteredAssignments =
-        Utils.compare2Dates(DateTime.now(), _selectedDate)
-            ? assignments
-            : assignments
+    final filteredAssignments = assignments
                 .where((e) => Utils.compare2Dates(e.dueDate!, _selectedDate))
                 .toList();
     return Scaffold(
@@ -39,7 +37,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
           Container(
             height: height * 0.16,
             color: AppColors.teal400,
-            padding: const EdgeInsets.only(top: 12.0, left: 22.0, right: 22.0),
+            padding: EdgeInsets.only(top: 12.h, left: 22.w, right: 22.w),
             child: SafeArea(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,7 +50,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           color: AppColors.yellow701,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6.w),
                       Text(
                         AppStrings.marley,
                         style: AppStyle.textstylepoppinsbold24.copyWith(
@@ -68,7 +66,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         color: AppColors.white,
                         scale: 4,
                       ),
-                      const SizedBox(width: 18),
+                      SizedBox(width: 18.w),
                       InkWell(
                         onTap: () {
                           AppRouter.push(context, const AccountSettingsPage());
@@ -85,14 +83,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
               ),
             ),
           ),
-          Divider(
-            height: 1,
-            thickness: 1,
-            color: AppColors.black.withOpacity(0.08),
-          ),
           Expanded(
             child: RefreshIndicator(
-              displacement: 10,
+              displacement: 10.h,
               onRefresh: () {
                 assignments = Utils.getAssignments();
                 setState(() {});
@@ -134,34 +127,35 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   Widget _buildCalendar() {
+    final now = DateTime.now();
     return Container(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.only(bottom: 12.h),
+      decoration: BoxDecoration(
         color: AppColors.teal400,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(30.r),
+          bottomRight: Radius.circular(30.r),
         ),
       ),
       child: TableCalendar(
-        firstDay: DateTime.now(),
-        currentDay: DateTime.now(),
+        currentDay: now,
+        lastDay: DateTime(2037),
         focusedDay: _selectedDate,
-        lastDay: DateTime.now().add(const Duration(days: 365)),
+        firstDay: DateTime(now.year, now.month, 1),
         calendarStyle: CalendarStyle(
           selectedDecoration: const BoxDecoration(
             color: AppColors.yellow701,
           ),
           selectedTextStyle: AppStyle.textstylepoppinsmedium12.copyWith(
-            fontSize: 14,
+            fontSize: 14.sp,
             color: AppColors.black,
           ),
           todayDecoration: BoxDecoration(
             border: Border.all(
               color: AppColors.yellow701,
-              width: 2,
+              width: 2.w,
             ),
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(5.r),
           ),
           holidayDecoration: const BoxDecoration(
             color: AppColors.red300,
@@ -177,15 +171,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
           formatButtonVisible: false,
           titleCentered: true,
           headerPadding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.1),
-          leftChevronIcon: const Icon(
-            Icons.chevron_left,
-            color: AppColors.white,
-          ),
-          rightChevronIcon: const Icon(
-            Icons.chevron_right,
-            color: AppColors.white,
-          ),
+              horizontal: MediaQuery.of(context).size.width * 0.1, vertical: 8.h),
+          leftChevronIcon: _buildIcons(Icons.chevron_left),
+          rightChevronIcon: _buildIcons(Icons.chevron_right),
         ),
         daysOfWeekStyle: DaysOfWeekStyle(
           dowTextFormatter: (dt, _) =>
@@ -193,9 +181,26 @@ class _AdminHomePageState extends State<AdminHomePage> {
           weekdayStyle: AppStyle.textstylepoppinsbold14,
           weekendStyle: AppStyle.textstylepoppinsbold14,
         ),
+        
         onDaySelected: (dt, _) => setState(() => _selectedDate = dt),
         holidayPredicate: (dt) => Utils.selectedDates(assignments, dt),
         selectedDayPredicate: (dt) => Utils.compare2Dates(dt, _selectedDate),
+      ),
+    );
+  }
+
+  Widget _buildIcons(IconData icon){
+    return Container(
+      width: 20.w,
+      height: 20.h,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(3.r),
+      ),
+      child: Icon(
+        icon,
+        size: 20,
+        color: AppColors.teal400,
       ),
     );
   }

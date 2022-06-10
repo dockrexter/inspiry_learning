@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 
 void main() {
@@ -8,7 +9,12 @@ void main() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  runApp(const MyApp());
+  runApp(
+    ScreenUtilInit(
+      builder: (context, _) => const MyApp(),
+      designSize: const Size(375, 812),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

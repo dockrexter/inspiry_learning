@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 
@@ -25,7 +26,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.35,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: EdgeInsets.only(bottom: 20.h),
               child: SafeArea(
                 child: Stack(
                   children: [
@@ -38,7 +39,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0, left: 6.0),
+                        padding: EdgeInsets.only(top: 20.h, left: 6.w),
                         child: IconButton(
                           icon: const Icon(
                             Icons.arrow_back_ios_new_outlined,
@@ -55,12 +56,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40.r),
+                  topLeft: Radius.circular(40.r),
                 ),
               ),
               child: SingleChildScrollView(
@@ -93,7 +94,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ),
                       CustomButton(
                         AppStrings.send,
-                        onPressed: () {},
+                        onPressed: () => _buildDialog(context),
                       ),
                     ],
                   ),
@@ -101,6 +102,70 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Future<dynamic> _buildDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20.r),
+          ),
+        ),
+        contentPadding: const EdgeInsets.all(0.0),
+        content: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.r),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 20.h),
+              CircleAvatar(
+                radius: 24.r,
+                backgroundColor: AppColors.yellow701,
+                child: const Icon(
+                  Icons.email,
+                  color: AppColors.white,
+                ),
+              ),
+              SizedBox(height: 20.h),              
+              Text(
+                AppStrings.emailSent,
+                style: AppStyle.textstylepoppinssemibold14.copyWith(
+                  fontSize: 14.sp,
+                  color: AppColors.black,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Text(
+                AppStrings.checkInbox,
+                style: AppStyle.textstylepoppinsregular12,
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            child: Text(
+              AppStrings.login,
+              style: AppStyle.textstylepoppinssemibold12.copyWith(
+                fontSize: 16.sp,
+              ),
+            ),
+            onPressed: () {
+              AppRouter.pop(context);
+              AppRouter.pop(context);
+            },
+          ),
         ],
       ),
     );

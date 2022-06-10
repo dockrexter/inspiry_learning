@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_assets.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 
@@ -26,7 +28,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
             child: SafeArea(
               child: Row(
                 children: [
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   IconButton(
                     icon: const Icon(
                       Icons.arrow_back_ios_new_outlined,
@@ -49,61 +51,71 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
           Expanded(
             child: Container(
               padding:
-                  const EdgeInsets.only(left: 0, right: 0, top: 12, bottom: 6),
+                  EdgeInsets.only(left: 0, right: 0, top: 12.h, bottom: 6.h),
               decoration: BoxDecoration(
                 color: AppColors.gray100,
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.black.withOpacity(0.19),
-                    blurRadius: 8,
+                    blurRadius: 8.r,
                     offset: const Offset(0, 2),
                   ),
                 ],
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(40.r),
+                  topLeft: Radius.circular(40.r),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomCard2(
-                      assignment: Utils.getAssignments()[0], onSelected: (_) {}),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppStrings.discription,
-                          style: AppStyle.textstyleinterbold23.copyWith(
-                            color: AppColors.black,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomCard2(
+                        assignment: Utils.getAssignments()[0],
+                        onSelected: (_) {}),
+                    SizedBox(height: 20.h),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppStrings.description,
+                            style: AppStyle.textstyleinterbold23.copyWith(
+                              color: AppColors.black,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'I need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment i need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment',
-                          style: AppStyle.textstylepoppinsregular10,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          AppStrings.attachments,
-                          style: AppStyle.textstylepoppinssemibold12.copyWith(
-                            fontSize: 16,
+                          SizedBox(height: 8.h),
+                          Text(
+                            'I need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment i need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment',
+                            style: AppStyle.textstylepoppinsregular10,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 16.h),
+                          Text(
+                            AppStrings.attachments,
+                            style: AppStyle.textstylepoppinssemibold12.copyWith(
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                          SizedBox(height: 14.h),
+                          ..._buildImagesGrid(
+                            context,
+                            imagesPath: AppAssets.attachments,
+                          ),
+                          SizedBox(height: 46.h),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
+        padding: EdgeInsets.only(bottom: 5.h),
         child: _buildFloatingActionButton(context),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -119,5 +131,33 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
         color: AppColors.teal400,
       ),
     );
+  }
+
+  List<Widget> _buildImagesGrid(BuildContext context,
+      {required List<String> imagesPath, double? width, int imagesPerRow = 3}) {
+    width ??= MediaQuery.of(context).size.width * 0.25;
+    List<Widget> imagesGrid = [];
+    for (int i = 0; i < imagesPath.length; i += imagesPerRow) {
+      imagesGrid.add(
+        Container(
+          padding: EdgeInsets.only(bottom: 8.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              for (int j = 0; j < imagesPerRow; j++)
+                if (i + j < imagesPath.length)
+                  Padding(
+                    padding: EdgeInsets.only(left: j == 0 ? 0 : 8.w),
+                    child: Image.asset(
+                      imagesPath[i + j],
+                      width: width,
+                    ),
+                  ),
+            ],
+          ),
+        ),
+      );
+    }
+    return imagesGrid;
   }
 }

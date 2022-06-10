@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class InputTextField extends StatefulWidget {
   const InputTextField(
@@ -15,6 +16,7 @@ class InputTextField extends StatefulWidget {
     this.initialValue,
     this.enabled = true,
     this.inputFormatters,
+    this.backgroundColor,
     this.obscureText = false,
   }) : super(key: key);
 
@@ -26,6 +28,7 @@ class InputTextField extends StatefulWidget {
   final Color? textColor;
   final Color? cursorColor;
   final String? initialValue;
+  final Color? backgroundColor;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -41,8 +44,8 @@ class _InputTextFieldState extends State<InputTextField> {
     return Container(
       alignment: Alignment.center,
       child: Material(
-        borderRadius: BorderRadius.circular(8.0),
-        color: AppColors.teal400.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(8.r),
+        color: widget.backgroundColor ?? AppColors.teal400.withOpacity(0.12),
         child: TextFormField(
           autofocus: false,
           enabled: widget.enabled,
@@ -58,7 +61,7 @@ class _InputTextFieldState extends State<InputTextField> {
           decoration: InputDecoration(
             icon: widget.icon != null
                 ? Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
+                    padding: EdgeInsets.only(left: 15.w),
                     child: widget.icon,
                   )
                 : null,
@@ -68,7 +71,7 @@ class _InputTextFieldState extends State<InputTextField> {
             ),
             border: InputBorder.none,
             contentPadding:
-                widget.icon == null ? const EdgeInsets.only(left: 10) : null,
+                widget.icon == null ? EdgeInsets.only(top: widget.maxLines == 1 ? 0 : 8.h,left: 10.w) : null,
             suffixIcon: widget.obscureText
                 ? IconButton(
                     onPressed: () => setState(() => isShow = !isShow),

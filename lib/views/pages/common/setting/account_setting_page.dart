@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/user_type.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
-import 'package:inspiry_learning/globals/user_type.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/subadmin/add_sub_admin_page.dart';
@@ -31,7 +32,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             child: SafeArea(
               child: Row(
                 children: [
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   IconButton(
                     icon: const Icon(
                       Icons.arrow_back_ios_new_outlined,
@@ -53,12 +54,12 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40.r),
+                  topLeft: Radius.circular(40.r),
                 ),
               ),
               child: SingleChildScrollView(
@@ -76,26 +77,26 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                           onTap: () =>
                               AppRouter.push(context, const AddSubAdminPage()),
                           child: Container(
-                            height: 48,
+                            height: 48.h,
                             width: MediaQuery.of(context).size.width * 0.6,
                             decoration: BoxDecoration(
                               color: AppColors.white,
                               border: Border.all(
-                                width: 2,
+                                width: 2.w,
                                 color: AppColors.teal400,
                               ),
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(14.r),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const CircleAvatar(
-                                  maxRadius: 14,
+                                CircleAvatar(
+                                  maxRadius: 14.r,
                                   backgroundColor: AppColors.teal400,
                                   child:
-                                      Icon(Icons.add, color: AppColors.white),
+                                      const Icon(Icons.add, color: AppColors.white),
                                 ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: 10.w),
                                 Text(
                                   AppStrings.addSubAdmin,
                                   style: AppStyle.textstylepoppinsbold17,
@@ -116,12 +117,12 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                             text: AppStrings.firstName,
                             initialValue: "Usama",
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
                           _buildEditAbleTextFields(
                             text: AppStrings.lastName,
                             initialValue: "Azad",
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
                           _buildEditAbleTextFields(
                             text: AppStrings.phoneNumber,
                             icon: Icons.phone,
@@ -144,7 +145,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                       ),
                       CustomButton(
                         AppStrings.save,
-                        onPressed: () {},
+                        onPressed: () => AppRouter.pop(context),
                       ),
                     ],
                   ),
@@ -157,35 +158,17 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     );
   }
 
-  Row _buildEditAbleTextFields({
+  Widget _buildEditAbleTextFields({
     required String text,
     String? initialValue,
-    VoidCallback? onPressed,
     IconData icon = Icons.person,
     TextEditingController? controller,
   }) {
-    return Row(
-      children: [
-        Expanded(
-          child: InputTextField(
-            text,
-            enabled: false,
-            icon: Icon(icon),
-            initialValue: initialValue,
-            controller: controller,
-          ),
-        ),
-        SizedBox(
-          width: 26,
-          child: IconButton(
-            onPressed: onPressed,
-            icon: const Icon(
-              Icons.drive_file_rename_outline_sharp,
-              size: 20,
-            ),
-          ),
-        ),
-      ],
+    return InputTextField(
+      text,
+      icon: Icon(icon),
+      initialValue: initialValue,
+      controller: controller,
     );
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/user_type.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
-import 'package:inspiry_learning/globals/user_type.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/login_page.dart';
 
@@ -20,7 +21,7 @@ class UserInfoPage extends StatelessWidget {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.20,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: EdgeInsets.only(bottom: 20.h),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
@@ -34,12 +35,12 @@ class UserInfoPage extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40.r),
+                  topLeft: Radius.circular(40.r),
                 ),
               ),
               child: Column(
@@ -51,7 +52,7 @@ class UserInfoPage extends StatelessWidget {
                       scale: 2,
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: 50.h),
                   CustomButton(
                     AppStrings.continueAsUser,
                     onPressed: () {
@@ -59,9 +60,9 @@ class UserInfoPage extends StatelessWidget {
                       _goToNextPage(context);
                     },
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   CustomButton(
-                    AppStrings.continueAsAdmin,
+                    AppStrings.continueAsProfessional,
                     onPressed: () {
                       UserTypeHelper.continueAsAdmin();
                       _goToNextPage(context);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CommonNetworkImageView extends StatelessWidget {
@@ -34,8 +35,8 @@ class CommonNetworkImageView extends StatelessWidget {
             fit: fit,
             imageUrl: url,
             placeholder: (context, url) => SizedBox(
-              height: 30,
-              width: 30,
+              height: 30.h,
+              width: 30.h,
               child: LinearProgressIndicator(
                 color: Colors.grey.shade200,
                 backgroundColor: Colors.grey.shade100,

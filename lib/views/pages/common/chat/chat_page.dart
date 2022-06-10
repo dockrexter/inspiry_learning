@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
@@ -30,7 +31,7 @@ class _ChatPageState extends State<ChatPage> {
             child: SafeArea(
               child: Row(
                 children: [
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   IconButton(
                     icon: const Icon(
                       Icons.arrow_back_ios_new_outlined,
@@ -55,19 +56,19 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: Container(
               padding:
-                  const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 6),
+                  EdgeInsets.only(left: 10.w, right: 10.w, top: 3.h, bottom: 6.h),
               decoration: BoxDecoration(
                 color: AppColors.gray100,
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.black.withOpacity(0.19),
-                    blurRadius: 8,
+                    blurRadius: 8.r,
                     offset: const Offset(0, 2),
                   ),
                 ],
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(40.r),
+                  topLeft: Radius.circular(40.r),
                 ),
               ),
               child: Column(
@@ -75,7 +76,7 @@ class _ChatPageState extends State<ChatPage> {
                   if (isAdmin)
                     Padding(
                       padding:
-                          const EdgeInsets.only(right: 16, left: 16, top: 10),
+                         EdgeInsets.only(right: 16.w, left: 16.w, top: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -86,7 +87,8 @@ class _ChatPageState extends State<ChatPage> {
                               AppStrings.assignmentDetails,
                               textAlign: TextAlign.center,
                               style:
-                                  AppStyle.textstylepoppinssemibold12.copyWith(
+                                  AppStyle.textstylepoppinssemibold14.copyWith(
+                                color: AppColors.teal400,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
@@ -97,7 +99,8 @@ class _ChatPageState extends State<ChatPage> {
                               AppStrings.sendQuatation,
                               textAlign: TextAlign.center,
                               style:
-                                  AppStyle.textstylepoppinssemibold12.copyWith(
+                                  AppStyle.textstylepoppinssemibold14.copyWith(
+                                color: AppColors.teal400,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
@@ -106,7 +109,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   if (isAdmin)
-                    const Divider(color: AppColors.teal400, height: 12),
+                    Divider(color: AppColors.teal400, height: 12.h),
                   Expanded(
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
@@ -122,6 +125,7 @@ class _ChatPageState extends State<ChatPage> {
                       },
                     ),
                   ),
+                  SizedBox(height: 52.h),
                 ],
               ),
             ),
@@ -129,7 +133,7 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
+        padding: EdgeInsets.only(bottom: 5.h),
         child: _buildFloatingActionButton(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -137,33 +141,48 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _showBottomQuatationSheet() {
+    AppRouter.closeKeyboard(context);
     showModalBottomSheet(
+      backgroundColor: AppColors.transparent,
       context: context,
       isScrollControlled: true,
       builder: (context) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        padding: EdgeInsets.only(
+          top: 12.h,
+          left: 16.w,
+          right: 16.w,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 12.h,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
+          ),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 8.h),
             Text(
               AppStrings.priceQuatation,
               style: AppStyle.textstylepoppinssemibold12.copyWith(
-                fontSize: 15,
+                fontSize: 18.sp,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             const InputTextField(
               AppStrings.price,
               controller: null,
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
             const InputTextField(
-              AppStrings.discription,
+              AppStrings.description,
               maxLines: 6,
               controller: null,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.5,
               child: CustomButton(
@@ -179,12 +198,12 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildFloatingActionButton() => Container(
-        height: 48,
-        margin: const EdgeInsets.symmetric(horizontal: 18),
-        padding: const EdgeInsets.only(left: 16, right: 10),
+        height: 48.h,
+        margin: EdgeInsets.symmetric(horizontal: 18.w),
+        padding: EdgeInsets.only(left: 16.w, right: 10.w),
         decoration: BoxDecoration(
           color: AppColors.teal400,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
@@ -200,7 +219,7 @@ class _ChatPageState extends State<ChatPage> {
                 cursorColor: AppColors.gray800,
               ),
             ),
-            const SizedBox(width: 2),
+            SizedBox(width: 2.w),
             Transform.rotate(
               angle: 0.2 * 3.14,
               child: const Icon(
@@ -209,16 +228,16 @@ class _ChatPageState extends State<ChatPage> {
                 color: AppColors.white,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             InkWell(
               onTap: () {},
               child: Container(
-                width: 28,
-                height: 25,
-                padding: const EdgeInsets.only(left: 4, bottom: 4),
+                width: 28.w,
+                height: 25.h,
+                padding: EdgeInsets.only(left: 4.w, bottom: 4.h),
                 decoration: BoxDecoration(
                   color: AppColors.teal100,
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Transform.rotate(
                   angle: -0.23 * 3.14,

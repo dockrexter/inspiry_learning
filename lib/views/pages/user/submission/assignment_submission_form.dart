@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 
@@ -35,19 +36,33 @@ class _AssignmentFormSubmissionPageState
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SafeArea(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: Image.asset(
-                        AppAssets.girlWithLaptop,
-                        scale: 2.8,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 3.w),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_outlined,
+                          color: AppColors.black,
+                        ),
+                        onPressed: () => AppRouter.pop(context),
                       ),
-                    ),
+                      const Spacer(),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 14.h),
+                          child: Image.asset(
+                            AppAssets.girlWithLaptop,
+                            scale: 2.8,
+                          ),
+                        ),
+                      ),
+                      const Spacer(flex: 3),
+                    ],
                   ),
                 ),
                 Text(
@@ -84,7 +99,7 @@ class _AssignmentFormSubmissionPageState
                       AppAssets.calanderIcon,
                       scale: 5,
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     Text(
                       AppStrings.dueDate,
                       textAlign: TextAlign.center,
@@ -92,7 +107,7 @@ class _AssignmentFormSubmissionPageState
                     ),
                     const Spacer(),
                     _buildPickers(1),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     _buildPickers(2),
                   ],
                 ),
@@ -107,12 +122,12 @@ class _AssignmentFormSubmissionPageState
                   onTap: () async => await _openFilePicker(),
                   child: Image.asset(
                     AppAssets.addFiles,
-                    scale: 5,
+                    scale: 4,
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
+                  padding: EdgeInsets.only(bottom: 4.h),
                   child: CustomButton(
                     AppStrings.submitAndProceed,
                     onPressed: () => _buildDialog(context),
@@ -130,48 +145,60 @@ class _AssignmentFormSubmissionPageState
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-            Radius.circular(20.0),
+            Radius.circular(20.r),
           ),
         ),
         contentPadding: const EdgeInsets.all(0.0),
         content: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
+              Radius.circular(20.r),
             ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               Image.asset(
                 AppAssets.thumbsUp,
                 scale: 4,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               const Icon(
                 Icons.star,
                 color: AppColors.orange800,
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
               Text(
                 AppStrings.thankyou,
                 style: AppStyle.textstylepoppinssemibold12.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
               Text(
                 AppStrings.contactedTime,
-                style: AppStyle.textstylepoppinsregular8,
+                style: AppStyle.textstylepoppinsregular10,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
+        actions: [
+          MaterialButton(
+            child: Text(
+              AppStrings.done,
+              style: AppStyle.textstylepoppinssemibold12,
+            ),
+            onPressed: () {
+              AppRouter.pop(context);
+              AppRouter.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -216,8 +243,8 @@ class _AssignmentFormSubmissionPageState
         height: 25,
         decoration: BoxDecoration(
           color: AppColors.white,
-          border: Border.all(color: AppColors.teal40065, width: 2),
-          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: AppColors.teal40065, width: 2.w),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Center(
           child: Text(

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 
 class CustomCard extends StatelessWidget {
   const CustomCard({Key? key, required this.assignment, this.onPressed})
@@ -18,15 +21,15 @@ class CustomCard extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        height: 100,
-        margin: const EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        height: 100.h,
+        margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: AppColors.teal40065.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.r),
           boxShadow: [
             BoxShadow(
-              blurRadius: 12,
+              blurRadius: 12.r,
               offset: const Offset(0, 4),
               color: AppColors.teal900.withOpacity(0.08),
             ),
@@ -40,7 +43,7 @@ class CustomCard extends StatelessWidget {
                   AppStrings.dueDate,
                   style: AppStyle.textstylepoppinsbold10t,
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3.h),
                 Text(
                   Utils.convertDateToString(assignment.dueDate!),
                   style: AppStyle.textstylepoppinsregular10,
@@ -50,20 +53,20 @@ class CustomCard extends StatelessWidget {
                   AppStrings.startingDate,
                   style: AppStyle.textstylepoppinsbold10,
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3.h),
                 Text(
                   Utils.convertDateToString(assignment.startDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
               ],
             ),
-            const VerticalDivider(
-              width: 26,
+            VerticalDivider(
+              width: 26.w,
               thickness: 3,
               color: AppColors.white,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 6.0),
+              padding: EdgeInsets.only(top: 8.h, bottom: 6.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,7 +82,7 @@ class CustomCard extends StatelessWidget {
                       children: [
                         Text(
                           Utils.getStatus(assignment.workStatus),
-                          style: AppStyle.textstylepoppinsmedium8,
+                          style: AppStyle.textstylepoppinsmedium10,
                         ),
                         Icon(
                           assignment.workStatus == WorkStatus.compleated
@@ -134,14 +137,14 @@ class CustomCard2 extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         height: 100,
-        margin: const EdgeInsets.only(bottom: 20.0, left: 12, right: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        margin: EdgeInsets.only(bottom: 20.h, left: 12.w, right: 12.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: AppColors.teal40065.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.r),
           boxShadow: [
             BoxShadow(
-              blurRadius: 12,
+              blurRadius: 12.r,
               offset: const Offset(0, 4),
               color: AppColors.teal900.withOpacity(0.08),
             ),
@@ -155,30 +158,42 @@ class CustomCard2 extends StatelessWidget {
                   AppStrings.dueDate,
                   style: AppStyle.textstylepoppinsbold10t,
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3.h),
                 Text(
                   Utils.convertDateToString(assignment.dueDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
-                Text(
-                  AppStrings.startingDate,
-                  style: AppStyle.textstylepoppinsbold10,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  Utils.convertDateToString(assignment.startDate!),
-                  style: AppStyle.textstylepoppinsregular10,
+                SizedBox(
+                  height: MediaQuery.of(context).size.width * 0.075,
+                  width: MediaQuery.of(context).size.width * 0.17,
+                  child: InkWell(
+                    onTap: () => _showTextInputDialog(context),
+                    child: Container(
+                      height: 20.h,
+                      width: 55.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.greenA700,
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          AppStrings.marley,
+                          style: AppStyle.textstylepoppinsregular7,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-            const VerticalDivider(
-              width: 26,
+            VerticalDivider(
+              width: 26.w,
               thickness: 3,
               color: AppColors.white,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 6.0),
+              padding: EdgeInsets.only(top: 8.h, bottom: 6.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,13 +223,13 @@ class CustomCard2 extends StatelessWidget {
                       children: [
                         Text(
                           Utils.getStatus(assignment.workStatus),
-                          style: AppStyle.textstylepoppinsmedium8,
+                          style: AppStyle.textstylepoppinsmedium10,
                         ),
                         InkWell(
                           onTap: () => _showAlertDialog(context),
                           child: Container(
-                            height: 20,
-                            width: 55,
+                            height: 25.h,
+                            width: 60.w,
                             decoration: BoxDecoration(
                               color: AppColors.yellow701,
                               borderRadius: BorderRadius.circular(5),
@@ -239,12 +254,40 @@ class CustomCard2 extends StatelessWidget {
     );
   }
 
+  void _showTextInputDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          width: 30.w,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            InputTextField(
+              "",
+              controller: TextEditingController(text: AppStrings.marley),
+            ),
+          ]),
+        ),
+        actions: [
+          MaterialButton(
+            child: Text(
+              AppStrings.done,
+              style: AppStyle.textstylepoppinsbold14
+                  .copyWith(color: AppColors.white),
+            ),
+            color: AppColors.greenA700,
+            onPressed: () => AppRouter.pop(context),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showAlertDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         content: SizedBox(
-          width: 30,
+          width: 30.w,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: items

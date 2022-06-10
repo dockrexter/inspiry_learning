@@ -9,11 +9,11 @@ class AppStrings {
   static const String signUp = "Sign Up";
   static const String rememberMe = "Remember Me";
   static const String loginAsUser = "Login as User";
-  static const String loginAsAdmin = "Login as Admin";
   static const String enterPassword = "Enter Password";
   static const String forgotPassword = "Forgot Password?";
   static const String enterEmailAddress = "Enter Email Address";
   static const String dontHaveAnAccount = "Don't have an account?";
+  static const String loginAsProfessional = "Login as Professional";
   static const String needAssignmentHelp = "Need an Assignment Help?";
 
   // Sign Up Page
@@ -28,12 +28,13 @@ class AppStrings {
 
   // Forgot Password Page
   static const String send = "Send";
+  static const String emailSent = "Email Sent";
+  static const String checkInbox = "Check your inbox to reset your password";
   static const String enterEmailForVerification =
       "Please Enter Your Email Adress To Recieve a Verification Code";
 
   // Home Page
   static const String hello = "Hello";
-  static const String arrowDown = "  ↓";
   static const String status = "Status";
   static const String marley = "Marley!";
   static const String triangleDown = "  ▼";
@@ -67,7 +68,7 @@ class AppStrings {
 
   // Chat Page
   static const String price = "Price";
-  static const String discription = "Discription";
+  static const String description = "Description";
   static const String chatWithUser = "Chat with User";
   static const String sendQuatation = "Send Quatation";
   static const String priceQuatation = "Price Quatation";
@@ -76,8 +77,8 @@ class AppStrings {
   static const String chatWithProfessionals = "Chat with Professional";
 
   // User Info Page
-  static const String continueAsUser = "Continue as User";
-  static const String continueAsAdmin = "Continue as Admin";
+  static const String continueAsUser = "Signin as User";
+  static const String continueAsProfessional = "Signin as Professional";
 
   // Sub Admin Page
   static const String fullName = "Full Name";

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
               height: MediaQuery.of(context).size.height * 0.1,
               child: Padding(
                 padding:
-                    const EdgeInsets.only(top: 20.0, left: 22.0, right: 22.0),
+                    EdgeInsets.only(top: 20.h, left: 22.w, right: 22.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                             color: AppColors.yellow701,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6.w),
                         Text(
                           AppStrings.marley,
                           style: AppStyle.textstylepoppinsbold24.copyWith(
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                           AppAssets.bellIcon,
                           scale: 4,
                         ),
-                        const SizedBox(width: 18),
+                        SizedBox(width: 18.w),
                         InkWell(
                           onTap: () {
                             AppRouter.push(
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
             color: AppColors.black.withOpacity(0.08),
             thickness: 1,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Text(AppStrings.submittedFormList,
               style: AppStyle.textstylepoppinsmedium11),
           Expanded(
@@ -94,13 +95,14 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          SizedBox(height: 36.h),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width * 0.82,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 3.0),
+          padding: EdgeInsets.only(bottom: 3.h),
           child: CustomButton(
             AppStrings.submitNewAssignmentForm,
             outlineBoarder: true,

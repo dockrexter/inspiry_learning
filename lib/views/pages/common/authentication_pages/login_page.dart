@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
@@ -34,11 +35,11 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.20,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: EdgeInsets.only(bottom: 20.h),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  isAdmin ? AppStrings.loginAsAdmin : AppStrings.loginAsUser,
+                  isAdmin ? AppStrings.loginAsProfessional : AppStrings.loginAsUser,
                   style: AppStyle.textstyleinterbold23.copyWith(
                     color: AppColors.white,
                   ),
@@ -48,12 +49,12 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40.r),
+                  topLeft: Radius.circular(40.r),
                 ),
               ),
               child: SingleChildScrollView(
@@ -107,8 +108,8 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                 },
                                 activeColor: AppColors.yellow701,
-                                side: const BorderSide(
-                                  width: 1.5,
+                                side: BorderSide(
+                                  width: 1.5.w,
                                   color: AppColors.yellow701,
                                 ),
                               ),
@@ -125,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             child: Text(
                               AppStrings.forgotPassword,
-                              style: AppStyle.textstylerobotoromanregular10,
+                              style: AppStyle.textstylerobotoromanregular12,
                             ),
                           )
                         ],
@@ -145,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                               AppStrings.dontHaveAnAccount,
                               style: AppStyle.textstylepoppinsmedium14,
                             ),
-                            const SizedBox(width: 6.0),
+                            SizedBox(width: 6.w),
                             GestureDetector(
                               onTap: () => AppRouter.makeFirst(
                                   context, const SignUpPage()),

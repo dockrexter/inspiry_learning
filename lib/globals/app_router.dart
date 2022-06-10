@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class AppRouter {
   static void push(BuildContext context, Widget page) {
+    closeKeyboard(context);
     Navigator.of(context).push(
-        PageRouteBuilder(pageBuilder: (BuildContext context, _, __) => page));
+      CupertinoPageRoute(builder: (context) => page),
+    );
   }
 
   static void pushWithThen(
       BuildContext context, Widget page, Function() thenFunction) {
+    closeKeyboard(context);
     Navigator.of(context)
-        .push(PageRouteBuilder(
-            pageBuilder: (BuildContext context, _, __) => page))
+        .push(
+      CupertinoPageRoute(builder: (context) => page),
+    )
         .then((value) {
       thenFunction();
     });
@@ -19,7 +24,7 @@ class AppRouter {
   static void replace(BuildContext context, Widget page,
       {bool bottomToUp = false}) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
+      CupertinoPageRoute(
           fullscreenDialog: bottomToUp, builder: (context) => page),
     );
   }
@@ -27,7 +32,7 @@ class AppRouter {
   static void makeFirst(BuildContext context, Widget page) {
     Navigator.of(context).popUntil((predicate) => predicate.isFirst);
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => page),
+      CupertinoPageRoute(builder: (context) => page),
     );
   }
 
@@ -41,6 +46,14 @@ class AppRouter {
 
   static void dismissAlert(context) {
     Navigator.of(context).pop();
+  }
+
+  static closeKeyboard(context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
   }
 
   static void bottomSheetOpen(BuildContext context, Widget sheet,

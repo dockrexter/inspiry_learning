@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageWidget extends StatelessWidget {
   final bool isMe;
@@ -22,7 +23,7 @@ class MessageWidget extends StatelessWidget {
           margin: const EdgeInsets.all(16),
           constraints: const BoxConstraints(maxWidth: 250),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(5.r),
             color: isMe ? AppColors.teal100 : AppColors.white,
           ),
           child: buildMessage(),
@@ -38,7 +39,9 @@ class MessageWidget extends StatelessWidget {
       children: [
         Text(
           message,
-          style: AppStyle.textstylepoppinsmedium10,
+          style: AppStyle.textstylepoppinsmedium12.copyWith(
+            color: AppColors.gray80099,
+          ),
         ),
       ],
     );

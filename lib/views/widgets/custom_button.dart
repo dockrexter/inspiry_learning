@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 
@@ -23,7 +24,7 @@ class CustomButton extends StatelessWidget {
       padding: const EdgeInsets.all(0),
       child: Container(
         alignment: Alignment.center,
-        height: 48.0,
+        height: 48.h,
         width: double.infinity,
         decoration: BoxDecoration(
           color: color,
@@ -31,7 +32,7 @@ class CustomButton extends StatelessWidget {
             color: outlineBoarder ? AppColors.white : color!,
             width: outlineBoarder ? 1 : 0,
           ),
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.r),
         ),
         child: Text(
           name,

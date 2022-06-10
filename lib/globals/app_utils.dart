@@ -117,6 +117,13 @@ class Utils {
         title: "Infrastructure Studies",
         workStatus: WorkStatus.pendingPayment,
       ),
+      Assignment(
+        id: 103,
+        dueDate: DateTime.parse("2022-06-08"),
+        startDate: DateTime.parse("2022-06-02"),
+        title: "Art and Culture",
+        workStatus: WorkStatus.pendingPayment,
+      ),
       for (int i = 6; i < 101; i++)
         Assignment(
           id: i,
