@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/colors.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 
 class InputTextField extends StatefulWidget {

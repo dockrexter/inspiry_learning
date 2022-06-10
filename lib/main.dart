@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/strings.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 
 void main() {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/colors.dart';
-import 'package:inspiry_learning/globals/strings.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
-import 'package:inspiry_learning/globals/assets_path.dart';
+import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 

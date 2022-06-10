@@ -1,4 +1,4 @@
-import 'package:inspiry_learning/globals/utils.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 
 class Assignment {
   int id;

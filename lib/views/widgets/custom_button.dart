@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/colors.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 
 class CustomButton extends StatelessWidget {
