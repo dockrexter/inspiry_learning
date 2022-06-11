@@ -128,7 +128,7 @@ class Utils {
         Assignment(
           id: i,
           dueDate: DateTime.parse(
-              "2022-06-${["10", "13", "23", "30"][random.nextInt(4)]}"),
+              "2022-06-${["10", "12", "13", "23", "30"][random.nextInt(5)]}"),
           startDate: DateTime.parse("2022-06-02"),
           title: [
             "History of Graphic Design",

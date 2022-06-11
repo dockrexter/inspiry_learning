@@ -131,7 +131,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                             ),
                             child: Text(
                               AppStrings.forgotPassword,
-                              style: AppStyle.textstylerobotoromanregular10,
+                              style: AppStyle.textstylerobotoromanregular12,
                             ),
                           )
                         ],

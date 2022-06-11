@@ -1,3 +1,5 @@
+import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
@@ -6,6 +8,7 @@ import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/widgets/custom_camera.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/details/assignment_details_page.dart';
@@ -55,8 +58,8 @@ class _ChatPageState extends State<ChatPage> {
           ),
           Expanded(
             child: Container(
-              padding:
-                  EdgeInsets.only(left: 10.w, right: 10.w, top: 3.h, bottom: 6.h),
+              padding: EdgeInsets.only(
+                  left: 10.w, right: 10.w, top: 3.h, bottom: 6.h),
               decoration: BoxDecoration(
                 color: AppColors.gray100,
                 boxShadow: [
@@ -76,7 +79,7 @@ class _ChatPageState extends State<ChatPage> {
                   if (isAdmin)
                     Padding(
                       padding:
-                         EdgeInsets.only(right: 16.w, left: 16.w, top: 10.h),
+                          EdgeInsets.only(right: 16.w, left: 16.w, top: 10.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -108,8 +111,7 @@ class _ChatPageState extends State<ChatPage> {
                         ],
                       ),
                     ),
-                  if (isAdmin)
-                    Divider(color: AppColors.teal400, height: 12.h),
+                  if (isAdmin) Divider(color: AppColors.teal400, height: 12.h),
                   Expanded(
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
@@ -207,10 +209,13 @@ class _ChatPageState extends State<ChatPage> {
         ),
         child: Row(
           children: [
-            const Icon(
-              Icons.camera_alt_outlined,
-              size: 22,
-              color: AppColors.teal100,
+            InkWell(
+              onTap: () async => await _openCamera(),
+              child: const Icon(
+                Icons.camera_alt_outlined,
+                size: 22,
+                color: AppColors.teal100,
+              ),
             ),
             const Expanded(
               child: InputTextField(
@@ -220,12 +225,15 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
             SizedBox(width: 2.w),
-            Transform.rotate(
-              angle: 0.2 * 3.14,
-              child: const Icon(
-                Icons.attach_file_outlined,
-                size: 22,
-                color: AppColors.white,
+            InkWell(
+              onTap: () => _openFilePicker(),
+              child: Transform.rotate(
+                angle: 0.2 * 3.14,
+                child: const Icon(
+                  Icons.attach_file_outlined,
+                  size: 22,
+                  color: AppColors.white,
+                ),
               ),
             ),
             SizedBox(width: 12.w),
@@ -252,4 +260,19 @@ class _ChatPageState extends State<ChatPage> {
           ],
         ),
       );
+
+  Future<void> _openCamera() async {
+    final cameras = await availableCameras();
+    final firstCamera = cameras.first;
+    AppRouter.push(context, TakePictureScreen(camera: firstCamera));
+  }
+
+  Future<void> _openFilePicker() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+      allowMultiple: true,
+    );
+    if (result != null) {}
+    setState(() {});
+  }
 }

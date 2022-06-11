@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
+import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_router.dart';
+import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
-import 'package:inspiry_learning/globals/app_style.dart';
-import 'package:inspiry_learning/globals/app_assets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/views/widgets/custom_dropdown.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 
 class CustomCard extends StatelessWidget {
@@ -137,8 +138,8 @@ class CustomCard2 extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         height: 100,
-        margin: EdgeInsets.only(bottom: 20.h, left: 12.w, right: 12.w),
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        margin: EdgeInsets.only(bottom: 20.h, left: 10.w, right: 10.w),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: AppColors.teal40065.withOpacity(0.12),
           borderRadius: BorderRadius.circular(8.r),
@@ -151,6 +152,7 @@ class CustomCard2 extends StatelessWidget {
           ],
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Column(
               children: [
@@ -195,7 +197,7 @@ class CustomCard2 extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 8.h, bottom: 6.h),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
@@ -225,21 +227,32 @@ class CustomCard2 extends StatelessWidget {
                           Utils.getStatus(assignment.workStatus),
                           style: AppStyle.textstylepoppinsmedium10,
                         ),
-                        InkWell(
-                          onTap: () => _showAlertDialog(context),
-                          child: Container(
+                        CustomDropdown(
+                          items: [
+                            for (var item in items)
+                              DropdownItem(value: item, child: Text(item)),
+                          ],
+                          child: Text(AppStrings.status,
+                              style: AppStyle.textstylepoppinssemibold10),
+                          onChange: (s, i) {
+                            onSelected(s);
+                          },
+                          icon: const Icon(Icons.arrow_drop_down, size: 18),
+                          dropdownStyle: DropdownStyle(
+                            width: 136.w,
+                            borderRadius: BorderRadius.circular(8.r),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 8.h,
+                            ),
+                          ),
+                          dropdownButtonStyle: DropdownButtonStyle(
                             height: 25.h,
-                            width: 60.w,
-                            decoration: BoxDecoration(
-                              color: AppColors.yellow701,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: Text(
-                                AppStrings.status + AppStrings.triangleDown,
-                                style: AppStyle.textstylepoppinssemibold10,
-                              ),
-                            ),
+                            width: 70.w,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            padding: EdgeInsets.zero,
+                            primaryColor: AppColors.black,
+                            backgroundColor: AppColors.yellow701,
                           ),
                         ),
                       ],
@@ -278,33 +291,6 @@ class CustomCard2 extends StatelessWidget {
             onPressed: () => AppRouter.pop(context),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showAlertDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: SizedBox(
-          width: 30.w,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: items
-                .map((e) => Column(
-                      children: [
-                        InkWell(
-                            child: Text(e),
-                            onTap: () {
-                              onSelected(e);
-                              Navigator.pop(context);
-                            }),
-                        const Divider(),
-                      ],
-                    ))
-                .toList(),
-          ),
-        ),
       ),
     );
   }
