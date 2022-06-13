@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           SafeArea(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
+              height: ScreenSize.height * 0.1,
               child: Padding(
                 padding:
                     EdgeInsets.only(top: 20.h, left: 22.w, right: 22.w),
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.82,
+        width: ScreenSize.width * 0.82,
         child: Padding(
           padding: EdgeInsets.only(bottom: 3.h),
           child: CustomButton(

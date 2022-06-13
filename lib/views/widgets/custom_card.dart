@@ -23,7 +23,7 @@ class CustomCard extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         height: 100.h,
-        margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
+        margin: EdgeInsets.only(bottom: 20.h, left: 16.w, right: 16.w),
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: AppColors.teal40065.withOpacity(0.12),
@@ -77,7 +77,7 @@ class CustomCard extends StatelessWidget {
                     style: AppStyle.textstylepoppinssemibold14,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.52,
+                    width: ScreenSize.width * 0.57,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -120,14 +120,6 @@ class CustomCard2 extends StatelessWidget {
     required this.onSelected,
   }) : super(key: key);
 
-  static final items = [
-    'New Request',
-    'Under Review',
-    'Pending Payment',
-    'Work in Progress',
-    'Work Completed',
-  ];
-
   final Function onSelected;
   final VoidCallback? onPressed;
   final Assignment assignment;
@@ -138,11 +130,11 @@ class CustomCard2 extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         height: 100,
-        margin: EdgeInsets.only(bottom: 20.h, left: 10.w, right: 10.w),
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+        margin: EdgeInsets.only(bottom: 20.h, left: 10.w, right: 10.w),
         decoration: BoxDecoration(
-          color: AppColors.teal40065.withOpacity(0.12),
           borderRadius: BorderRadius.circular(8.r),
+          color: AppColors.teal40065.withOpacity(0.12),
           boxShadow: [
             BoxShadow(
               blurRadius: 12.r,
@@ -167,13 +159,13 @@ class CustomCard2 extends StatelessWidget {
                 ),
                 const Spacer(),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.075,
-                  width: MediaQuery.of(context).size.width * 0.17,
+                  width: ScreenSize.width * 0.17,
+                  height: ScreenSize.width * 0.075,
                   child: InkWell(
                     onTap: () => _showTextInputDialog(context),
                     child: Container(
-                      height: 20.h,
                       width: 55.w,
+                      height: 20.h,
                       decoration: BoxDecoration(
                         color: AppColors.greenA700,
                         borderRadius: BorderRadius.circular(5.r),
@@ -197,11 +189,10 @@ class CustomCard2 extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 8.h, bottom: 6.h),
               child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: ScreenSize.width * 0.6,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -219,7 +210,7 @@ class CustomCard2 extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: ScreenSize.width * 0.6,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -228,10 +219,10 @@ class CustomCard2 extends StatelessWidget {
                           style: AppStyle.textstylepoppinsmedium10,
                         ),
                         CustomDropdown(
-                          items: [
-                            for (var item in items)
-                              DropdownItem(value: item, child: Text(item)),
-                          ],
+                          items: AppStrings.items
+                              .map((item) =>
+                                  DropdownItem(value: item, child: Text(item)))
+                              .toList(),
                           child: Text(AppStrings.status,
                               style: AppStyle.textstylepoppinssemibold10),
                           onChange: (s, i) {
@@ -242,13 +233,13 @@ class CustomCard2 extends StatelessWidget {
                             width: 136.w,
                             borderRadius: BorderRadius.circular(8.r),
                             padding: EdgeInsets.symmetric(
-                              horizontal: 8.w,
                               vertical: 8.h,
+                              horizontal: 8.w,
                             ),
                           ),
                           dropdownButtonStyle: DropdownButtonStyle(
-                            height: 25.h,
                             width: 70.w,
+                            height: 25.h,
                             mainAxisAlignment: MainAxisAlignment.center,
                             padding: EdgeInsets.zero,
                             primaryColor: AppColors.black,

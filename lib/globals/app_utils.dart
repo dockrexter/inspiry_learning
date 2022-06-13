@@ -7,6 +7,11 @@ enum WorkStatus {
   pendingPayment,
 }
 
+class ScreenSize {
+  static late double width;
+  static late double height;
+}
+
 class Utils {
   static WorkStatus getWorkStatus(String status) {
     switch (status) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
@@ -21,7 +22,7 @@ class SignUpPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: ScreenSize.height * 0.20,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20.h),
               child: Align(
@@ -50,7 +51,7 @@ class SignUpPage extends StatelessWidget {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.80,
+                  height: ScreenSize.height * 0.80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

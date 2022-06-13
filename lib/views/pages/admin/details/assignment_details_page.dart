@@ -24,7 +24,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.16,
+            height: ScreenSize.height * 0.16,
             child: SafeArea(
               child: Row(
                 children: [
@@ -124,7 +124,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
 
   Widget _buildFloatingActionButton(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.5,
+      width: ScreenSize.width * 0.5,
       child: CustomButton(
         AppStrings.done,
         onPressed: () => Navigator.pop(context),
@@ -135,7 +135,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
 
   List<Widget> _buildImagesGrid(BuildContext context,
       {required List<String> imagesPath, double? width, int imagesPerRow = 3}) {
-    width ??= MediaQuery.of(context).size.width * 0.25;
+    width ??= ScreenSize.width * 0.25;
     List<Widget> imagesGrid = [];
     for (int i = 0; i < imagesPath.length; i += imagesPerRow) {
       imagesGrid.add(

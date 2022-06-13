@@ -26,7 +26,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = ScreenSize.height;
     final filteredAssignments = assignments
                 .where((e) => Utils.compare2Dates(e.dueDate!, _selectedDate))
                 .toList();
@@ -171,7 +171,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
           formatButtonVisible: false,
           titleCentered: true,
           headerPadding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.1, vertical: 8.h),
+              horizontal: ScreenSize.width * 0.1, vertical: 8.h),
           leftChevronIcon: _buildIcons(Icons.chevron_left),
           rightChevronIcon: _buildIcons(Icons.chevron_right),
         ),

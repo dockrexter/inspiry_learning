@@ -86,4 +86,13 @@ class AppStrings {
 
   // Assignment Details Page
   static const String assignmentDetailsTitle = "Assignment Details";
+
+
+  static const List<String> items = [
+    'New Request',
+    'Under Review',
+    'Pending Payment',
+    'Work in Progress',
+    'Work Completed',
+  ];
 }

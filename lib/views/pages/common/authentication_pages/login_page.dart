@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
@@ -33,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: ScreenSize.height * 0.20,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20.h),
               child: Align(
@@ -62,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.80,
+                  height: ScreenSize.height * 0.80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

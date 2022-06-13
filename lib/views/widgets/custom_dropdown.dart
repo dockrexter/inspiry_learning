@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 
 class CustomDropdown<T> extends StatefulWidget {
   final Icon? icon;
@@ -104,8 +105,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         onTap: () => _toggleDropdown(close: true),
         behavior: HitTestBehavior.translucent,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: ScreenSize.height,
+          width: ScreenSize.width,
           child: Stack(
             children: [
               Positioned(
@@ -128,7 +129,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       child: ConstrainedBox(
                         constraints: widget.dropdownStyle.constraints ??
                             BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height -
+                              maxHeight: ScreenSize.height -
                                   topOffset -
                                   15,
                             ),

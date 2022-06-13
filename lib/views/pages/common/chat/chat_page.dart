@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
@@ -8,9 +9,9 @@ import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
-import 'package:inspiry_learning/views/widgets/custom_camera.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/pages/common/camera/camera_page.dart';
 import 'package:inspiry_learning/views/pages/admin/details/assignment_details_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.16,
+            height: ScreenSize.height * 0.16,
             child: SafeArea(
               child: Row(
                 children: [
@@ -186,7 +187,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
             SizedBox(height: 20.h),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
+              width: ScreenSize.width * 0.5,
               child: CustomButton(
                 AppStrings.done,
                 onPressed: () => Navigator.pop(context),
@@ -264,7 +265,7 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _openCamera() async {
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
-    AppRouter.push(context, TakePictureScreen(camera: firstCamera));
+    AppRouter.push(context, CameraPage(camera: firstCamera));
   }
 
   Future<void> _openFilePicker() async {

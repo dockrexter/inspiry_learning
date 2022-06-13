@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
@@ -28,7 +29,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.18,
+            height: ScreenSize.height * 0.18,
             child: SafeArea(
               child: Row(
                 children: [
@@ -67,7 +68,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.82,
+                  height: ScreenSize.height * 0.82,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
@@ -19,7 +20,7 @@ class UserInfoPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: ScreenSize.height * 0.20,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20.h),
               child: Align(

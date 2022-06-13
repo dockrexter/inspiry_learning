@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
@@ -19,10 +22,9 @@ class AssignmentFormSubmissionPage extends StatefulWidget {
 
 class _AssignmentFormSubmissionPageState
     extends State<AssignmentFormSubmissionPage> {
-  // ignore: unused_field
-  String _filePath = '';
   DateTime _date = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
+  final List<PlatformFile> _files = [];
   final _subjectController = TextEditingController();
   final _summaryController = TextEditingController();
 
@@ -34,7 +36,7 @@ class _AssignmentFormSubmissionPageState
         physics: const BouncingScrollPhysics(),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: ScreenSize.height,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Column(
@@ -125,7 +127,8 @@ class _AssignmentFormSubmissionPageState
                     scale: 4,
                   ),
                 ),
-                SizedBox(height: 30.h),
+                // SizedBox(height: 30.h),
+                showFiles(files: _files),
                 Padding(
                   padding: EdgeInsets.only(bottom: 4.h),
                   child: CustomButton(
@@ -203,13 +206,67 @@ class _AssignmentFormSubmissionPageState
     );
   }
 
+  Widget showFiles({
+    required List<PlatformFile> files,
+  }) {
+    return SizedBox(
+      height: 80.h,
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: files.length,
+        itemBuilder: (context, index) {
+          final file = files[index];
+          return buildFile(file);
+        },
+      ),
+    );
+  }
+
+  Widget buildFile(PlatformFile file) {
+    return Padding(
+      padding: EdgeInsets.only(right: 10.w),
+      child: CircleAvatar(
+        backgroundColor: AppColors.gray100,
+        backgroundImage: (file.extension == 'jpg' || file.extension == 'png')
+            ? FileImage(File(file.path.toString()), scale: 5.0)
+            : const AssetImage(AppAssets.imageNotFound) as ImageProvider,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 12.h,
+              right: 0,
+              child: InkWell(
+                onTap: () {
+                  _files.remove(file);
+                  setState(() {});
+                },
+                child: CircleAvatar(
+                  radius: 10.r,
+                  backgroundColor: AppColors.gray100,
+                  child: Icon(
+                    Icons.close,
+                    size: 12.w,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _openFilePicker() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png'],
+      type: FileType.any,
+      allowMultiple: true,
+      withReadStream: true,
     );
-    if (result != null) {
-      _filePath = result.files.first.path!;
+    if (result == null) return;
+    for (final file in result.files) {
+      _files.add(file);
     }
     setState(() {});
   }

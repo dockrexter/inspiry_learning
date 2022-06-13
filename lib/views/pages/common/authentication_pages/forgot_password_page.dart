@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
@@ -24,7 +25,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
+            height: ScreenSize.height * 0.35,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20.h),
               child: SafeArea(
@@ -69,7 +70,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.65,
+                  height: ScreenSize.height * 0.65,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

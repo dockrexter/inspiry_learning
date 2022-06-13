@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
@@ -23,7 +24,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: ScreenSize.height * 0.20,
             child: SafeArea(
               child: Row(
                 children: [
@@ -62,7 +63,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.80,
+                  height: ScreenSize.height * 0.80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

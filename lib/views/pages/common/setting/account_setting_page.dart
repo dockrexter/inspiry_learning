@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/subadmin/add_sub_admin_page.dart';
@@ -28,7 +29,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: ScreenSize.height * 0.20,
             child: SafeArea(
               child: Row(
                 children: [
@@ -67,7 +68,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.80,
+                  height: ScreenSize.height * 0.80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -78,7 +79,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                               AppRouter.push(context, const AddSubAdminPage()),
                           child: Container(
                             height: 48.h,
-                            width: MediaQuery.of(context).size.width * 0.6,
+                            width: ScreenSize.width * 0.6,
                             decoration: BoxDecoration(
                               color: AppColors.white,
                               border: Border.all(
