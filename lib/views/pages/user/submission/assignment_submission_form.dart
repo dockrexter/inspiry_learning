@@ -127,7 +127,7 @@ class _AssignmentFormSubmissionPageState
                     scale: 4,
                   ),
                 ),
-                // SizedBox(height: 30.h),
+                SizedBox(height: 8.h),
                 showFiles(files: _files),
                 Padding(
                   padding: EdgeInsets.only(bottom: 4.h),
@@ -217,13 +217,60 @@ class _AssignmentFormSubmissionPageState
         itemCount: files.length,
         itemBuilder: (context, index) {
           final file = files[index];
-          return buildFile(file);
+          return _buildFile(file);
         },
       ),
     );
   }
 
-  Widget buildFile(PlatformFile file) {
+  // Widget _buildFile(PlatformFile file) {
+  //   return Padding(
+  //     padding: EdgeInsets.only(right: 10.w),
+  //     child: Stack(
+  //       children: [
+  //         Container(
+  //           width: 50.w,
+  //           height: 50.h,
+  //           alignment: Alignment.center,
+  //           decoration: BoxDecoration(
+  //             color: AppColors.gray100,
+  //             borderRadius: BorderRadius.all(
+  //               Radius.circular(12.r),
+  //             ),
+  //             border: Border.all(
+  //               color: AppColors.gray800,
+  //               width: 1.w,
+  //             ),
+  //           ),
+  //           child: (file.extension == 'jpg' || file.extension == 'png')
+  //               ? Image.file(File(file.path.toString()), fit: BoxFit.contain, height: 40.h)
+  //               : Image.asset(AppAssets.imageNotFound),
+  //         ),
+  //         Positioned(
+  //           top: -2,
+  //           right: -2,
+  //           child: InkWell(
+  //             onTap: () {
+  //               _files.remove(file);
+  //               setState(() {});
+  //             },
+  //             child: CircleAvatar(
+  //               radius: 10.r,
+  //               backgroundColor: AppColors.gray100,
+  //               child: Icon(
+  //                 Icons.close,
+  //                 size: 12.w,
+  //                 color: Colors.red,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _buildFile(PlatformFile file) {
     return Padding(
       padding: EdgeInsets.only(right: 10.w),
       child: CircleAvatar(

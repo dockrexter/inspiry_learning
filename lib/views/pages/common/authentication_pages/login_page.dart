@@ -9,6 +9,7 @@ import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
@@ -23,9 +24,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool rememberMe = false;
+  bool _isLoading = false;
+  bool _rememberMe = false;
+  final _isAdmin = UserTypeHelper.isAdmin();
 
-  bool isAdmin = UserTypeHelper.isAdmin();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +51,9 @@ class _LoginPageState extends State<LoginPage> {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  isAdmin ? AppStrings.loginAsProfessional : AppStrings.loginAsUser,
+                  _isAdmin
+                      ? AppStrings.loginAsProfessional
+                      : AppStrings.loginAsUser,
                   style: AppStyle.textstyleinterbold23.copyWith(
                     color: AppColors.white,
                   ),
@@ -73,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           scale: 3,
                         ),
                       ),
-                      if (!isAdmin)
+                      if (!_isAdmin)
                         Text(
                           AppStrings.needAssignmentHelp,
                           style: AppStyle.textstylerobotoromanmedium14,
@@ -81,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                       InputTextField(
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
-                        controller: TextEditingController(),
+                        controller: _emailController,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                             RegExp(AppStrings.regexEmailValidation),
@@ -92,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: true,
                         AppStrings.enterPassword,
                         icon: const Icon(Icons.lock),
-                        controller: TextEditingController(),
+                        controller: _passwordController,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,14 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                           Row(
                             children: [
                               Checkbox(
-                                value: rememberMe,
-                                onChanged: (value) {
-                                  setState(
-                                    () {
-                                      rememberMe = value ?? false;
-                                    },
-                                  );
-                                },
+                                value: _rememberMe,
+                                onChanged: (value) => setState(
+                                    () => _rememberMe = value ?? false),
                                 activeColor: AppColors.yellow701,
                                 side: BorderSide(
                                   width: 1.5.w,
@@ -132,14 +140,18 @@ class _LoginPageState extends State<LoginPage> {
                           )
                         ],
                       ),
-                      CustomButton(
-                        AppStrings.login,
-                        onPressed: () => AppRouter.push(
-                          context,
-                          isAdmin ? const AdminHomePage() : const HomePage(),
-                        ),
-                      ),
-                      if (!isAdmin)
+                      _isLoading
+                          ? const CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.yellow701,
+                              ),
+                            )
+                          : CustomButton(
+                              AppStrings.login,
+                              onPressed: () async =>
+                                  await _loginBtnClickHandler(),
+                            ),
+                      if (!_isAdmin)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -167,5 +179,27 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _loginBtnClickHandler() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+    if (_emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _passwordController.text.length < 6) {
+      setState(() => _isLoading = false);
+      return;
+    }
+    final user = await UserRepository().login(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    setState(() => _isLoading = false);
+    if (user != null) {
+      AppRouter.push(
+        context,
+        _isAdmin ? const AdminHomePage() : const HomePage(),
+      );
+    }
   }
 }

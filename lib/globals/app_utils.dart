@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 
 enum WorkStatus {
@@ -35,6 +36,14 @@ class Utils {
       case WorkStatus.pendingPayment:
         return "Pending Payment";
     }
+  }
+
+  static showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      fontSize: 16.0,
+      toastLength: Toast.LENGTH_SHORT,
+    );
   }
 
   static bool compare2Dates(DateTime date1, DateTime date2) {

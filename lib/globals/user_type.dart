@@ -1,3 +1,5 @@
+import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
+
 enum UserType{
   user,
   admin,
@@ -14,12 +16,14 @@ class UserTypeHelper{
     userType = type;
   }
 
-  static void continueAsUser(){
+  static void continueAsUser({bool save_ = true}){
     setUserType(UserType.user);
+    if (save_) save();
   }
 
-  static void continueAsAdmin() {
+  static void continueAsAdmin({bool save_ = true}) {
     setUserType(UserType.admin);
+    if (save_) save();
   }
 
   static bool isUser(){
@@ -28,6 +32,23 @@ class UserTypeHelper{
 
   static bool isAdmin(){
     return userType == UserType.admin;
+  }
+
+  static bool initUserType(){
+    final isAdmin = SharedPreferencesManager.instance.getIsAdmin();
+    if(isAdmin == null){
+      return false;
+    }
+    if(isAdmin){
+      continueAsAdmin(save_: false);
+      return true;
+    }
+    continueAsUser(save_: false);
+    return true;
+  }
+
+  static Future<bool> save() async {
+    return await SharedPreferencesManager.instance.setIsAdmin(isAdmin());
   }
 
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspiry_learning/models/user_model.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
@@ -8,12 +9,37 @@ import 'package:inspiry_learning/globals/app_assets.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
-import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
+import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/login_page.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  bool _isLoading = false;
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _lastNameController.dispose();
+    _firstNameController.dispose();
+    _phoneNumberController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +94,7 @@ class SignUpPage extends StatelessWidget {
                       InputTextField(
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
-                        controller: TextEditingController(),
+                        controller: _emailController,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                             RegExp(AppStrings.regexEmailValidation),
@@ -78,36 +104,40 @@ class SignUpPage extends StatelessWidget {
                       InputTextField(
                         AppStrings.firstName,
                         icon: const Icon(Icons.person),
-                        controller: TextEditingController(),
+                        controller: _firstNameController,
                       ),
                       InputTextField(
                         AppStrings.lastName,
                         icon: const Icon(Icons.person),
-                        controller: TextEditingController(),
+                        controller: _lastNameController,
                       ),
                       InputTextField(
                         AppStrings.phoneNumber,
                         icon: const Icon(Icons.phone),
-                        controller: TextEditingController(),
+                        controller: _phoneNumberController,
                       ),
                       InputTextField(
                         obscureText: true,
                         AppStrings.password,
                         icon: const Icon(Icons.lock),
-                        controller: TextEditingController(),
+                        controller: _passwordController,
                       ),
                       InputTextField(
+                        obscureText: true,
                         AppStrings.confirmPassword,
                         icon: const Icon(Icons.lock),
-                        controller: TextEditingController(),
+                        controller: _confirmPasswordController,
                       ),
-                      CustomButton(
-                        AppStrings.signUp,
-                        onPressed: () => AppRouter.push(
-                          context,
-                          const HomePage(),
-                        ),
-                      ),
+                      _isLoading
+                          ? const CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.yellow701,
+                              ),
+                            )
+                          : CustomButton(
+                              AppStrings.signUp,
+                              onPressed: () async => await _signUpBtnClickHandler(),
+                            ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -135,5 +165,58 @@ class SignUpPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool _checkIsAnyFieldIsEmpty(){
+    return _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        _firstNameController.text.isEmpty ||
+        _phoneNumberController.text.isEmpty ||
+        _confirmPasswordController.text.isEmpty;
+  }
+
+  bool _checkPasswordMatch(){
+    return _passwordController.text == _confirmPasswordController.text;
+  }
+
+  void _emptyAllFields(){
+    _emailController.clear();
+    _passwordController.clear();
+    _lastNameController.clear();
+    _firstNameController.clear();
+    _phoneNumberController.clear();
+    _confirmPasswordController.clear();
+  }
+
+  Future<void> _signUpBtnClickHandler() async {
+    if (_isLoading) return;
+    if (_passwordController.text.length < 6) {
+      Utils.showToast(AppStrings.passwordmustbe6characters);
+      return;
+    }
+    if (!_checkPasswordMatch()) {
+      Utils.showToast(AppStrings.passworddoesnotmatch);
+      return;
+    }
+    if (_checkIsAnyFieldIsEmpty()) {
+      Utils.showToast(AppStrings.allfieldsarerequired);
+      return;
+    }
+    setState(() => _isLoading = true);
+    final status = await UserRepository().signUp(
+      user: User(
+        email: _emailController.text,
+        password: _passwordController.text,
+        lastname: _lastNameController.text,
+        phone: _phoneNumberController.text,
+        firstname: _firstNameController.text,
+      ),
+    );
+    setState(() => _isLoading = false);
+    if (status) {
+      _emptyAllFields();
+      AppRouter.makeFirst(context, const LoginPage());
+    }
   }
 }

@@ -54,6 +54,11 @@ class UserInfoPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 50.h),
+                  Text(
+                    AppStrings.needAssignmentHelp,
+                    style: AppStyle.textstylerobotoromanmedium14,
+                  ),
+                  SizedBox(height: 50.h),
                   CustomButton(
                     AppStrings.continueAsUser,
                     onPressed: () {
