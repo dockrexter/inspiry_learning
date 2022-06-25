@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 
@@ -55,7 +56,7 @@ class Utils {
   static List<DateTime> getAssignmentDueDates(List<Assignment> assignments) {
     final dueDates = <DateTime>[];
     for (final assignment in assignments) {
-      dueDates.add(assignment.dueDate!);
+      dueDates.add(assignment.deadline!);
     }
     return dueDates;
   }
@@ -80,78 +81,97 @@ class Utils {
     return -1;
   }
 
+  static bool checkIsAnyFieldIsEmpty({required List<TextEditingController> controllers}) {
+    for (final controller in controllers) {
+      if (controller.text.isEmpty) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static bool isPasswordMatched({required List<TextEditingController> controllers}) {
+    return controllers[0].text == controllers[1].text;
+  }
+
+  static void clearAllFields({required List<TextEditingController> controllers}){
+    for (final controller in controllers) {
+      controller.clear();
+    }
+  }
+
   static List<Assignment> getAssignments() {
     final random = Random();
     return [
       Assignment(
         id: 1,
-        dueDate: DateTime.parse("2022-06-10"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "History of Graphic Design",
+        deadline: DateTime.parse("2022-06-10"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "History of Graphic Design",
       ),
       Assignment(
         id: 2,
-        dueDate: DateTime.parse("2022-06-10"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "Art and Culture",
-        workStatus: WorkStatus.compleated,
+        deadline: DateTime.parse("2022-06-10"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "Art and Culture",
+        status: WorkStatus.compleated,
       ),
       Assignment(
         id: 3,
-        dueDate: DateTime.parse("2022-06-10"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "Information Design",
+        deadline: DateTime.parse("2022-06-10"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "Information Design",
       ),
       Assignment(
         id: 4,
-        dueDate: DateTime.parse("2022-06-10"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "Food Sciences",
-        workStatus: WorkStatus.pendingPayment,
+        deadline: DateTime.parse("2022-06-10"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "Food Sciences",
+        status: WorkStatus.pendingPayment,
       ),
       Assignment(
         id: 5,
-        dueDate: DateTime.parse("2022-06-10"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "Infrastructure Studies",
-        workStatus: WorkStatus.pendingPayment,
+        deadline: DateTime.parse("2022-06-10"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "Infrastructure Studies",
+        status: WorkStatus.pendingPayment,
       ),
       // Duplicated assignment
       Assignment(
         id: 101,
-        dueDate: DateTime.parse("2022-07-05"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "Food Sciences",
-        workStatus: WorkStatus.compleated,
+        deadline: DateTime.parse("2022-07-05"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "Food Sciences",
+        status: WorkStatus.compleated,
       ),
       Assignment(
         id: 102,
-        dueDate: DateTime.parse("2022-08-12"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "Infrastructure Studies",
-        workStatus: WorkStatus.pendingPayment,
+        deadline: DateTime.parse("2022-08-12"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "Infrastructure Studies",
+        status: WorkStatus.pendingPayment,
       ),
       Assignment(
         id: 103,
-        dueDate: DateTime.parse("2022-06-08"),
-        startDate: DateTime.parse("2022-06-02"),
-        title: "Art and Culture",
-        workStatus: WorkStatus.pendingPayment,
+        deadline: DateTime.parse("2022-06-08"),
+        createdDate: DateTime.parse("2022-06-02"),
+        subject: "Art and Culture",
+        status: WorkStatus.pendingPayment,
       ),
       for (int i = 6; i < 101; i++)
         Assignment(
           id: i,
-          dueDate: DateTime.parse(
+          deadline: DateTime.parse(
               "2022-06-${["10", "12", "13", "23", "30"][random.nextInt(5)]}"),
-          startDate: DateTime.parse("2022-06-02"),
-          title: [
+          createdDate: DateTime.parse("2022-06-02"),
+          subject: [
             "History of Graphic Design",
             "Art and Culture",
             "Information Design",
             "Food Sciences",
             "Infrastructure Studies"
           ][random.nextInt(5)],
-          workStatus: WorkStatus.values[random.nextInt(3)],
+          status: WorkStatus.values[random.nextInt(3)],
         ),
     ];
   }

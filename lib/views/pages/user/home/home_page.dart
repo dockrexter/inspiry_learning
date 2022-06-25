@@ -26,8 +26,7 @@ class _HomePageState extends State<HomePage> {
             child: SizedBox(
               height: ScreenSize.height * 0.1,
               child: Padding(
-                padding:
-                    EdgeInsets.only(top: 20.h, left: 22.w, right: 22.w),
+                padding: EdgeInsets.only(top: 20.h, left: 22.w, right: 22.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -86,7 +85,10 @@ class _HomePageState extends State<HomePage> {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) => CustomCard(
                 assignment: assignments[index],
-                onPressed: () => AppRouter.push(context, const ChatPage()),
+                onPressed: () => AppRouter.push(
+                  context,
+                  ChatPage(assignment: assignments[index]),
+                ),
               ),
             ),
           ),

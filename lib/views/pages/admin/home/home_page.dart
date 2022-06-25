@@ -23,8 +23,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
   Widget build(BuildContext context) {
     final height = ScreenSize.height;
     final filteredAssignments = assignments
-                .where((e) => Utils.compare2Dates(e.dueDate!, _selectedDate))
-                .toList();
+        .where((e) => Utils.compare2Dates(e.deadline!, _selectedDate))
+        .toList();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Column(
@@ -111,12 +111,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
         onSelected: (String status) {
           assignments[Utils.findIndexByID(
                   assignments, filteredAssignments[index].id)]
-              .workStatus = Utils.getWorkStatus(status);
-          setState(
-            () {},
-          );
+              .status = Utils.getWorkStatus(status);
+          setState(() {});
         },
-        onPressed: () => AppRouter.push(context, const ChatPage()),
+        onPressed: () => AppRouter.push(
+          context,
+          ChatPage(assignment: filteredAssignments[index]),
+        ),
       ),
     );
   }
@@ -176,7 +177,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
           weekdayStyle: AppStyle.textstylepoppinsbold14,
           weekendStyle: AppStyle.textstylepoppinsbold14,
         ),
-        
         onDaySelected: (dt, _) => setState(() => _selectedDate = dt),
         holidayPredicate: (dt) => Utils.selectedDates(assignments, dt),
         selectedDayPredicate: (dt) => Utils.compare2Dates(dt, _selectedDate),
@@ -184,7 +184,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  Widget _buildIcons(IconData icon){
+  Widget _buildIcons(IconData icon) {
     return Container(
       width: 20.w,
       height: 20.h,

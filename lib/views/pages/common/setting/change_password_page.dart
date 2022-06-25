@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -12,6 +13,19 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  bool _isLoading = false;
+  final _oldPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _oldPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,28 +88,35 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             obscureText: true,
                             AppStrings.currentPassword,
                             icon: const Icon(Icons.lock),
-                            controller: TextEditingController(),
+                            controller: _oldPasswordController,
                           ),
                           SizedBox(height: 12.h),
                           InputTextField(
                             obscureText: true,
                             AppStrings.newPassword,
                             icon: const Icon(Icons.lock),
-                            controller: TextEditingController(),
+                            controller: _newPasswordController,
                           ),
                           SizedBox(height: 12.h),
                           InputTextField(
                             obscureText: true,
                             AppStrings.confirmNewPassword,
                             icon: const Icon(Icons.lock),
-                            controller: TextEditingController(),
+                            controller: _confirmPasswordController,
                           ),
                         ],
                       ),
-                      CustomButton(
-                        AppStrings.done,
-                        onPressed: () {},
-                      ),
+                      _isLoading
+                          ? const CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.yellow701,
+                              ),
+                            )
+                          : CustomButton(
+                              AppStrings.done,
+                              onPressed: () async =>
+                                  await _changePasswordBtnClickHandler(),
+                            ),
                     ],
                   ),
                 ),
@@ -105,5 +126,38 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         ],
       ),
     );
+  }
+
+  dynamic getControllers() => [
+        _oldPasswordController,
+        _newPasswordController,
+        _confirmPasswordController,
+      ];
+
+  Future<void> _changePasswordBtnClickHandler() async {
+    if (_isLoading) return;
+    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      Utils.showToast(AppStrings.allfieldsarerequired);
+      return;
+    }
+    if (!Utils.isPasswordMatched(
+        controllers: [_newPasswordController, _confirmPasswordController])) {
+      Utils.showToast(AppStrings.passworddoesnotmatch);
+      return;
+    }
+    if (_newPasswordController.text.length < 6) {
+      Utils.showToast(AppStrings.passwordmustbe6characters);
+      return;
+    }
+    setState(() => _isLoading = true);
+    final status = await UserRepository().changePassword(
+      oldPassword: _oldPasswordController.text,
+      newPassword: _newPasswordController.text,
+    );
+    setState(() => _isLoading = false);
+    if (status) {
+      Utils.clearAllFields(controllers: getControllers());
+      // AppRouter.makeFirst(context, const HomePage());
+    }
   }
 }

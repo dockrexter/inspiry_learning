@@ -132,7 +132,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             )
                           : CustomButton(
                               AppStrings.signUp,
-                              onPressed: () async => await _signUpBtnClickHandler(),
+                              onPressed: () async =>
+                                  await _signUpBtnClickHandler(),
                             ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -163,40 +164,28 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  bool _checkIsAnyFieldIsEmpty(){
-    return _emailController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _lastNameController.text.isEmpty ||
-        _firstNameController.text.isEmpty ||
-        _phoneNumberController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty;
-  }
-
-  bool _checkPasswordMatch(){
-    return _passwordController.text == _confirmPasswordController.text;
-  }
-
-  void _emptyAllFields(){
-    _emailController.clear();
-    _passwordController.clear();
-    _lastNameController.clear();
-    _firstNameController.clear();
-    _phoneNumberController.clear();
-    _confirmPasswordController.clear();
-  }
+  dynamic getControllers() => [
+        _emailController,
+        _passwordController,
+        _lastNameController,
+        _firstNameController,
+        _phoneNumberController,
+        _confirmPasswordController,
+      ];
 
   Future<void> _signUpBtnClickHandler() async {
     if (_isLoading) return;
-    if (_passwordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordmustbe6characters);
+    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      Utils.showToast(AppStrings.allfieldsarerequired);
       return;
     }
-    if (!_checkPasswordMatch()) {
+    if (!Utils.isPasswordMatched(
+        controllers: [_passwordController, _confirmPasswordController])) {
       Utils.showToast(AppStrings.passworddoesnotmatch);
       return;
     }
-    if (_checkIsAnyFieldIsEmpty()) {
-      Utils.showToast(AppStrings.allfieldsarerequired);
+    if (_passwordController.text.length < 6) {
+      Utils.showToast(AppStrings.passwordmustbe6characters);
       return;
     }
     setState(() => _isLoading = true);
@@ -211,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
     setState(() => _isLoading = false);
     if (user != null) {
-      _emptyAllFields();
+      Utils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(context, const HomePage());
     }
   }

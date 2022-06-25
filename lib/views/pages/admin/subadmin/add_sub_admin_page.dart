@@ -164,26 +164,20 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
     );
   }
 
-  bool _checkIsAnyFieldIsEmpty() {
-    return _emailController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _fullNameController.text.isEmpty;
-  }
-
-  void _emptyAllFields() {
-    _emailController.clear();
-    _passwordController.clear();
-    _fullNameController.clear();
-  }
+  dynamic getControllers() => [
+    _emailController,
+    _passwordController,
+    _fullNameController,
+  ];
 
   Future<void> _registerBtnClickHandler() async {
     if (_isLoading) return;
-    if (_passwordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordmustbe6characters);
+    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      Utils.showToast(AppStrings.allfieldsarerequired);
       return;
     }
-    if (_checkIsAnyFieldIsEmpty()) {
-      Utils.showToast(AppStrings.allfieldsarerequired);
+    if (_passwordController.text.length < 6) {
+      Utils.showToast(AppStrings.passwordmustbe6characters);
       return;
     }
     setState(() => _isLoading = true);
@@ -196,7 +190,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
     );
     setState(() => _isLoading = false);
     if (user != null) {
-      _emptyAllFields();
+      Utils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(context, const AdminHomePage());
     }
   }

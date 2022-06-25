@@ -41,7 +41,7 @@ class CustomCard extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  Utils.convertDateToString(assignment.dueDate!),
+                  Utils.convertDateToString(assignment.deadline!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
@@ -51,7 +51,7 @@ class CustomCard extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  Utils.convertDateToString(assignment.startDate!),
+                  Utils.convertDateToString(assignment.createdDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
               ],
@@ -68,7 +68,7 @@ class CustomCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    assignment.title!,
+                    assignment.subject!,
                     style: AppStyle.textstylepoppinssemibold14,
                   ),
                   SizedBox(
@@ -77,16 +77,16 @@ class CustomCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          Utils.getStatus(assignment.workStatus),
+                          Utils.getStatus(assignment.status),
                           style: AppStyle.textstylepoppinsmedium10,
                         ),
                         Icon(
-                          assignment.workStatus == WorkStatus.compleated
+                          assignment.status == WorkStatus.compleated
                               ? Icons.check_circle
                               : Icons.circle_outlined,
                           color: AppColors.teal400,
                         ),
-                        if (assignment.workStatus == WorkStatus.compleated)
+                        if (assignment.status == WorkStatus.compleated)
                           GestureDetector(
                             onTap: () {},
                             child: Image.asset(
@@ -149,7 +149,7 @@ class CustomCard2 extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  Utils.convertDateToString(assignment.dueDate!),
+                  Utils.convertDateToString(assignment.deadline!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
@@ -192,11 +192,11 @@ class CustomCard2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          assignment.title!,
+                          assignment.subject!,
                           style: AppStyle.textstylepoppinssemibold14,
                         ),
                         Icon(
-                          assignment.workStatus == WorkStatus.compleated
+                          assignment.status == WorkStatus.compleated
                               ? Icons.check_circle
                               : Icons.circle_outlined,
                           color: AppColors.teal400,
@@ -210,7 +210,7 @@ class CustomCard2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          Utils.getStatus(assignment.workStatus),
+                          Utils.getStatus(assignment.status),
                           style: AppStyle.textstylepoppinsmedium10,
                         ),
                         CustomDropdown(

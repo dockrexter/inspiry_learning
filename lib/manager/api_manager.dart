@@ -14,16 +14,16 @@ class APIManager {
 
   late Dio _dio;
 
-  Future<dynamic> get(String endPoint) async {
+  Future<dynamic> get(String endPoint, {Map<String, dynamic>? params}) async {
     dynamic responseJson;
     try {
-      final response = await _dio.get(endPoint);
+      final response = await _dio.get(endPoint, queryParameters: params);
       responseJson = response.data;
     }  on DioError catch(_){}
     return responseJson;
   }
 
-  Future<dynamic> post(String endPoint, dynamic data) async {
+  Future<dynamic> post(String endPoint, {dynamic data}) async {
     dynamic responseJson;
     try {
       final response = await _dio.post(endPoint, data: data);
@@ -32,7 +32,7 @@ class APIManager {
     return responseJson;
   }
 
-  Future<dynamic> put(String endPoint, dynamic data) async {
+  Future<dynamic> put(String endPoint, {dynamic data}) async {
     dynamic responseJson;
     try {
       final response = await _dio.put(endPoint, data: data);

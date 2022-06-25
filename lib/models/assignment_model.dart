@@ -2,35 +2,40 @@ import 'package:inspiry_learning/globals/app_utils.dart';
 
 class Assignment {
   int id;
-  String? title;
-  WorkStatus workStatus;
-  DateTime? startDate, dueDate;
+  WorkStatus status;
+  String? subject, summary;
+  List<List<int>>? attachments;
+  DateTime? createdDate, deadline;
 
   Assignment({
     required this.id,
-    this.title,
-    this.dueDate,
-    this.startDate,
-    this.workStatus = WorkStatus.inProgress,
+    this.subject,
+    this.summary,
+    this.deadline,
+    this.createdDate,
+    this.status = WorkStatus.inProgress,
   });
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
     return Assignment(
       id: json['id'] as int,
-      title: json['title'] as String?,
-      dueDate: DateTime.parse(json['dueDate']),
-      startDate: DateTime.parse(json['startDate']),
-      workStatus: WorkStatus.values[json['workStatus']],
+      subject: json['subject'] as String?,
+      summary: json['summary'] as String?,
+      status: WorkStatus.values[json['status']],
+      deadline: DateTime.parse(json['deadline']),
+      createdDate: DateTime.parse(json['created_date']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'title': title,
-      'workStatus': workStatus.index,
-      'dueDate': dueDate!.millisecondsSinceEpoch,
-      'startDate': startDate!.millisecondsSinceEpoch,
+      'subject': subject,
+      'summary': summary,
+      'status': status.index,
+      'attachments': attachments,
+      'deadline': deadline!.millisecondsSinceEpoch,
+      'created_date': createdDate!.millisecondsSinceEpoch,
     };
   }
 }

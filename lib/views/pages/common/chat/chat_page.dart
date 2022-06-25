@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
@@ -10,7 +11,9 @@ import 'package:inspiry_learning/views/pages/common/camera/camera_page.dart';
 import 'package:inspiry_learning/views/pages/admin/details/assignment_details_page.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+  const ChatPage({Key? key, required this.assignment}) : super(key: key);
+
+  final Assignment assignment;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -81,7 +84,10 @@ class _ChatPageState extends State<ChatPage> {
                         children: [
                           InkWell(
                             onTap: () => AppRouter.push(
-                                context, const AssignmentDetailsPage()),
+                              context,
+                              AssignmentDetailsPage(
+                                  assignment: widget.assignment),
+                            ),
                             child: Text(
                               AppStrings.assignmentDetails,
                               textAlign: TextAlign.center,

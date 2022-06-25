@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
-  const AssignmentDetailsPage({Key? key}) : super(key: key);
+  const AssignmentDetailsPage({Key? key, required this.assignment}) : super(key: key);
+
+  final Assignment assignment;
 
   @override
   State<AssignmentDetailsPage> createState() => _AssignmentDetailsPageState();
 }
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +71,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomCard2(
-                        assignment: Utils.getAssignments()[0],
+                        assignment: widget.assignment,
                         onSelected: (_) {}),
                     SizedBox(height: 20.h),
                     Padding(
@@ -83,7 +87,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            'I need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment i need proper assignment according to my requirements which i have added bellow in aattched document.What type of requirements from me you need in this assignment',
+                            widget.assignment.summary ?? '',
                             style: AppStyle.textstylepoppinsregular10,
                           ),
                           SizedBox(height: 16.h),

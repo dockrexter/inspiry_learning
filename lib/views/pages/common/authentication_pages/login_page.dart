@@ -175,21 +175,29 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  dynamic getControllers() => [
+        _emailController,
+        _passwordController,
+      ];
+
   Future<void> _loginBtnClickHandler() async {
     if (_isLoading) return;
-    setState(() => _isLoading = true);
-    if (_emailController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _passwordController.text.length < 6) {
-      setState(() => _isLoading = false);
+    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      Utils.showToast(AppStrings.allfieldsarerequired);
       return;
     }
+    if (_passwordController.text.length < 6) {
+      Utils.showToast(AppStrings.passwordmustbe6characters);
+      return;
+    }
+    setState(() => _isLoading = true);
     final user = await UserRepository().login(
       email: _emailController.text,
       password: _passwordController.text,
     );
     setState(() => _isLoading = false);
     if (user != null) {
+      Utils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(
         context,
         _isAdmin ? const AdminHomePage() : const HomePage(),

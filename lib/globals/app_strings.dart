@@ -91,6 +91,8 @@ class AppStrings {
   // Toast Messages
   static const String allfieldsarerequired = "all fields are required";
   static const String passworddoesnotmatch = "password does not match";
+  static const String somethingWentWrong = "something went wrong";
+  static const String userNameOrPasswordIncorrect= "user name or password is incorrect";
   static const String passwordmustbe6characters = "password must be at least 6 characters";
 
 
