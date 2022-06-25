@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/app_style.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_router.dart';
-import 'package:inspiry_learning/globals/app_assets.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
-import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
+import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/forgot_password_page.dart';
 
 class AddSubAdminPage extends StatefulWidget {
@@ -21,6 +18,19 @@ class AddSubAdminPage extends StatefulWidget {
 
 class _AddSubAdminPageState extends State<AddSubAdminPage> {
   bool rememberMe = false;
+  bool _isLoading = false;
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _fullNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _fullNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +91,12 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                       InputTextField(
                         AppStrings.fullName,
                         icon: const Icon(Icons.person),
-                        controller: TextEditingController(),
+                        controller: _fullNameController,
                       ),
                       InputTextField(
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
-                        controller: TextEditingController(),
+                        controller: _emailController,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                             RegExp(AppStrings.regexEmailValidation),
@@ -97,7 +107,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                         obscureText: true,
                         AppStrings.enterPassword,
                         icon: const Icon(Icons.lock),
-                        controller: TextEditingController(),
+                        controller: _passwordController,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,13 +116,8 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                             children: [
                               Checkbox(
                                 value: rememberMe,
-                                onChanged: (value) {
-                                  setState(
-                                    () {
-                                      rememberMe = value ?? false;
-                                    },
-                                  );
-                                },
+                                onChanged: (value) =>
+                                    setState(() => rememberMe = value ?? false),
                                 activeColor: AppColors.yellow701,
                                 side: BorderSide(
                                   width: 1.5.w,
@@ -137,13 +142,17 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                           )
                         ],
                       ),
-                      CustomButton(
-                        AppStrings.registerSubAdmin,
-                        onPressed: () => AppRouter.push(
-                          context,
-                          const HomePage(),
-                        ),
-                      ),
+                      _isLoading
+                          ? const CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.yellow701,
+                              ),
+                            )
+                          : CustomButton(
+                              AppStrings.registerSubAdmin,
+                              onPressed: () async =>
+                                  await _registerBtnClickHandler(),
+                            ),
                     ],
                   ),
                 ),
@@ -153,5 +162,42 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
         ],
       ),
     );
+  }
+
+  bool _checkIsAnyFieldIsEmpty() {
+    return _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _fullNameController.text.isEmpty;
+  }
+
+  void _emptyAllFields() {
+    _emailController.clear();
+    _passwordController.clear();
+    _fullNameController.clear();
+  }
+
+  Future<void> _registerBtnClickHandler() async {
+    if (_isLoading) return;
+    if (_passwordController.text.length < 6) {
+      Utils.showToast(AppStrings.passwordmustbe6characters);
+      return;
+    }
+    if (_checkIsAnyFieldIsEmpty()) {
+      Utils.showToast(AppStrings.allfieldsarerequired);
+      return;
+    }
+    setState(() => _isLoading = true);
+    final user = await UserRepository().signUp(
+      user: User(
+        email: _emailController.text,
+        password: _passwordController.text,
+        firstname: _fullNameController.text,
+      ),
+    );
+    setState(() => _isLoading = false);
+    if (user != null) {
+      _emptyAllFields();
+      AppRouter.makeFirst(context, const AdminHomePage());
+    }
   }
 }

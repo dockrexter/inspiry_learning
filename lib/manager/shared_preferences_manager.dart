@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesManager {

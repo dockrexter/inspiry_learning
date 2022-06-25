@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/app_style.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/user_type.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_router.dart';
-import 'package:inspiry_learning/globals/app_assets.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/subadmin/add_sub_admin_page.dart';

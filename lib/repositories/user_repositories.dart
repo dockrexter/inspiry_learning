@@ -32,14 +32,18 @@ class UserRepository {
     return null;
   }
 
-  Future<bool> signUp({required User user}) async {
+  Future<User?> signUp({required User user}) async {
     final response =
         await _apiManager.post(APIEndPoint.signup, user.toJson());
-    if (response != null || response.status != 200) {
+    if (response != null) {
+      if (response['status'] == 'ok') {
+        return User.fromJson(response['user']);
+      }
       Utils.showToast('something went wrong');
-      return false;
+      return null;
     }
-    return true;
+    Utils.showToast('something went wrong');
+    return null;
   }
 
   // Future<bool> deleteUser({required int id}) async {

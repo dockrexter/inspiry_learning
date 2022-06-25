@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspiry_learning/models/user_model.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/app_style.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_router.dart';
-import 'package:inspiry_learning/globals/app_assets.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/login_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -204,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
     setState(() => _isLoading = true);
-    final status = await UserRepository().signUp(
+    final user = await UserRepository().signUp(
       user: User(
         email: _emailController.text,
         password: _passwordController.text,
@@ -214,9 +210,9 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
     setState(() => _isLoading = false);
-    if (status) {
+    if (user != null) {
       _emptyAllFields();
-      AppRouter.makeFirst(context, const LoginPage());
+      AppRouter.makeFirst(context, const HomePage());
     }
   }
 }

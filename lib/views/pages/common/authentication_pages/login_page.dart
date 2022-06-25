@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/user_type.dart';
-import 'package:inspiry_learning/globals/app_style.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_router.dart';
-import 'package:inspiry_learning/globals/app_assets.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
@@ -196,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
     );
     setState(() => _isLoading = false);
     if (user != null) {
-      AppRouter.push(
+      AppRouter.makeFirst(
         context,
         _isAdmin ? const AdminHomePage() : const HomePage(),
       );

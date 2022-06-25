@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/user_type.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/login_page.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  SharedPreferencesManager.instance.initPrefrences();
+  await SharedPreferencesManager.instance.initPrefrences();
   runApp(
     ScreenUtilInit(
       builder: (context, _) => const MyApp(),
