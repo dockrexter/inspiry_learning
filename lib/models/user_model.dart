@@ -1,6 +1,8 @@
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
 
 class User {
+  int? userId;
   String? username;
   String? password;
   String? firstname;
@@ -10,6 +12,7 @@ class User {
   String? token;
 
   User({
+    this.userId,
     this.username,
     this.password,
     this.firstname,
@@ -20,8 +23,8 @@ class User {
   });
 
   User.fromJson(Map<String, dynamic> json) {
+    userId = json['user_id'] as int?;
     username = json['username'];
-    password = json['password'];
     firstname = json['firstname'];
     lastname = json['lastname'];
     email = json['email'];
@@ -41,6 +44,9 @@ class User {
   }
 
   Future<bool> save() async {
-    return await SharedPreferencesManager.instance.saveToken(token ?? '');
+    ActiveUser.token = token;
+    ActiveUser.userId = userId;
+    await SharedPreferencesManager.instance.saveToken(token ?? '');
+    return await SharedPreferencesManager.instance.saveUserId(userId ?? -1);
   }
 }

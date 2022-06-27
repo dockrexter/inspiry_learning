@@ -3,7 +3,8 @@ class AppStrings {
   static const String appTitle = "Inspiry Learning";
 
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
-  static const String baseUrl = "https://inspiry-learning-backend.herokuapp.com";
+  // static const String baseUrl = "https://inspiry-learning-backend.herokuapp.com";
+  static const String baseUrl = "http://192.168.100.180:5000";
 
   // Login Page
   static const String login = "Login";
@@ -89,9 +90,11 @@ class AppStrings {
   static const String assignmentDetailsTitle = "Assignment Details";
 
   // Toast Messages
+  static const String subjectRequired = "subject is required";
+  static const String somethingWentWrong = "something went wrong";
   static const String allfieldsarerequired = "all fields are required";
   static const String passworddoesnotmatch = "password does not match";
-  static const String somethingWentWrong = "something went wrong";
+  static const String passwordchangedsuccessfully = "password changed successfully";
   static const String userNameOrPasswordIncorrect= "user name or password is incorrect";
   static const String passwordmustbe6characters = "password must be at least 6 characters";
 

@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
+import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({Key? key}) : super(key: key);
@@ -149,15 +151,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       Utils.showToast(AppStrings.passwordmustbe6characters);
       return;
     }
+    if (ActiveUser.userId == null) {
+      Utils.showToast(AppStrings.somethingWentWrong);
+      return;
+    }
     setState(() => _isLoading = true);
     final status = await UserRepository().changePassword(
+      userId: ActiveUser.userId!,
       oldPassword: _oldPasswordController.text,
       newPassword: _newPasswordController.text,
     );
     setState(() => _isLoading = false);
     if (status) {
+      Utils.showToast(AppStrings.passwordchangedsuccessfully);
       Utils.clearAllFields(controllers: getControllers());
-      // AppRouter.makeFirst(context, const HomePage());
+      AppRouter.makeFirst(context,
+          UserTypeHelper.isAdmin() ? const AdminHomePage() : const HomePage());
     }
   }
 }

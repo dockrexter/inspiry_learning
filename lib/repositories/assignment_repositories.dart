@@ -6,7 +6,8 @@ import 'package:inspiry_learning/models/assignment_model.dart';
 class AssignmentRepository {
   late APIManager _apiManager;
 
-  static final AssignmentRepository _assignmentRepository = AssignmentRepository._internal();
+  static final AssignmentRepository _assignmentRepository =
+      AssignmentRepository._internal();
 
   factory AssignmentRepository() {
     return _assignmentRepository;
@@ -16,15 +17,15 @@ class AssignmentRepository {
     _apiManager = APIManager();
   }
 
-  Future<List<Assignment>> getAssignments(String userId) async {
+  Future<dynamic> getAssignments(int userId) async {
     final response = await _apiManager.get(
       ApiEndpoints.getAssignments,
       params: {
         'user_id': userId,
       },
     );
-    if (response.statusCode == 200) {
-      final assignments = (response.data as List)
+    if (response != null) {
+      final assignments = response
           .map((assignment) => Assignment.fromJson(assignment))
           .toList();
       return assignments;
@@ -33,16 +34,16 @@ class AssignmentRepository {
     }
   }
 
-  Future<Assignment> createAssignment(Assignment assignment) async {
+  Future<bool> createAssignment(Assignment assignment) async {
     final response = await _apiManager.post(
       ApiEndpoints.createAssignment,
       data: assignment.toJson(),
     );
-    if (response.statusCode == 200) {
-      final assignment = Assignment.fromJson(response.data);
-      return assignment;
-    } else {
-      throw Exception(AppStrings.somethingWentWrong);
-    }
+    return (response == 'insertion sucess');
+    // if (response != null) {
+    //   return Assignment.fromJson(response.data);
+    // } else {
+    //   throw Exception(AppStrings.somethingWentWrong);
+    // }
   }
 }

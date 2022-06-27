@@ -6,6 +6,8 @@ import 'package:inspiry_learning/models/assignment_model.dart';
 enum WorkStatus {
   compleated,
   inProgress,
+  newRequest,
+  underReview,
   pendingPayment,
 }
 
@@ -14,14 +16,23 @@ class ScreenSize {
   static late double height;
 }
 
+class ActiveUser {
+  static int? userId = 58;
+  static String? token;
+}
+
 class Utils {
   static WorkStatus getWorkStatus(String status) {
     switch (status) {
-      case 'Work Completed':
+      case "Work Completed":
         return WorkStatus.compleated;
-      case 'Work in Progress':
+      case "Work in Progress":
         return WorkStatus.inProgress;
-      case 'Pending Payment':
+      case "New Request":
+        return WorkStatus.newRequest;
+      case "Under Review":
+        return WorkStatus.underReview;
+      case "Pending Payment":
         return WorkStatus.pendingPayment;
       default:
         return WorkStatus.inProgress;
@@ -34,6 +45,10 @@ class Utils {
         return "Work Completed";
       case WorkStatus.inProgress:
         return "Work in progress";
+      case WorkStatus.newRequest:
+        return "New Request";
+      case WorkStatus.underReview:
+        return "Under Review";
       case WorkStatus.pendingPayment:
         return "Pending Payment";
     }

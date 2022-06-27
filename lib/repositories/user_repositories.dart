@@ -47,8 +47,12 @@ class UserRepository {
     return null;
   }
 
-  Future<bool> changePassword({required String oldPassword, required String newPassword}) async {
-    final response = await _apiManager.put(ApiEndpoints.changePassword, data: {
+  Future<bool> changePassword(
+      {required int userId,
+      required String oldPassword,
+      required String newPassword}) async {
+    final response = await _apiManager.post(ApiEndpoints.changePassword, data: {
+      'user_id': 58,
       'currentPassword': oldPassword,
       'changePassword': newPassword,
       'confirmPassword': newPassword,
@@ -56,11 +60,14 @@ class UserRepository {
     if (response != null) {
       if (response['status'] == 'ok') {
         return true;
+      } else if (response['status'] == 'error') {
+        Utils.showToast(response['message']);
+        return false;
       }
+    } else {
       Utils.showToast(AppStrings.somethingWentWrong);
       return false;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
 

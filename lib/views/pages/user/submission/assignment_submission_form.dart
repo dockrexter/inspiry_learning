@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 
 class AssignmentFormSubmissionPage extends StatefulWidget {
   const AssignmentFormSubmissionPage({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class AssignmentFormSubmissionPage extends StatefulWidget {
 
 class _AssignmentFormSubmissionPageState
     extends State<AssignmentFormSubmissionPage> {
+  bool _isLoading = false;
   DateTime _date = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
   final List<PlatformFile> _files = [];
@@ -126,10 +129,16 @@ class _AssignmentFormSubmissionPageState
                 showFiles(files: _files),
                 Padding(
                   padding: EdgeInsets.only(bottom: 4.h),
-                  child: CustomButton(
-                    AppStrings.submitAndProceed,
-                    onPressed: () => _buildDialog(context),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator.adaptive(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.yellow701,
+                          ),
+                        )
+                      : CustomButton(
+                          AppStrings.submitAndProceed,
+                          onPressed: () async => await _submitAndProceed(),
+                        ),
                 ),
               ],
             ),
@@ -137,6 +146,35 @@ class _AssignmentFormSubmissionPageState
         ),
       ),
     );
+  }
+
+  Future<void> _submitAndProceed() async {
+    if (_subjectController.text.isEmpty) {
+      Utils.showToast(AppStrings.subjectRequired);
+      return;
+    }
+    setState(() => _isLoading = true);
+    final assignment = Assignment(
+      id: -1,
+      subject: _subjectController.text,
+      summary: _summaryController.text,
+      status: WorkStatus.newRequest,
+      attachments: _files.map((file) => file.bytes).toList(),
+      deadline: DateTime(
+        _date.year,
+        _date.month,
+        _date.day,
+        _time.hour,
+        _time.minute,
+      ),
+    );
+    final result = await AssignmentRepository().createAssignment(assignment);
+    setState(() => _isLoading = false);
+    if (result) {
+      _buildDialog(context);
+    } else {
+      Utils.showToast(AppStrings.somethingWentWrong);
+    }
   }
 
   Future<dynamic> _buildDialog(BuildContext context) {
@@ -201,9 +239,7 @@ class _AssignmentFormSubmissionPageState
     );
   }
 
-  Widget showFiles({
-    required List<PlatformFile> files,
-  }) {
+  Widget showFiles({required List<PlatformFile> files}) {
     return SizedBox(
       height: 80.h,
       child: ListView.builder(

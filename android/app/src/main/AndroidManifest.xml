@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.inspiry_learning">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="inspiry_learning"
         android:name="${applicationName}"

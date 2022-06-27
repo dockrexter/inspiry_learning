@@ -1,10 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:inspiry_learning/globals/app_utils.dart';
 
 class Assignment {
   int id;
   WorkStatus status;
   String? subject, summary;
-  List<List<int>>? attachments;
+  List<Uint8List?>? attachments;
   DateTime? createdDate, deadline;
 
   Assignment({
@@ -13,7 +15,8 @@ class Assignment {
     this.summary,
     this.deadline,
     this.createdDate,
-    this.status = WorkStatus.inProgress,
+    this.attachments,
+    this.status = WorkStatus.newRequest,
   });
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
@@ -21,7 +24,7 @@ class Assignment {
       id: json['id'] as int,
       subject: json['subject'] as String?,
       summary: json['summary'] as String?,
-      status: WorkStatus.values[json['status']],
+      status: Utils.getWorkStatus(json['status']),
       deadline: DateTime.parse(json['deadline']),
       createdDate: DateTime.parse(json['created_date']),
     );
@@ -29,13 +32,12 @@ class Assignment {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'subject': subject,
-      'summary': summary,
-      'status': status.index,
+      'subject': subject ?? '',
+      'summary': summary ?? '',
       'attachments': attachments,
-      'deadline': deadline!.millisecondsSinceEpoch,
-      'created_date': createdDate!.millisecondsSinceEpoch,
+      'status': Utils.getStatus(status),
+      'deadline': deadline?.toIso8601String(),
+      'created_date': (createdDate ?? DateTime.now()).toIso8601String(),
     };
   }
 }

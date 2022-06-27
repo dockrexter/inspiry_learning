@@ -4,6 +4,7 @@ import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
 import 'package:inspiry_learning/views/pages/user/submission/assignment_submission_form.dart';
 
@@ -17,7 +18,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final assignments = Utils.getAssignments();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Column(
@@ -79,17 +79,40 @@ class _HomePageState extends State<HomePage> {
           Text(AppStrings.submittedFormList,
               style: AppStyle.textstylepoppinsmedium11),
           Expanded(
-            child: ListView.builder(
-              itemCount: assignments.length,
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => CustomCard(
-                assignment: assignments[index],
-                onPressed: () => AppRouter.push(
-                  context,
-                  ChatPage(assignment: assignments[index]),
-                ),
-              ),
+            child:
+
+                // ActiveUser.userId == null
+                //     ? const Center(child: Text(AppStrings.somethingWentWrong))
+                //     :
+
+                FutureBuilder(
+              future: AssignmentRepository()
+                  .getAssignments(ActiveUser.userId!),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  final assignments = snapshot.data;
+                  return ListView.builder(
+                    itemCount: assignments.length,
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) => CustomCard(
+                      assignment: assignments[index],
+                      onPressed: () => AppRouter.push(
+                        context,
+                        ChatPage(assignment: assignments[index]),
+                      ),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return const Center(
+                    child: Text(AppStrings.somethingWentWrong),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+              },
             ),
           ),
           SizedBox(height: 36.h),
