@@ -24,14 +24,6 @@ class SharedPreferencesManager {
     }
   }
 
-  int? _getInt(String key) {
-    try {
-      return _preferences.getInt(key);
-    } catch (_) {
-      return null;
-    }
-  }
-
   bool? _getBool(String key) {
     try {
       return _preferences.getBool(key);
@@ -44,28 +36,16 @@ class SharedPreferencesManager {
     return await _preferences.setString(key, value);
   }
 
-  Future<bool> _setInt(String key, int value) async {
-    return await _preferences.setInt(key, value);
-  }
-
   Future<bool> _setBool(String key, bool value) async {
     return await _preferences.setBool(key, value);
   }
 
-  Future<bool> saveToken(String token) async {
-    return await _setString('token', token);
+  Future<bool> saveUser(String user) async {
+    return await _setString('user', user);
   }
 
-  String? getToken() {
-    return _getString('token');
-  }
-
-  Future<bool> saveUserId(int userId) async {
-    return await _setInt('user_id', userId);
-  }
-
-  int? getUserId() {
-    return _getInt('user_id');
+  String? getUser() {
+    return _getString('user');
   }
 
   Future<bool> setIsAdmin(bool isAdmin) async {

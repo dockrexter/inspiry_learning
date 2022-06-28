@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
@@ -191,12 +192,12 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     setState(() => _isLoading = true);
-    final user = await UserRepository().login(
+    ActiveUser.instance.user = await UserRepository().login(
       email: _emailController.text,
       password: _passwordController.text,
     );
     setState(() => _isLoading = false);
-    if (user != null) {
+    if (ActiveUser.instance.user != null) {
       Utils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(
         context,

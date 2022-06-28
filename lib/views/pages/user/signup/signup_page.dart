@@ -189,7 +189,7 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
     setState(() => _isLoading = true);
-    final user = await UserRepository().signUp(
+    ActiveUser.instance.user = await UserRepository().signUp(
       user: User(
         email: _emailController.text,
         password: _passwordController.text,
@@ -199,7 +199,7 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
     setState(() => _isLoading = false);
-    if (user != null) {
+    if (ActiveUser.instance.user != null) {
       Utils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(context, const HomePage());
     }

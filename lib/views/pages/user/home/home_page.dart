@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
 
                 FutureBuilder(
               future: AssignmentRepository()
-                  .getAssignments(ActiveUser.userId!),
+                  .getAssignments(ActiveUser.instance.user!.userId!),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   final assignments = snapshot.data;

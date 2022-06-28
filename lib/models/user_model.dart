@@ -1,4 +1,5 @@
-import 'package:inspiry_learning/globals/app_utils.dart';
+import 'dart:convert';
+
 import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
 
 class User {
@@ -43,10 +44,14 @@ class User {
     return data;
   }
 
+  static Future<User?> getUser() async {
+    final user = SharedPreferencesManager.instance.getUser();
+    if (user == null) return null;
+    return User.fromJson(json.decode(user));
+  }
+
   Future<bool> save() async {
-    ActiveUser.token = token;
-    ActiveUser.userId = userId;
-    await SharedPreferencesManager.instance.saveToken(token ?? '');
-    return await SharedPreferencesManager.instance.saveUserId(userId ?? -1);
+    return await SharedPreferencesManager.instance
+        .saveUser(json.encode(toJson()));
   }
 }

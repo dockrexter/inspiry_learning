@@ -159,6 +159,7 @@ class _AssignmentFormSubmissionPageState
       subject: _subjectController.text,
       summary: _summaryController.text,
       status: WorkStatus.newRequest,
+      userId: ActiveUser.instance.user?.userId,
       attachments: _files.map((file) => file.bytes).toList(),
       deadline: DateTime(
         _date.year,

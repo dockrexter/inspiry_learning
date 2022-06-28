@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
@@ -151,13 +152,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       Utils.showToast(AppStrings.passwordmustbe6characters);
       return;
     }
-    if (ActiveUser.userId == null) {
+    if (ActiveUser.instance.user == null || ActiveUser.instance.user?.userId == null) {
       Utils.showToast(AppStrings.somethingWentWrong);
       return;
     }
     setState(() => _isLoading = true);
     final status = await UserRepository().changePassword(
-      userId: ActiveUser.userId!,
+      userId: ActiveUser.instance.user!.userId!,
       oldPassword: _oldPasswordController.text,
       newPassword: _newPasswordController.text,
     );

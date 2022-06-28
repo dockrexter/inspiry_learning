@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/models/user_model.dart';
 
 enum WorkStatus {
   compleated,
@@ -17,8 +18,9 @@ class ScreenSize {
 }
 
 class ActiveUser {
-  static int? userId = 58;
-  static String? token;
+  ActiveUser._();
+  static final ActiveUser instance = ActiveUser._();
+  User? user;
 }
 
 class Utils {
@@ -96,7 +98,8 @@ class Utils {
     return -1;
   }
 
-  static bool checkIsAnyFieldIsEmpty({required List<TextEditingController> controllers}) {
+  static bool checkIsAnyFieldIsEmpty(
+      {required List<TextEditingController> controllers}) {
     for (final controller in controllers) {
       if (controller.text.isEmpty) {
         return true;
@@ -105,11 +108,13 @@ class Utils {
     return false;
   }
 
-  static bool isPasswordMatched({required List<TextEditingController> controllers}) {
+  static bool isPasswordMatched(
+      {required List<TextEditingController> controllers}) {
     return controllers[0].text == controllers[1].text;
   }
 
-  static void clearAllFields({required List<TextEditingController> controllers}){
+  static void clearAllFields(
+      {required List<TextEditingController> controllers}) {
     for (final controller in controllers) {
       controller.clear();
     }

@@ -3,8 +3,8 @@ class AppStrings {
   static const String appTitle = "Inspiry Learning";
 
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
-  // static const String baseUrl = "https://inspiry-learning-backend.herokuapp.com";
-  static const String baseUrl = "http://192.168.100.180:5000";
+  static const String baseUrl = "https://inspiry-learning-backend.herokuapp.com";
+  // static const String baseUrl = "http://192.168.100.180:5000";
 
   // Login Page
   static const String login = "Login";
