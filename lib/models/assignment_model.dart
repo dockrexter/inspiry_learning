@@ -35,7 +35,7 @@ class Assignment {
 
   Map<String, dynamic> toJson() {
     return {
-      'user_id': userId,
+      'user_id': userId.toString(),
       'subject': subject ?? '',
       'summary': summary ?? '',
       'attachments': [], // attachments,

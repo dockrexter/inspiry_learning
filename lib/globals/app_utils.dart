@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/user_model.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/models/assignment_model.dart';
 
 enum WorkStatus {
   compleated,
@@ -61,6 +62,7 @@ class Utils {
       msg: message,
       fontSize: 16.0,
       toastLength: Toast.LENGTH_SHORT,
+      backgroundColor: AppColors.gray800,
     );
   }
 

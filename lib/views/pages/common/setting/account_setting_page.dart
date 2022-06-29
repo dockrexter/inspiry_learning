@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/subadmin/add_sub_admin_page.dart';
 import 'package:inspiry_learning/views/pages/common/setting/change_password_page.dart';
@@ -14,7 +15,30 @@ class AccountSettingsPage extends StatefulWidget {
 }
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
+  bool _isLoading = false;
   bool isAdmin = UserTypeHelper.isAdmin();
+
+  var user = ActiveUser.instance.user;
+
+  late TextEditingController _phoneController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _firstNameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController = TextEditingController(text: user?.phone);
+    _lastNameController = TextEditingController(text: user?.lastname);
+    _firstNameController = TextEditingController(text: user?.firstname);
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _lastNameController.dispose();
+    _firstNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +112,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                                 CircleAvatar(
                                   maxRadius: 14.r,
                                   backgroundColor: AppColors.teal400,
-                                  child:
-                                      const Icon(Icons.add, color: AppColors.white),
+                                  child: const Icon(Icons.add,
+                                      color: AppColors.white),
                                 ),
                                 SizedBox(width: 10.w),
                                 Text(
@@ -110,18 +134,18 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                         children: [
                           _buildEditAbleTextFields(
                             text: AppStrings.firstName,
-                            initialValue: "Usama",
+                            controller: _firstNameController,
                           ),
                           SizedBox(height: 12.h),
                           _buildEditAbleTextFields(
                             text: AppStrings.lastName,
-                            initialValue: "Azad",
+                            controller: _lastNameController,
                           ),
                           SizedBox(height: 12.h),
                           _buildEditAbleTextFields(
                             text: AppStrings.phoneNumber,
                             icon: Icons.phone,
-                            initialValue: "+923465979647",
+                            controller: _phoneController,
                           ),
                         ],
                       ),
@@ -138,10 +162,17 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                           ),
                         ),
                       ),
-                      CustomButton(
-                        AppStrings.save,
-                        onPressed: () => AppRouter.pop(context),
-                      ),
+                      _isLoading
+                          ? const CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.yellow701,
+                              ),
+                            )
+                          : CustomButton(
+                              AppStrings.save,
+                              onPressed: () async =>
+                                  await _saveBtnClickHandler(),
+                            ),
                     ],
                   ),
                 ),
@@ -165,5 +196,36 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       initialValue: initialValue,
       controller: controller,
     );
+  }
+
+  dynamic getControllers() => [
+        _firstNameController,
+        _lastNameController,
+        _phoneController,
+      ];
+
+  Future<void> _saveBtnClickHandler() async {
+    if (_isLoading) return;
+    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      Utils.showToast(AppStrings.allfieldsarerequired);
+      return;
+    }
+    setState(() => _isLoading = true);
+    user = user?.copyWith(
+      firstname: _firstNameController.text,
+      lastname: _lastNameController.text,
+      phone: _phoneController.text,
+    );
+    if (user == null){
+      Utils.showToast(AppStrings.somethingWentWrong);
+      setState(() => _isLoading = false);
+      return;
+    }
+    ActiveUser.instance.user = await UserRepository().updateUser(user: user!);
+    setState(() => _isLoading = false);
+    if (ActiveUser.instance.user != null) {
+      Utils.showToast(AppStrings.updatedSuccessfully);
+      AppRouter.pop(context);
+    }
   }
 }

@@ -47,15 +47,32 @@ class UserRepository {
     return null;
   }
 
+  Future<User?> updateUser({required User user}) async {
+    final response = await _apiManager.post(ApiEndpoints.updateUser, data: {
+      "values": user.toJsonForUpdate(),
+    });
+    if (response != null) {
+      if (response['status'] == 'ok') {
+        return user;
+      }
+      Utils.showToast(AppStrings.somethingWentWrong);
+      return null;
+    }
+    Utils.showToast(AppStrings.somethingWentWrong);
+    return null;
+  }
+
   Future<bool> changePassword(
       {required int userId,
       required String oldPassword,
       required String newPassword}) async {
     final response = await _apiManager.post(ApiEndpoints.changePassword, data: {
-      'user_id': 58,
-      'currentPassword': oldPassword,
-      'changePassword': newPassword,
-      'confirmPassword': newPassword,
+      "values": {
+        'user_id': 58,
+        'currentPassword': oldPassword,
+        'changePassword': newPassword,
+        'confirmPassword': newPassword,
+      }
     });
     if (response != null) {
       if (response['status'] == 'ok') {

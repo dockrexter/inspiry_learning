@@ -44,6 +44,37 @@ class User {
     return data;
   }
 
+  Map<String, dynamic> toJsonForUpdate() {
+    final data = <String, dynamic>{};
+    data['firstname'] = firstname;
+    data['lastname'] = lastname;
+    data['phone'] = phone;
+    data['user_id'] = userId;
+    return data;
+  }
+
+  User copyWith({
+    int? userId,
+    String? username,
+    String? password,
+    String? firstname,
+    String? lastname,
+    String? email,
+    String? phone,
+    String? token,
+  }) {
+    return User(
+      userId: userId ?? this.userId,
+      username: username ?? this.username,
+      password: password ?? this.password,
+      firstname: firstname ?? this.firstname,
+      lastname: lastname ?? this.lastname,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      token: token ?? this.token,
+    );
+  }
+
   static Future<User?> getUser() async {
     final user = SharedPreferencesManager.instance.getUser();
     if (user == null) return null;

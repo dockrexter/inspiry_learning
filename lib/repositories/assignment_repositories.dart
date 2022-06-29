@@ -37,9 +37,9 @@ class AssignmentRepository {
   Future<bool> createAssignment(Assignment assignment) async {
     final response = await _apiManager.post(
       ApiEndpoints.createAssignment,
-      data: assignment.toJson(),
+      data: {"values": assignment.toJson()},
     );
-    return (response == 'insertion sucess');
+    return (response != null && response == 'insertion sucess');
     // if (response != null) {
     //   return Assignment.fromJson(response.data);
     // } else {
