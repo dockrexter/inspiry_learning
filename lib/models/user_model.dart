@@ -37,7 +37,6 @@ class User {
     email = json['email'];
     phone = json['phone'];
     token = json['token'];
-    save();
   }
 
   Map<String, dynamic> toJson() {
@@ -47,7 +46,19 @@ class User {
     data['lastname'] = lastname;
     data['role'] = role;
     data['phone'] = phone;
+    data['email'] = email;
+    return data;
+  }
+
+    Map<String, dynamic> toJsonForSave() {
+    final data = <String, dynamic>{};
+    data['user_id'] = userId;
+    data['firstname'] = firstname;
+    data['lastname'] = lastname;
+    data['email'] = email;
     data['phone'] = phone;
+    data['role'] = role;
+    data['token'] = token;
     return data;
   }
 
@@ -92,6 +103,6 @@ class User {
 
   Future<bool> save() async {
     return await SharedPreferencesManager.instance
-        .saveUser(json.encode(toJson()));
+        .saveUser(json.encode(toJsonForSave()));
   }
 }

@@ -17,7 +17,10 @@ class UserRepository {
     _apiManager = APIManager();
   }
 
-  Future<User?> login({required String email, required String password, required String role}) async {
+  Future<User?> login(
+      {required String email,
+      required String password,
+      required String role}) async {
     final response = await _apiManager.post(ApiEndpoints.login, data: {
       'email': email,
       'password': password,
@@ -25,7 +28,9 @@ class UserRepository {
     });
     if (response != null) {
       if (response['status'] == 'ok') {
-        return User.fromJson(response['user']);
+        var user = User.fromJson(response['user']);
+        await user.save();
+        return user;
       }
       Utils.showToast(AppStrings.userNameOrPasswordIncorrect);
       return null;
@@ -39,7 +44,9 @@ class UserRepository {
         await _apiManager.post(ApiEndpoints.signup, data: user.toJson());
     if (response != null) {
       if (response['status'] == 'ok') {
-        return User.fromJson(response['user']);
+        var user = User.fromJson(response['user']);
+        await user.save();
+        return user;
       }
       Utils.showToast(AppStrings.somethingWentWrong);
       return null;
