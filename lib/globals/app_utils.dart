@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/models/user_model.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 
 enum WorkStatus {
@@ -25,6 +25,9 @@ class ActiveUser {
 }
 
 class Utils {
+
+  static get role => UserTypeHelper.isAdmin() ? "admin" : "user";
+
   static WorkStatus getWorkStatus(String status) {
     switch (status) {
       case "Work Completed":

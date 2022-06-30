@@ -194,6 +194,7 @@ class _LoginPageState extends State<LoginPage> {
     ActiveUser.instance.user = await UserRepository().login(
       email: _emailController.text,
       password: _passwordController.text,
+      role: Utils.role,
     );
     setState(() => _isLoading = false);
     if (ActiveUser.instance.user != null) {

@@ -17,10 +17,11 @@ class UserRepository {
     _apiManager = APIManager();
   }
 
-  Future<User?> login({required String email, required String password}) async {
+  Future<User?> login({required String email, required String password, required String role}) async {
     final response = await _apiManager.post(ApiEndpoints.login, data: {
       'email': email,
       'password': password,
+      'role': role,
     });
     if (response != null) {
       if (response['status'] == 'ok') {
@@ -68,7 +69,7 @@ class UserRepository {
       required String newPassword}) async {
     final response = await _apiManager.post(ApiEndpoints.changePassword, data: {
       "values": {
-        'user_id': 58,
+        'user_id': userId,
         'currentPassword': oldPassword,
         'changePassword': newPassword,
         'confirmPassword': newPassword,

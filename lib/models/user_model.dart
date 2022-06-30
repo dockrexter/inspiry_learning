@@ -4,12 +4,16 @@ import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
 
 class User {
   int? userId;
+
   String? username;
   String? password;
   String? firstname;
   String? lastname;
+
   String? email;
   String? phone;
+
+  String? role;
   String? token;
 
   User({
@@ -18,6 +22,7 @@ class User {
     this.password,
     this.firstname,
     this.lastname,
+    this.role,
     this.email,
     this.phone,
     this.token,
@@ -28,6 +33,7 @@ class User {
     username = json['username'];
     firstname = json['firstname'];
     lastname = json['lastname'];
+    role = json['role'];
     email = json['email'];
     phone = json['phone'];
     token = json['token'];
@@ -39,15 +45,16 @@ class User {
     data['password'] = password;
     data['firstname'] = firstname;
     data['lastname'] = lastname;
-    data['email'] = email;
+    data['role'] = role;
+    data['phone'] = phone;
     data['phone'] = phone;
     return data;
   }
 
   Map<String, dynamic> toJsonForUpdate() {
     final data = <String, dynamic>{};
-    data['firstname'] = firstname;
-    data['lastname'] = lastname;
+    data['firstName'] = firstname;
+    data['lastName'] = lastname;
     data['phone'] = phone;
     data['user_id'] = userId;
     return data;
@@ -59,6 +66,7 @@ class User {
     String? password,
     String? firstname,
     String? lastname,
+    String? role,
     String? email,
     String? phone,
     String? token,
@@ -69,6 +77,7 @@ class User {
       password: password ?? this.password,
       firstname: firstname ?? this.firstname,
       lastname: lastname ?? this.lastname,
+      role: role ?? this.role,
       email: email ?? this.email,
       phone: phone ?? this.phone,
       token: token ?? this.token,

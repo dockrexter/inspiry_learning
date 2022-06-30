@@ -191,6 +191,7 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() => _isLoading = true);
     ActiveUser.instance.user = await UserRepository().signUp(
       user: User(
+        role: Utils.role,
         email: _emailController.text,
         password: _passwordController.text,
         lastname: _lastNameController.text,
