@@ -47,7 +47,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                       SizedBox(width: 6.w),
                       Text(
-                        AppStrings.marley,
+                        (ActiveUser.instance.user?.firstname ??
+                                AppStrings.marley) +
+                            AppStrings.exclamation,
                         style: AppStyle.textstylepoppinsbold24.copyWith(
                           color: AppColors.white,
                         ),

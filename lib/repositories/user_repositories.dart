@@ -39,13 +39,15 @@ class UserRepository {
     return null;
   }
 
-  Future<User?> signUp({required User user}) async {
+  Future<User?> signUp({required User user, bool addSubAdmin = false}) async {
     final response =
         await _apiManager.post(ApiEndpoints.signup, data: user.toJson());
     if (response != null) {
       if (response['status'] == 'ok') {
         var user = User.fromJson(response['user']);
-        await user.save();
+        if (!addSubAdmin) {
+          await user.save();
+        }
         return user;
       }
       Utils.showToast(AppStrings.somethingWentWrong);
@@ -61,6 +63,7 @@ class UserRepository {
     });
     if (response != null) {
       if (response['status'] == 'ok') {
+        user.save();
         return user;
       }
       Utils.showToast(AppStrings.somethingWentWrong);

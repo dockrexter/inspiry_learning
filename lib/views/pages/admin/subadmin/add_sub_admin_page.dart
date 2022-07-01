@@ -181,16 +181,26 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
       return;
     }
     setState(() => _isLoading = true);
+    var fullName = _fullNameController.text;
+    List<String> splitted = [fullName];
+    if (fullName.contains(' ')) {
+      splitted = fullName.split(' ');
+    }
     final user = await UserRepository().signUp(
       user: User(
+        phone: '',
+        role: Utils.role,
+        firstname: splitted[0],
         email: _emailController.text,
         password: _passwordController.text,
-        firstname: _fullNameController.text,
+        lastname: splitted.length > 1 ? splitted[1] : '',
       ),
+      addSubAdmin: true,
     );
     setState(() => _isLoading = false);
     if (user != null) {
       Utils.clearAllFields(controllers: getControllers());
+      Utils.showToast(AppStrings.subadminaddedsuccessfully);
       AppRouter.makeFirst(context, const AdminHomePage());
     }
   }
