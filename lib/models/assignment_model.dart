@@ -5,6 +5,7 @@ import 'package:inspiry_learning/globals/app_utils.dart';
 class Assignment {
   int id;
   int? userId;
+  String? assignTo;
   WorkStatus status;
   String? subject, summary;
   List<Uint8List?>? attachments;
@@ -16,6 +17,7 @@ class Assignment {
     this.subject,
     this.summary,
     this.deadline,
+    this.assignTo,
     this.createdDate,
     this.attachments,
     this.status = WorkStatus.newRequest,
@@ -27,6 +29,7 @@ class Assignment {
       userId: json['user_id'] as int,
       subject: json['subject'] as String?,
       summary: json['summary'] as String?,
+      assignTo: json['assignee'] as String?,
       status: Utils.getWorkStatus(json['status']),
       deadline: DateTime.parse(json['deadline']),
       createdDate: DateTime.parse(json['created_date']),
@@ -38,6 +41,7 @@ class Assignment {
       'user_id': userId.toString(),
       'subject': subject ?? '',
       'summary': summary ?? '',
+      'assignee': assignTo ?? '',
       'attachments': [], // attachments,
       'status': Utils.getStatus(status),
       'deadline': deadline?.toIso8601String(),

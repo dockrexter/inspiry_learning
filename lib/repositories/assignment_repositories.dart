@@ -34,6 +34,23 @@ class AssignmentRepository {
     }
   }
 
+  Future<dynamic> getAssignmentsByDate(DateTime date) async {
+    final response = await _apiManager.post(
+      ApiEndpoints.getAssignmentsByDate,
+      data: {
+        "deadline": date.toString().split(' ')[0],
+      },
+    );
+    if (response != null) {
+      final assignments = response
+          .map((assignment) => Assignment.fromJson(assignment))
+          .toList();
+      return assignments;
+    } else {
+      throw Exception(AppStrings.somethingWentWrong);
+    }
+  }
+
   Future<bool> createAssignment(Assignment assignment) async {
     final response = await _apiManager.post(
       ApiEndpoints.createAssignment,
@@ -45,5 +62,20 @@ class AssignmentRepository {
     // } else {
     //   throw Exception(AppStrings.somethingWentWrong);
     // }
+  }
+
+  Future<bool> updateAssignmentStatus(
+      int assignmentId, String status) async {
+    final response = await _apiManager.post(
+      ApiEndpoints.updateAssignmentStatus,
+      data: {
+        'id': assignmentId,
+        'status': status,
+      },
+    );
+    if (response != null) {
+      return true;
+    }
+    return false;
   }
 }

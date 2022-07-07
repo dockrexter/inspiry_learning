@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
@@ -110,10 +111,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => CustomCard2(
         assignment: filteredAssignments[index],
-        onSelected: (String status) {
-          assignments[Utils.findIndexByID(
-                  assignments, filteredAssignments[index].id)]
-              .status = Utils.getWorkStatus(status);
+        onSelected: (String status) async {
+          var assignment = assignments[
+              Utils.findIndexByID(assignments, filteredAssignments[index].id)];
+          await AssignmentRepository().updateAssignmentStatus(assignment.id, status);          
+          assignment.status = Utils.getWorkStatus(status);
           setState(() {});
         },
         onPressed: () => AppRouter.push(

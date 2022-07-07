@@ -5,4 +5,6 @@ class ApiEndpoints {
   static const String changePassword = '/user/changePassword';
   static const String getAssignments = '/assignment/getAssignments';
   static const String createAssignment = '/assignment/postAssignments';
+  static const String updateAssignmentStatus = '/assignment/changeStatus';
+  static const String getAssignmentsByDate = '/assignment/getAssignmentsAdmin';
 }

@@ -81,13 +81,7 @@ class _HomePageState extends State<HomePage> {
           Text(AppStrings.submittedFormList,
               style: AppStyle.textstylepoppinsmedium11),
           Expanded(
-            child:
-
-                // ActiveUser.userId == null
-                //     ? const Center(child: Text(AppStrings.somethingWentWrong))
-                //     :
-
-                FutureBuilder(
+            child: FutureBuilder(
               future: AssignmentRepository()
                   .getAssignments(ActiveUser.instance.user!.userId!),
               builder: (context, AsyncSnapshot snapshot) {
