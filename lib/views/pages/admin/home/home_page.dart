@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -16,16 +16,19 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  List<Assignment> assignments = Utils.getAssignments();
+  List<Assignment>? assignments;
   DateTime _selectedDate = DateTime.now();
   static const _narrowWeekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   @override
+  void initState() {
+    super.initState();
+    _getAssignments();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = ScreenSize.height;
-    final filteredAssignments = assignments
-        .where((e) => Utils.compare2Dates(e.deadline!, _selectedDate))
-        .toList();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Column(
@@ -81,30 +84,40 @@ class _AdminHomePageState extends State<AdminHomePage> {
               ),
             ),
           ),
-          Expanded(
-            child: RefreshIndicator(
-              displacement: 10.h,
-              onRefresh: () {
-                assignments = Utils.getAssignments();
-                setState(() {});
-                return Future.delayed(const Duration(seconds: 1));
-              },
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildCalendar(),
-                    _buildAssignments(filteredAssignments),
-                  ],
+          assignments == null
+              ? const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                )
+              : Expanded(
+                  child: RefreshIndicator(
+                    displacement: 10.h,
+                    onRefresh: () => _getAssignments(),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildCalendar(),
+                          _buildAssignments(),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildAssignments(dynamic filteredAssignments) {
+  Future<void> _getAssignments({String? month, String? year}) async {
+    assignments = await AssignmentRepository().getAssignmentsByMonth(
+        month ?? DateTime.now().month.toString(),
+        year ?? DateTime.now().year.toString());
+    setState(() {});
+  }
+
+  Widget _buildAssignments() {
+    final filteredAssignments = assignments!
+        .where((e) => Utils.compare2Dates(e.deadline!, _selectedDate))
+        .toList();
     return ListView.builder(
       shrinkWrap: true,
       itemCount: filteredAssignments.length,
@@ -112,9 +125,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
       itemBuilder: (context, index) => CustomCard2(
         assignment: filteredAssignments[index],
         onSelected: (String status) async {
-          var assignment = assignments[
+          var assignment = assignments![
               Utils.findIndexByID(assignments, filteredAssignments[index].id)];
-          await AssignmentRepository().updateAssignmentStatus(assignment.id, status);          
+          await AssignmentRepository()
+              .updateAssignmentStatus(assignment.id, status);
           assignment.status = Utils.getWorkStatus(status);
           setState(() {});
         },
@@ -181,8 +195,17 @@ class _AdminHomePageState extends State<AdminHomePage> {
           weekdayStyle: AppStyle.textstylepoppinsbold14,
           weekendStyle: AppStyle.textstylepoppinsbold14,
         ),
+        onPageChanged: (dt) {
+          if (dt.month == now.month && dt.year == now.year) {
+            _selectedDate = now;
+          } else {
+            _selectedDate = dt;
+          }
+
+          _getAssignments(month: dt.month.toString(), year: dt.year.toString());
+        },
         onDaySelected: (dt, _) => setState(() => _selectedDate = dt),
-        holidayPredicate: (dt) => Utils.selectedDates(assignments, dt),
+        holidayPredicate: (dt) => Utils.selectedDates(assignments!, dt),
         selectedDayPredicate: (dt) => Utils.compare2Dates(dt, _selectedDate),
       ),
     );

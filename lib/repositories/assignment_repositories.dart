@@ -25,7 +25,7 @@ class AssignmentRepository {
       },
     );
     if (response != null) {
-      final assignments = response
+      final assignments = response['assignments']
           .map((assignment) => Assignment.fromJson(assignment))
           .toList();
       return assignments;
@@ -51,6 +51,24 @@ class AssignmentRepository {
     }
   }
 
+  Future<List<Assignment>> getAssignmentsByMonth(String month, String year) async {
+    final response = await _apiManager.post(
+      ApiEndpoints.getAssignmentsByMonth,
+      data: {
+        "currentMonth": month,
+        "currentYear": year,
+      },
+    );
+    if (response != null) {
+      final List<Assignment> assignments = (response['assignments'] as List<dynamic>)
+          .map((assignment) => Assignment.fromJson(assignment))
+          .toList();
+      return assignments;
+    } else {
+      throw Exception(AppStrings.somethingWentWrong);
+    }
+  }
+
   Future<bool> createAssignment(Assignment assignment) async {
     final response = await _apiManager.post(
       ApiEndpoints.createAssignment,
@@ -64,8 +82,7 @@ class AssignmentRepository {
     // }
   }
 
-  Future<bool> updateAssignmentStatus(
-      int assignmentId, String status) async {
+  Future<bool> updateAssignmentStatus(int assignmentId, String status) async {
     final response = await _apiManager.post(
       ApiEndpoints.updateAssignmentStatus,
       data: {
