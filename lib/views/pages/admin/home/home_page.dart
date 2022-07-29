@@ -84,12 +84,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
               ),
             ),
           ),
-          assignments == null
-              ? const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                )
-              : Expanded(
-                  child: RefreshIndicator(
+          Expanded(
+            child: assignments == null
+                ? const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  )
+                : RefreshIndicator(
                     displacement: 10.h,
                     onRefresh: () => _getAssignments(),
                     child: SingleChildScrollView(
@@ -101,7 +101,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                   ),
-                ),
+          ),
         ],
       ),
     );

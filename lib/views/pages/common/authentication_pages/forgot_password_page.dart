@@ -82,6 +82,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
                         controller: TextEditingController(),
+                        keyboardType: TextInputType.emailAddress,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                             RegExp(AppStrings.regexEmailValidation),

@@ -92,11 +92,13 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                         AppStrings.fullName,
                         icon: const Icon(Icons.person),
                         controller: _fullNameController,
+                        keyboardType: TextInputType.name,
                       ),
                       InputTextField(
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
                         controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                             RegExp(AppStrings.regexEmailValidation),

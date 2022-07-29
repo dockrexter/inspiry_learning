@@ -4,6 +4,7 @@ import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_dropdown.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 
 class CustomCard extends StatelessWidget {
   const CustomCard({Key? key, required this.assignment, this.onPressed})
@@ -157,7 +158,8 @@ class CustomCard2 extends StatelessWidget {
                   width: ScreenSize.width * 0.17,
                   height: ScreenSize.width * 0.075,
                   child: InkWell(
-                    onTap: () => _showTextInputDialog(context),
+                    onTap: () =>
+                        _showTextInputDialog(context, assignment.assignTo),
                     child: Container(
                       width: 55.w,
                       height: 20.h,
@@ -167,7 +169,7 @@ class CustomCard2 extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          AppStrings.marley,
+                          assignment.assignTo ?? AppStrings.marley,
                           style: AppStyle.textstylepoppinsregular7,
                         ),
                       ),
@@ -253,7 +255,9 @@ class CustomCard2 extends StatelessWidget {
     );
   }
 
-  void _showTextInputDialog(BuildContext context) {
+  void _showTextInputDialog(BuildContext context, String? assignTo) {
+    final assigneeController =
+        TextEditingController(text: assignTo ?? AppStrings.marley);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -262,7 +266,8 @@ class CustomCard2 extends StatelessWidget {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             InputTextField(
               "",
-              controller: TextEditingController(text: AppStrings.marley),
+              controller: assigneeController,
+              keyboardType: TextInputType.name,
             ),
           ]),
         ),
@@ -274,7 +279,14 @@ class CustomCard2 extends StatelessWidget {
                   .copyWith(color: AppColors.white),
             ),
             color: AppColors.greenA700,
-            onPressed: () => AppRouter.pop(context),
+            onPressed: () async {
+              if (assigneeController.text.isNotEmpty) {
+                await AssignmentRepository()
+                    .updateAssignee(assignment.id, assigneeController.text);
+              }
+              assigneeController.dispose();
+              AppRouter.pop(context);
+            },
           ),
         ],
       ),

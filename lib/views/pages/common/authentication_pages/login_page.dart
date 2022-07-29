@@ -89,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
                         controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                             RegExp(AppStrings.regexEmailValidation),

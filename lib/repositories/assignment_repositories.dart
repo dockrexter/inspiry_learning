@@ -95,4 +95,18 @@ class AssignmentRepository {
     }
     return false;
   }
+
+  Future<bool> updateAssignee(int assignmentId, String assignee) async {
+    final response = await _apiManager.post(
+      ApiEndpoints.updateAssignee,
+      data: {
+        'id': assignmentId,
+        'assignee': assignee,
+      },
+    );
+    if (response != null) {
+      return true;
+    }
+    return false;
+  }
 }

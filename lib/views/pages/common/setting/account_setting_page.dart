@@ -135,17 +135,20 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                           _buildEditAbleTextFields(
                             text: AppStrings.firstName,
                             controller: _firstNameController,
+                            keyboardType: TextInputType.name,
                           ),
                           SizedBox(height: 12.h),
                           _buildEditAbleTextFields(
                             text: AppStrings.lastName,
                             controller: _lastNameController,
+                            keyboardType: TextInputType.name,
                           ),
                           SizedBox(height: 12.h),
                           _buildEditAbleTextFields(
                             text: AppStrings.phoneNumber,
                             icon: Icons.phone,
                             controller: _phoneController,
+                            keyboardType: TextInputType.phone,
                           ),
                         ],
                       ),
@@ -187,6 +190,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   Widget _buildEditAbleTextFields({
     required String text,
     String? initialValue,
+    TextInputType? keyboardType,
     IconData icon = Icons.person,
     TextEditingController? controller,
   }) {
@@ -194,6 +198,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       text,
       icon: Icon(icon),
       initialValue: initialValue,
+      keyboardType: keyboardType,
       controller: controller,
     );
   }

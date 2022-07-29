@@ -14,6 +14,7 @@ class InputTextField extends StatefulWidget {
     this.cursorColor,
     this.maxLines = 1,
     this.initialValue,
+    this.keyboardType,
     this.enabled = true,
     this.inputFormatters,
     this.backgroundColor,
@@ -29,6 +30,7 @@ class InputTextField extends StatefulWidget {
   final Color? cursorColor;
   final String? initialValue;
   final Color? backgroundColor;
+  final TextInputType? keyboardType;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -53,6 +55,7 @@ class _InputTextFieldState extends State<InputTextField> {
           controller: widget.controller,
           cursorColor: widget.cursorColor,
           initialValue: widget.initialValue,
+          keyboardType: widget.keyboardType,
           inputFormatters: widget.inputFormatters,
           style: TextStyle(color: widget.textColor),
           obscureText: widget.obscureText && !isShow,

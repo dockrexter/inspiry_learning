@@ -91,6 +91,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
                         controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
                             RegExp(AppStrings.regexEmailValidation),
@@ -101,16 +102,19 @@ class _SignUpPageState extends State<SignUpPage> {
                         AppStrings.firstName,
                         icon: const Icon(Icons.person),
                         controller: _firstNameController,
+                        keyboardType: TextInputType.name,
                       ),
                       InputTextField(
                         AppStrings.lastName,
                         icon: const Icon(Icons.person),
                         controller: _lastNameController,
+                        keyboardType: TextInputType.name,
                       ),
                       InputTextField(
                         AppStrings.phoneNumber,
                         icon: const Icon(Icons.phone),
                         controller: _phoneNumberController,
+                        keyboardType: TextInputType.phone,
                       ),
                       InputTextField(
                         obscureText: true,

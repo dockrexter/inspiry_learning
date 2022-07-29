@@ -179,6 +179,7 @@ class _ChatPageState extends State<ChatPage> {
             const InputTextField(
               AppStrings.price,
               controller: null,
+              keyboardType: TextInputType.number,
             ),
             SizedBox(height: 10.h),
             const InputTextField(
