@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
@@ -26,6 +27,12 @@ class ActiveUser {
 class Utils {
 
   static get role => UserTypeHelper.isAdmin() ? "admin" : "user";
+
+  static Future<void> launchURL(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    }
+  }
 
   static WorkStatus getWorkStatus(String status) {
     switch (status) {

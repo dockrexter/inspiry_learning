@@ -123,8 +123,14 @@ class _ChatPageState extends State<ChatPage> {
                           isMe: [true, false][index % 2],
                           message: [
                             "I need proper assignment according to my requirements which i have added bellow in aattched document. What type of requirements from me you need in this assignment?",
-                            "Hello Marley, everything is ok? What type of help you needin this assignment? \n\nClick Here to make the payment"
+                            "Hello Marley, everything is ok? What type of help you needin this assignment?"
                           ][index % 2],
+                          linktext: index % 2 == 0
+                              ? null
+                              : "Click Here to make the payment",
+                          linkUrl: index % 2 == 0
+                              ? null
+                              : "https://www.github.com/Usama-Azad",
                         );
                       },
                     ),

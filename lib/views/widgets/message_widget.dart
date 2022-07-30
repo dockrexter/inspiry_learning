@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageWidget extends StatelessWidget {
   final bool isMe;
   final String message;
+  final String? linkUrl;
+  final String? linktext;
 
   const MessageWidget({
     Key? key,
+    this.linkUrl,
+    this.linktext,
     required this.isMe,
     required this.message,
   }) : super(key: key);
@@ -43,6 +48,20 @@ class MessageWidget extends StatelessWidget {
             color: AppColors.gray80099,
           ),
         ),
+        if (linktext != null) SizedBox(height: 8.h),
+        if (linktext != null)
+          GestureDetector(
+            onTap: linkUrl == null
+                ? null
+                : () async => await Utils.launchURL(linkUrl!),
+            child: Text(
+              linktext!,
+              style: AppStyle.textstylepoppinssemibold13.copyWith(
+                fontSize: 12.sp,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
       ],
     );
   }

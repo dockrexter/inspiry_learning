@@ -97,6 +97,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         children: [
                           _buildCalendar(),
                           _buildAssignments(),
+                          SizedBox(height: 80.h),
                         ],
                       ),
                     ),
