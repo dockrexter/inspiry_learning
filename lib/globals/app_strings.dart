@@ -92,6 +92,7 @@ class AppStrings {
 
   // Toast Messages
   static const String subjectRequired = "subject is required";
+  static const String emailAlreadyExist = "email already exist";
   static const String somethingWentWrong = "something went wrong";
   static const String updatedSuccessfully = "Updated Successfully";
   static const String allfieldsarerequired = "all fields are required";

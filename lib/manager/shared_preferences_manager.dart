@@ -40,8 +40,16 @@ class SharedPreferencesManager {
     return await _preferences.setBool(key, value);
   }
 
+  Future<bool> _remove(String key) async {
+    return await _preferences.remove(key);
+  }
+
   Future<bool> saveUser(String user) async {
     return await _setString('user', user);
+  }
+
+  Future<bool> removeUser() async {
+    return await _remove('user');
   }
 
   String? getUser() {

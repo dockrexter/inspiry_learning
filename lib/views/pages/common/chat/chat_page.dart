@@ -1,8 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:inspiry_learning/models/message_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
@@ -20,10 +24,62 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final _socket = SocketManager();
   bool isAdmin = UserTypeHelper.isAdmin();
+  final _scrollController = ScrollController();
+  final _messageController = TextEditingController();
+  late List<Message> fmessages;
+
+  @override
+  void initState() {
+    super.initState();
+    _socket.onConnect((data) {});
+    _socket.emitJoinEvent(
+        userId: ActiveUser.instance.user!.userId!,
+        assignmentId: widget.assignment.id);
+    _messagesListnerHandler();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _scrollToEnd(updateState: false));
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  void _messagesListnerHandler() {
+    SocketManager().onMessage((data) {
+      try {
+        if (data["text"] != null) {
+          if (int.parse(data["user"]) != ActiveUser.instance.user!.userId) {
+            messages.add(Message(
+              id: 1,
+              assignmentId: widget.assignment.id,
+              isMe: false,
+              message: data["text"],
+            ));
+            setState(() {});
+            _scrollToEnd();
+          }
+        } else {
+          print("Usama -> $data");
+        }
+      } catch (_) {}
+    });
+  }
+
+  void _scrollToEnd({bool updateState = true}) {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 10.0);
+    if (updateState) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    fmessages = messages
+        .where((msg) => msg.assignmentId == widget.assignment.id)
+        .toList();
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Column(
@@ -115,25 +171,19 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                   if (isAdmin) Divider(color: AppColors.teal400, height: 12.h),
                   Expanded(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: 50,
-                      itemBuilder: (context, index) {
-                        return MessageWidget(
-                          isMe: [true, false][index % 2],
-                          message: [
-                            "I need proper assignment according to my requirements which i have added bellow in aattched document. What type of requirements from me you need in this assignment?",
-                            "Hello Marley, everything is ok? What type of help you needin this assignment?"
-                          ][index % 2],
-                          linktext: index % 2 == 0
-                              ? null
-                              : "Click Here to make the payment",
-                          linkUrl: index % 2 == 0
-                              ? null
-                              : "https://www.github.com/Usama-Azad",
-                        );
-                      },
-                    ),
+                    child: fmessages.isEmpty
+                        ? Center(
+                            child: Text("Say hi!",
+                                style: AppStyle.textstylepoppinsbold17))
+                        : ListView.builder(
+                            controller: _scrollController,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: fmessages.length + 1,
+                            itemBuilder: (context, index) =>
+                                index < fmessages.length
+                                    ? MessageWidget(message: fmessages[index])
+                                    : SizedBox(height: 20.h),
+                      ),
                   ),
                   SizedBox(height: 52.h),
                 ],
@@ -151,6 +201,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _showBottomQuatationSheet() {
+    final priceController = TextEditingController();
+    final descriptionController = TextEditingController();
     AppRouter.closeKeyboard(context);
     showModalBottomSheet(
       backgroundColor: AppColors.transparent,
@@ -182,23 +234,39 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
             SizedBox(height: 20.h),
-            const InputTextField(
+            InputTextField(
               AppStrings.price,
-              controller: null,
+              controller: priceController,
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 10.h),
-            const InputTextField(
+            InputTextField(
               AppStrings.description,
               maxLines: 6,
-              controller: null,
+              controller: descriptionController,
             ),
             SizedBox(height: 20.h),
             SizedBox(
               width: ScreenSize.width * 0.5,
               child: CustomButton(
                 AppStrings.done,
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  if (priceController.text.isNotEmpty &&
+                      descriptionController.text.isNotEmpty) {
+                    messages.add(Message(
+                        id: 1,
+                        assignmentId: 14,
+                        isMe: true,
+                        message:
+                            "Price: ${priceController.text}\nDescription: ${descriptionController.text}",
+                        linktext: "Click Here to make the payment",
+                        linkUrl: "https://www.github.com/Usama-Azad"));
+                    setState(() {});
+                    _scrollToEnd();
+                    _messageController.clear();
+                  }
+                  Navigator.pop(context);
+                },
                 color: AppColors.teal400,
               ),
             ),
@@ -226,10 +294,11 @@ class _ChatPageState extends State<ChatPage> {
                 color: AppColors.teal100,
               ),
             ),
-            const Expanded(
+            Expanded(
               child: InputTextField(
                 AppStrings.typeYourMessage,
                 textColor: AppColors.white,
+                controller: _messageController,
                 cursorColor: AppColors.gray800,
               ),
             ),
@@ -247,7 +316,19 @@ class _ChatPageState extends State<ChatPage> {
             ),
             SizedBox(width: 12.w),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                if (_messageController.text.isNotEmpty) {
+                  _socket.sendMessage({"message": _messageController.text});
+                  messages.add(Message(
+                      id: 1,
+                      assignmentId: widget.assignment.id,
+                      isMe: true,
+                      message: _messageController.text));
+                  setState(() {});
+                  _scrollToEnd();
+                  _messageController.clear();
+                }
+              },
               child: Container(
                 width: 28.w,
                 height: 25.h,

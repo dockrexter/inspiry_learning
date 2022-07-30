@@ -50,7 +50,7 @@ class User {
     return data;
   }
 
-    Map<String, dynamic> toJsonForSave() {
+  Map<String, dynamic> toJsonForSave() {
     final data = <String, dynamic>{};
     data['user_id'] = userId;
     data['firstname'] = firstname;
@@ -104,5 +104,9 @@ class User {
   Future<bool> save() async {
     return await SharedPreferencesManager.instance
         .saveUser(json.encode(toJsonForSave()));
+  }
+
+  static Future<bool> remove() async {
+    return await SharedPreferencesManager.instance.removeUser();
   }
 }

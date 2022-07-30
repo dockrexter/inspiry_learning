@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
 
@@ -76,6 +78,17 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           AppAssets.settingIcon,
                           color: AppColors.white,
                           scale: 4,
+                        ),
+                      ),
+                      SizedBox(width: 18.w),
+                      InkWell(
+                        onTap: () async {
+                          await User.remove();
+                          AppRouter.makeFirst(context, const UserInfoPage());
+                        },
+                        child: const Icon(
+                          Icons.logout,
+                          color: AppColors.white,
                         ),
                       ),
                     ],

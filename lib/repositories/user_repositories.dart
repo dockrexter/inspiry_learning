@@ -49,6 +49,9 @@ class UserRepository {
           await user.save();
         }
         return user;
+      } else if (response['status'] == 'error') {
+        Utils.showToast(AppStrings.emailAlreadyExist);
+        return null;
       }
       Utils.showToast(AppStrings.somethingWentWrong);
       return null;
