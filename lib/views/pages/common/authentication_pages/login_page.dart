@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
-  bool _rememberMe = false;
+  bool _rememberMe = true;
   final _isAdmin = UserTypeHelper.isAdmin();
 
   final _emailController = TextEditingController();
@@ -195,6 +195,7 @@ class _LoginPageState extends State<LoginPage> {
     ActiveUser.instance.user = await UserRepository().login(
       email: _emailController.text,
       password: _passwordController.text,
+      rememberMe: _rememberMe,
       role: Utils.role,
     );
     setState(() => _isLoading = false);
