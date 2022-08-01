@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:inspiry_learning/models/attachment_model.dart';
 
 class Message {
   int id;
@@ -7,7 +7,7 @@ class Message {
   String? message;
   DateTime? timeStamp;
   String? linktext, linkUrl;
-  List<Uint8List?>? attachments;
+  Attachment? attachment;
 
   Message({
     required this.id,
@@ -15,19 +15,20 @@ class Message {
     required this.assignmentId,
     this.message,
     this.linkUrl,
-    this.linktext,
     this.timeStamp,
-    this.attachments,
-  });
+    this.attachment,
+  }) : assert(message != null || attachment != null,
+            'Message or Attachment must be provided') {
+    timeStamp ??= DateTime.now();
+  }
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       id: json['id'] as int,
       isMe: json['is_me'] as bool,
-      attachments: json['attachments'],
+      attachment: json['attachment'],
       message: json['message'] as String?,
       linkUrl: json['link_url'] as String?,
-      linktext: json['link_text'] as String?,
       assignmentId: json['assignment_id'] as int,
       timeStamp: DateTime.parse(json['time_stamp']),
     );
@@ -64,10 +65,9 @@ final messages = [
     timeStamp: DateTime.now().subtract(const Duration(days: 2)),
     message:
         "Hello Marley, everything is ok? What type of help you needin this assignment?",
-    linktext: "Click Here to make the payment",
     linkUrl: "https://www.github.com/Usama-Azad",
   ),
-    Message(
+  Message(
     id: 1,
     isMe: false,
     assignmentId: 29,
@@ -82,10 +82,9 @@ final messages = [
     timeStamp: DateTime.now().subtract(const Duration(days: 2)),
     message:
         "Hello Marley, everything is ok? What type of help you needin this assignment?",
-    linktext: "Click Here to make the payment",
     linkUrl: "https://www.github.com/Usama-Azad",
   ),
-    Message(
+  Message(
     id: 1,
     isMe: false,
     assignmentId: 29,
@@ -100,7 +99,6 @@ final messages = [
     timeStamp: DateTime.now().subtract(const Duration(days: 2)),
     message:
         "Hello Marley, everything is ok? What type of help you needin this assignment?",
-    linktext: "Click Here to make the payment",
     linkUrl: "https://www.github.com/Usama-Azad",
   ),
 ];

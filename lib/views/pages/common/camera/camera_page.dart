@@ -10,8 +10,10 @@ class CameraPage extends StatefulWidget {
   const CameraPage({
     super.key,
     required this.camera,
+    required this.assignmentId,
   });
 
+  final int assignmentId;
   final CameraDescription camera;
 
   @override
@@ -80,6 +82,7 @@ class _CameraPageState extends State<CameraPage> {
               context,
               DisplayPicturePage(
                 imagePath: image.path,
+                assignmentId: widget.assignmentId,
               ),
             );
           } catch (_) {}

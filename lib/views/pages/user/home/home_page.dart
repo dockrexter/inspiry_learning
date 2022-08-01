@@ -94,34 +94,41 @@ class _HomePageState extends State<HomePage> {
           Text(AppStrings.submittedFormList,
               style: AppStyle.textstylepoppinsmedium11),
           Expanded(
-            child: FutureBuilder(
-              future: AssignmentRepository()
-                  .getAssignments(ActiveUser.instance.user!.userId!),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  final assignments = snapshot.data;
-                  return ListView.builder(
-                    itemCount: assignments.length,
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => CustomCard(
-                      assignment: assignments[index],
-                      onPressed: () => AppRouter.push(
-                        context,
-                        ChatPage(assignment: assignments[index]),
-                      ),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text(AppStrings.somethingWentWrong),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                }
+            child: RefreshIndicator(
+              displacement: 10.h,
+              onRefresh: () async {
+                await Future.delayed(const Duration(seconds: 1));
+                setState(() {});
               },
+              child: FutureBuilder(
+                future: AssignmentRepository()
+                    .getAssignments(ActiveUser.instance.user!.userId!),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    final assignments = snapshot.data;
+                    return ListView.builder(
+                      itemCount: assignments.length,
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => CustomCard(
+                        assignment: assignments[index],
+                        onPressed: () => AppRouter.push(
+                          context,
+                          ChatPage(assignment: assignments[index]),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: Text(AppStrings.somethingWentWrong),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  }
+                },
+              ),
             ),
           ),
           SizedBox(height: 36.h),

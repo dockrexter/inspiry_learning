@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/models/user_model.dart';
@@ -25,12 +26,38 @@ class ActiveUser {
 }
 
 class Utils {
-
   static get role => UserTypeHelper.isAdmin() ? "admin" : "user";
 
   static Future<void> launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
+    }
+  }
+
+  static Future<OpenResult> openFile(String path) async {
+    return await OpenFile.open(path);
+  }
+
+  static String converBytes(int bytes) {
+    double mb = bytes / 1024 / 1024;
+    double kb = bytes / 1024;
+    double b = bytes.toDouble();
+    if (mb > 1) {
+      return "${mb.round()} MB";
+    } else if (kb > 1) {
+      return "${kb.round()} KB";
+    } else {
+      return "${b.round()} B";
+    }
+  }
+
+  static String fromatTime(DateTime dateTime) {
+    if (dateTime.hour < 12) {
+      return "${dateTime.hour}:${dateTime.minute} AM";
+    } else if (dateTime.hour == 12) {
+      return "${dateTime.hour}:${dateTime.minute} PM";
+    } else {
+      return "${dateTime.hour - 12}:${dateTime.minute} PM";
     }
   }
 
@@ -130,5 +157,4 @@ class Utils {
       controller.clear();
     }
   }
-
 }

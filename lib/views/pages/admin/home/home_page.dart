@@ -104,8 +104,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   )
                 : RefreshIndicator(
                     displacement: 10.h,
-                    onRefresh: () => _getAssignments(),
+                    onRefresh: () async => await _getAssignments(month: _selectedDate.month.toString(), year: _selectedDate.year.toString()),
                     child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           _buildCalendar(),
@@ -169,7 +170,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         currentDay: now,
         lastDay: DateTime(2037),
         focusedDay: _selectedDate,
-        firstDay: DateTime(now.year, now.month, 1),
+        firstDay: DateTime(now.year, 1, 1),
         calendarStyle: CalendarStyle(
           selectedDecoration: const BoxDecoration(
             color: AppColors.yellow701,

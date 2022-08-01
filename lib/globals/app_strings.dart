@@ -4,6 +4,7 @@ class AppStrings {
 
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
+  // static const String baseUrl = "http://192.168.100.125:8000";
   static const String baseUrl = "https://inspirylearning-web.herokuapp.com";
   // static const String baseUrl = "https://inspiry-learning-backend.herokuapp.com";
 
@@ -70,7 +71,9 @@ class AppStrings {
   static const String confirmNewPassword = "Confirm New Password";
 
   // Chat Page
+  static const String pay = "Pay";
   static const String price = "Price";
+  static const String reject = "Reject";
   static const String description = "Description";
   static const String chatWithUser = "Chat with User";
   static const String sendQuatation = "Send Quatation";

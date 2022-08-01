@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -8,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/models/attachment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
@@ -63,16 +62,17 @@ class _ChatPageState extends State<ChatPage> {
             setState(() {});
             _scrollToEnd();
           }
-        } else {
-          print("Usama -> $data");
         }
       } catch (_) {}
     });
   }
 
   void _scrollToEnd({bool updateState = true}) {
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 10.0);
-    if (updateState) setState(() {});
+    if (_scrollController.hasClients) {
+      _scrollController
+          .jumpTo(_scrollController.position.maxScrollExtent + 10.0);
+      if (updateState) setState(() {});
+    }
   }
 
   @override
@@ -183,7 +183,7 @@ class _ChatPageState extends State<ChatPage> {
                                 index < fmessages.length
                                     ? MessageWidget(message: fmessages[index])
                                     : SizedBox(height: 20.h),
-                      ),
+                          ),
                   ),
                   SizedBox(height: 52.h),
                 ],
@@ -255,17 +255,20 @@ class _ChatPageState extends State<ChatPage> {
                       descriptionController.text.isNotEmpty) {
                     messages.add(Message(
                         id: 1,
-                        assignmentId: 14,
+                        assignmentId: widget.assignment.id,
                         isMe: true,
                         message:
                             "Price: ${priceController.text}\nDescription: ${descriptionController.text}",
-                        linktext: "Click Here to make the payment",
                         linkUrl: "https://www.github.com/Usama-Azad"));
                     setState(() {});
                     _scrollToEnd();
+                    _socket.sendMessage({
+                      "message":
+                          "Price: ${priceController.text}\nDescription: ${descriptionController.text}"
+                    });
                     _messageController.clear();
                   }
-                  Navigator.pop(context);
+                  AppRouter.pop(context);
                 },
                 color: AppColors.teal400,
               ),
@@ -318,7 +321,6 @@ class _ChatPageState extends State<ChatPage> {
             InkWell(
               onTap: () {
                 if (_messageController.text.isNotEmpty) {
-                  _socket.sendMessage({"message": _messageController.text});
                   messages.add(Message(
                       id: 1,
                       assignmentId: widget.assignment.id,
@@ -326,6 +328,7 @@ class _ChatPageState extends State<ChatPage> {
                       message: _messageController.text));
                   setState(() {});
                   _scrollToEnd();
+                  _socket.sendMessage({"message": _messageController.text});
                   _messageController.clear();
                 }
               },
@@ -354,15 +357,29 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _openCamera() async {
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
-    AppRouter.push(context, CameraPage(camera: firstCamera));
+    AppRouter.push(context,
+        CameraPage(camera: firstCamera, assignmentId: widget.assignment.id));
   }
 
   Future<void> _openFilePicker() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
+      withData: false,
       allowMultiple: true,
+      withReadStream: false,
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'zip'],
     );
-    if (result != null) {}
+    if (result != null) {
+      for (var f in result.files) {
+        messages.add(Message(
+          id: 1,
+          isMe: true,
+          assignmentId: widget.assignment.id,
+          attachment: Attachment.formPlatformFile(f),
+        ));
+      }
+    }
     setState(() {});
+    _scrollToEnd();
   }
 }
