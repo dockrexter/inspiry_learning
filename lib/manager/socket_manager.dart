@@ -12,9 +12,7 @@ class SocketManager {
       : _socket = io.io(AppStrings.baseUrl, {
           "transports": ["websocket"],
           "autoConnect": false,
-        }) {
-    _socket.connect();
-  }
+        });
 
   final io.Socket _socket;
 
@@ -34,18 +32,42 @@ class SocketManager {
     _socket.onConnect(handler);
   }
 
+  void onOnline(dynamic Function(dynamic) handler) {
+    _socket.on("online", handler);
+  }
+
+  void onTyping(dynamic Function(dynamic) handler) {
+    _socket.on("typing", handler);
+  }
+
+  void onDBChat(dynamic Function(dynamic) handler) {
+    _socket.once("getChat", handler);
+  }
+
   void onMessage(dynamic Function(dynamic) handler) {
-    _socket.on("message", handler);
+    _socket.once("message", handler);
   }
 
   void sendMessage(dynamic data) {
     _socket.emit("sendMessage", data);
   }
 
-  void emitJoinEvent({required int userId, required int assignmentId}) {
+  void emitTyping(dynamic data) {
+    _socket.emit("typing", data);
+  }
+
+  void emitOnline(dynamic data) {
+    _socket.emit("online", data);
+  }
+
+  void removeAllListeners() {
+    _socket.clearListeners();
+  }
+
+  void joinRoom({required int userId, required int assignmentId}) {
     _socket.emit("join", {
-      "user_id": userId.toString(),
-      "assignment_id": assignmentId.toString(),
+      "user_id": userId,
+      "assignment_id": assignmentId,
     });
   }
 }

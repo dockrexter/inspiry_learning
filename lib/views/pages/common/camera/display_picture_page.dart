@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inspiry_learning/models/message_model.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/models/attachment_model.dart';
 
 class DisplayPicturePage extends StatelessWidget {
   final int assignmentId;
@@ -45,7 +43,7 @@ class DisplayPicturePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          messages.add(Message(id: messages.length + 1, assignmentId: assignmentId, isMe: true, attachment: Attachment.formFile(File(imagePath))));
+          // messages.add(Message(id: messages.length + 1, assignmentId: assignmentId, isMe: true, attachment: Attachment.formFile(File(imagePath))));
           AppRouter.pop(context);
         },
         child: const Icon(Icons.send),

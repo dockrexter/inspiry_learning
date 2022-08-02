@@ -1,12 +1,13 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:inspiry_learning/models/message_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
+import 'package:inspiry_learning/providers/chat_provider.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
@@ -23,20 +24,15 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final _socket = SocketManager();
-  bool isAdmin = UserTypeHelper.isAdmin();
+  late ChatProvider _chatProvider;
+  late List<Message> filteredMessages;
   final _scrollController = ScrollController();
+  final bool _isAdmin = UserTypeHelper.isAdmin();
   final _messageController = TextEditingController();
-  late List<Message> fmessages;
 
   @override
   void initState() {
     super.initState();
-    _socket.onConnect((data) {});
-    _socket.emitJoinEvent(
-        userId: ActiveUser.instance.user!.userId!,
-        assignmentId: widget.assignment.id);
-    _messagesListnerHandler();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _scrollToEnd(updateState: false));
   }
@@ -45,26 +41,8 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     _scrollController.dispose();
     _messageController.dispose();
+    _chatProvider.disconnect();
     super.dispose();
-  }
-
-  void _messagesListnerHandler() {
-    SocketManager().onMessage((data) {
-      try {
-        if (data["text"] != null) {
-          if (int.parse(data["user"]) != ActiveUser.instance.user!.userId) {
-            messages.add(Message(
-              id: 1,
-              assignmentId: widget.assignment.id,
-              isMe: false,
-              message: data["text"],
-            ));
-            setState(() {});
-            _scrollToEnd();
-          }
-        }
-      } catch (_) {}
-    });
   }
 
   void _scrollToEnd({bool updateState = true}) {
@@ -77,7 +55,8 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    fmessages = messages
+    _chatProvider = Provider.of<ChatProvider>(context);
+    filteredMessages = _chatProvider.messages
         .where((msg) => msg.assignmentId == widget.assignment.id)
         .toList();
     return Scaffold(
@@ -99,7 +78,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   const Spacer(),
                   Text(
-                    isAdmin
+                    _isAdmin
                         ? AppStrings.chatWithUser
                         : AppStrings.chatWithProfessionals,
                     style: AppStyle.textstyleinterbold23.copyWith(
@@ -131,7 +110,7 @@ class _ChatPageState extends State<ChatPage> {
               ),
               child: Column(
                 children: [
-                  if (isAdmin)
+                  if (_isAdmin)
                     Padding(
                       padding:
                           EdgeInsets.only(right: 16.w, left: 16.w, top: 10.h),
@@ -169,19 +148,20 @@ class _ChatPageState extends State<ChatPage> {
                         ],
                       ),
                     ),
-                  if (isAdmin) Divider(color: AppColors.teal400, height: 12.h),
+                  if (_isAdmin) Divider(color: AppColors.teal400, height: 12.h),
                   Expanded(
-                    child: fmessages.isEmpty
+                    child: filteredMessages.isEmpty
                         ? Center(
                             child: Text("Say hi!",
                                 style: AppStyle.textstylepoppinsbold17))
                         : ListView.builder(
                             controller: _scrollController,
                             physics: const BouncingScrollPhysics(),
-                            itemCount: fmessages.length + 1,
+                            itemCount: filteredMessages.length + 1,
                             itemBuilder: (context, index) =>
-                                index < fmessages.length
-                                    ? MessageWidget(message: fmessages[index])
+                                index < filteredMessages.length
+                                    ? MessageWidget(
+                                        message: filteredMessages[index])
                                     : SizedBox(height: 20.h),
                           ),
                   ),
@@ -253,19 +233,17 @@ class _ChatPageState extends State<ChatPage> {
                 onPressed: () {
                   if (priceController.text.isNotEmpty &&
                       descriptionController.text.isNotEmpty) {
-                    messages.add(Message(
+                    _chatProvider.sendMessage(
+                      Message(
                         id: 1,
                         assignmentId: widget.assignment.id,
                         isMe: true,
+                        paymentAmount: double.tryParse(priceController.text),
                         message:
                             "Price: ${priceController.text}\nDescription: ${descriptionController.text}",
-                        linkUrl: "https://www.github.com/Usama-Azad"));
-                    setState(() {});
+                      ),
+                    );
                     _scrollToEnd();
-                    _socket.sendMessage({
-                      "message":
-                          "Price: ${priceController.text}\nDescription: ${descriptionController.text}"
-                    });
                     _messageController.clear();
                   }
                   AppRouter.pop(context);
@@ -321,14 +299,12 @@ class _ChatPageState extends State<ChatPage> {
             InkWell(
               onTap: () {
                 if (_messageController.text.isNotEmpty) {
-                  messages.add(Message(
+                  _chatProvider.sendMessage(Message(
                       id: 1,
                       assignmentId: widget.assignment.id,
                       isMe: true,
                       message: _messageController.text));
-                  setState(() {});
                   _scrollToEnd();
-                  _socket.sendMessage({"message": _messageController.text});
                   _messageController.clear();
                 }
               },
@@ -371,7 +347,7 @@ class _ChatPageState extends State<ChatPage> {
     );
     if (result != null) {
       for (var f in result.files) {
-        messages.add(Message(
+        _chatProvider.sendMessage(Message(
           id: 1,
           isMe: true,
           assignmentId: widget.assignment.id,

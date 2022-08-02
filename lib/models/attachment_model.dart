@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data' show Uint8List;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:inspiry_learning/repositories/attachment_repositories.dart';
 
@@ -8,33 +7,29 @@ class Attachment {
     String? path,
     required this.name,
     required this.size,
-    this.bytes,
     this.downloadUrl,
   }) : _path = path;
 
   factory Attachment.fromMap(Map data, {Stream<List<int>>? readStream}) {
     return Attachment(
-      name: data['name'],
-      path: data['path'],
-      bytes: data['bytes'],
-      size: data['size'],
+      name: data['file_name'],
+      size: data['file_size'],
+      downloadUrl: data['download_url'],
     );
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['name'] = name;
-    data['path'] = path;
-    data['size'] = size;
-    data['bytes'] = bytes;
+    data['file_name'] = name;
+    data['file_size'] = size;
+    data['download_url'] = size;
     return data;
   }
 
   factory Attachment.formFile(File file) {
     return Attachment(
-      name: file.path.split('/').last,
       path: file.path,
-      bytes: file.readAsBytesSync(),
+      name: file.path.split('/').last,
       size: file.lengthSync(),
     );
   }
@@ -43,13 +38,13 @@ class Attachment {
     return Attachment(
       name: platformFile.name,
       path: platformFile.path,
-      bytes: platformFile.bytes,
       size: platformFile.size,
     );
   }
 
   Future<void> upload() async {
-    downloadUrl ??= await AttachmentRepository().uploadAttachment(attachment: this);
+    downloadUrl ??=
+        await AttachmentRepository().uploadAttachment(attachment: this);
   }
 
   String? get path {
@@ -64,6 +59,5 @@ class Attachment {
   final int size;
   final String name;
   String? downloadUrl;
-  final Uint8List? bytes;
   String? get extension => name.split('.').last;
 }

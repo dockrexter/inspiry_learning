@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/providers/chat_provider.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
@@ -114,7 +116,10 @@ class _HomePageState extends State<HomePage> {
                         assignment: assignments[index],
                         onPressed: () => AppRouter.push(
                           context,
-                          ChatPage(assignment: assignments[index]),
+                          ChangeNotifierProvider(
+                              create: (_) => ChatProvider(assignmentId: assignments[index].id),
+                              builder: (_, __) =>
+                                  ChatPage(assignment: assignments[index])),
                         ),
                       ),
                     );

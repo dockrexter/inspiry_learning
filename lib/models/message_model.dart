@@ -1,104 +1,64 @@
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
 
+enum MessageType {
+  text,
+  offer,
+  attachment,
+}
+
 class Message {
-  int id;
+  int? id;
   bool isMe;
-  int assignmentId;
   String? message;
+  int assignmentId;
+  MessageType type;
+  int? paymentStatus;
   DateTime? timeStamp;
-  String? linktext, linkUrl;
+  double? paymentAmount;
   Attachment? attachment;
 
   Message({
-    required this.id,
+    this.id,
     required this.isMe,
     required this.assignmentId,
     this.message,
-    this.linkUrl,
     this.timeStamp,
     this.attachment,
+    this.paymentStatus,
+    this.paymentAmount,
+    this.type = MessageType.text,
   }) : assert(message != null || attachment != null,
             'Message or Attachment must be provided') {
     timeStamp ??= DateTime.now();
   }
 
   factory Message.fromJson(Map<String, dynamic> json) {
+    int? userId = json["user_id"] ?? json["admin_id"];
     return Message(
-      id: json['id'] as int,
-      isMe: json['is_me'] as bool,
-      attachment: json['attachment'],
+      id: json['id'] as int?,
+      // attachment: json['attachment'],
       message: json['message'] as String?,
-      linkUrl: json['link_url'] as String?,
+      paymentStatus: json['status'] as int?,
+      paymentAmount: json['amount'] as double?,
       assignmentId: json['assignment_id'] as int,
+      type: MessageType.values[json['type'] as int],
       timeStamp: DateTime.parse(json['time_stamp']),
+      isMe: userId == null ? false : userId == ActiveUser.instance.user!.userId,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id.toString(),
-      'message': message ?? '',
-      'link_url': linkUrl ?? '',
-      'link_text': linktext ?? '',
+      'id': id,
+      'message': message,
+      'type': type.index,
+      'amount': paymentAmount,
+      'status': paymentStatus,
       'assignment_id': assignmentId.toString(),
-      'time_stamp': (timeStamp ?? DateTime.now()).toIso8601String(),
-      'attachments': [],
+      'time_stamp': timeStamp?.toUtc().toString(),
+      'user_type': UserTypeHelper.isAdmin() ? 1 : 0,
+      'attachment': attachment == null ? null : attachment!.toJson(),
     };
   }
 }
-
-// For Testing Only
-
-final messages = [
-  Message(
-    id: 1,
-    isMe: false,
-    assignmentId: 29,
-    timeStamp: DateTime.now(),
-    message:
-        "I need proper assignment according to my requirements which i have added bellow in aattched document. What type of requirements from me you need in this assignment?",
-  ),
-  Message(
-    id: 2,
-    isMe: true,
-    assignmentId: 29,
-    timeStamp: DateTime.now().subtract(const Duration(days: 2)),
-    message:
-        "Hello Marley, everything is ok? What type of help you needin this assignment?",
-    linkUrl: "https://www.github.com/Usama-Azad",
-  ),
-  Message(
-    id: 1,
-    isMe: false,
-    assignmentId: 29,
-    timeStamp: DateTime.now(),
-    message:
-        "I need proper assignment according to my requirements which i have added bellow in aattched document. What type of requirements from me you need in this assignment?",
-  ),
-  Message(
-    id: 2,
-    isMe: true,
-    assignmentId: 29,
-    timeStamp: DateTime.now().subtract(const Duration(days: 2)),
-    message:
-        "Hello Marley, everything is ok? What type of help you needin this assignment?",
-    linkUrl: "https://www.github.com/Usama-Azad",
-  ),
-  Message(
-    id: 1,
-    isMe: false,
-    assignmentId: 29,
-    timeStamp: DateTime.now(),
-    message:
-        "I need proper assignment according to my requirements which i have added bellow in aattched document. What type of requirements from me you need in this assignment?",
-  ),
-  Message(
-    id: 2,
-    isMe: true,
-    assignmentId: 29,
-    timeStamp: DateTime.now().subtract(const Duration(days: 2)),
-    message:
-        "Hello Marley, everything is ok? What type of help you needin this assignment?",
-    linkUrl: "https://www.github.com/Usama-Azad",
-  ),
-];

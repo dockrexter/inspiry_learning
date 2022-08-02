@@ -19,7 +19,6 @@ class MessageWidget extends StatefulWidget {
 }
 
 class _MessageWidgetState extends State<MessageWidget> {
-
   @override
   void initState() {
     super.initState();
@@ -76,22 +75,29 @@ class _MessageWidgetState extends State<MessageWidget> {
                   color: AppColors.gray80099,
                 ),
               ),
-              if (widget.message.linktext != null) SizedBox(height: 12.h),
-              if (widget.message.linktext != null)
+              if (widget.message.type.index == 1) SizedBox(height: 12.h),
+              if (widget.message.type.index == 1)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (!widget.message.isMe)
-                    _buildCustomButtons(
+                      _buildCustomButtons(
                         text: AppStrings.pay,
                         color: AppColors.primary,
                         icon: Icons.send,
-                        onTap: widget.message.linkUrl == null
+                        onTap: widget.message.type.index == 1
                             ? null
-                            : () async =>
-                                await Utils.launchURL(widget.message.linkUrl!)),
+                            : () async => await Utils.launchURL(
+                                "https://github.com/Usama-Azad"),
+                      ),
                     _buildCustomButtons(
-                        text: AppStrings.reject, color: AppColors.red300),
+                      text: AppStrings.reject,
+                      color: AppColors.red300,
+                      onTap: widget.message.type.index == 1
+                          ? null
+                          : () async => await Utils.launchURL(
+                              "https://github.com/Usama-Azad"),
+                    ),
                   ],
                 ),
             ],

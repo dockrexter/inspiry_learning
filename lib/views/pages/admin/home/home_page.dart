@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/providers/chat_provider.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
@@ -104,7 +106,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   )
                 : RefreshIndicator(
                     displacement: 10.h,
-                    onRefresh: () async => await _getAssignments(month: _selectedDate.month.toString(), year: _selectedDate.year.toString()),
+                    onRefresh: () async => await _getAssignments(
+                        month: _selectedDate.month.toString(),
+                        year: _selectedDate.year.toString()),
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
@@ -149,7 +153,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
         },
         onPressed: () => AppRouter.push(
           context,
-          ChatPage(assignment: filteredAssignments[index]),
+          ChangeNotifierProvider(
+              create: (_) =>
+                  ChatProvider(assignmentId: filteredAssignments[index].id),
+              builder: (_, __) =>
+                  ChatPage(assignment: filteredAssignments[index])),
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 enum WorkStatus {
   compleated,
@@ -99,6 +100,25 @@ class Utils {
       fontSize: 16.0,
       toastLength: Toast.LENGTH_SHORT,
       backgroundColor: AppColors.gray800,
+    );
+  }
+
+  static Future<void> showNotification({String? title, String? body}) async {
+    return await FlutterLocalNotificationsPlugin().show(
+      1,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          "high_importance_channel",
+          "High Importance Notifications",
+          channelDescription:
+              "This channel is used for important notifications.",
+          color: Colors.blue,
+          playSound: true,
+          icon: "@mipmap/ic_launcher",
+        ),
+      ),
     );
   }
 
