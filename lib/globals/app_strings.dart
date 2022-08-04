@@ -4,9 +4,9 @@ class AppStrings {
 
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
-  // static const String baseUrl = "http://192.168.100.125:8000";
+  // static const String baseUrl = "https://inspiry.texus.tech";
+  // static const String baseUrl = "http://192.168.100.145:8000";
   static const String baseUrl = "https://inspirylearning-web.herokuapp.com";
-  // static const String baseUrl = "https://inspiry-learning-backend.herokuapp.com";
 
   // Login Page
   static const String login = "Login";
@@ -44,6 +44,7 @@ class AppStrings {
   static const String triangleDown = "  ▼";
   static const String dueDate = "Due Date";
   static const String startingDate = "Starting Date";
+  static const String noAttachments = "Attachment not Found";
   static const String submitNewAssignmentForm = "Submit New Assignment Form";
   static const String submittedFormList = "List of assignments forms submitted";
 
@@ -73,7 +74,10 @@ class AppStrings {
   // Chat Page
   static const String pay = "Pay";
   static const String price = "Price";
+  static const String sayHi = "Say Hi";
   static const String reject = "Reject";
+  static const String online = "online";
+  static const String offline = "offline";
   static const String description = "Description";
   static const String chatWithUser = "Chat with User";
   static const String sendQuatation = "Send Quatation";
@@ -93,24 +97,33 @@ class AppStrings {
   // Assignment Details Page
   static const String assignmentDetailsTitle = "Assignment Details";
 
+  // Android Notifications
+  static const String notificationId = "high_importance_channel";
+  static const String notificationName = "High Importance Notifications";
+  static const String notificationDescription =
+      "This channel is used for important notifications";
+
   // Toast Messages
   static const String subjectRequired = "subject is required";
   static const String emailAlreadyExist = "email already exist";
   static const String somethingWentWrong = "something went wrong";
   static const String updatedSuccessfully = "Updated Successfully";
-  static const String allfieldsarerequired = "all fields are required";
-  static const String passworddoesnotmatch = "password does not match";
-  static const String subadminaddedsuccessfully = "sub admin added successfully";
-  static const String passwordchangedsuccessfully = "password changed successfully";
-  static const String userNameOrPasswordIncorrect = "user name or password is incorrect";
-  static const String passwordmustbe6characters = "password must be at least 6 characters";
-
+  static const String allFieldsAreRequired = "all fields are required";
+  static const String passwordDoesNotMatch = "password does not match";
+  static const String subAdminAddedSuccessfully =
+      "sub admin added successfully";
+  static const String passwordChangedSuccessfully =
+      "password changed successfully";
+  static const String userNameOrPasswordIncorrect =
+      "user name or password is incorrect";
+  static const String passwordMustBe6Characters =
+      "password must be at least 6 characters";
 
   static const List<String> items = [
-    'New Request',
-    'Under Review',
-    'Pending Payment',
-    'Work in Progress',
-    'Work Completed',
+    "New Request",
+    "Under Review",
+    "Pending Payment",
+    "Work in Progress",
+    "Work Completed",
   ];
 }

@@ -12,7 +12,7 @@ class SocketManager {
       : _socket = io.io(AppStrings.baseUrl, {
           "transports": ["websocket"],
           "autoConnect": false,
-        });
+        }).connect();
 
   final io.Socket _socket;
 
@@ -32,6 +32,18 @@ class SocketManager {
     _socket.onConnect(handler);
   }
 
+  void onDisconnect(dynamic Function(dynamic) handler) {
+    _socket.onDisconnect(handler);
+  }
+
+  void onJoinRoom(dynamic Function(dynamic) handler) {
+    _socket.on("userJoined", handler);
+  }
+
+  void onLeftRoom(dynamic Function(dynamic) handler) {
+    _socket.on("userLeft", handler);
+  }
+
   void onOnline(dynamic Function(dynamic) handler) {
     _socket.on("online", handler);
   }
@@ -45,7 +57,7 @@ class SocketManager {
   }
 
   void onMessage(dynamic Function(dynamic) handler) {
-    _socket.once("message", handler);
+    _socket.on("message", handler);
   }
 
   void sendMessage(dynamic data) {
@@ -54,10 +66,6 @@ class SocketManager {
 
   void emitTyping(dynamic data) {
     _socket.emit("typing", data);
-  }
-
-  void emitOnline(dynamic data) {
-    _socket.emit("online", data);
   }
 
   void removeAllListeners() {

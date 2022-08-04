@@ -8,7 +8,8 @@ class DisplayPicturePage extends StatelessWidget {
   final int assignmentId;
   final String imagePath;
 
-  const DisplayPicturePage({super.key, required this.imagePath, required this.assignmentId});
+  const DisplayPicturePage(
+      {super.key, required this.imagePath, required this.assignmentId});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,7 @@ class DisplayPicturePage extends StatelessWidget {
             SizedBox(
               width: ScreenSize.width,
               height: ScreenSize.height,
-              child: Image.file(
-                File(imagePath),
-              ),
+              child: Image.file(File(imagePath)),
             ),
             Positioned(
               top: 50.h,
@@ -42,10 +41,7 @@ class DisplayPicturePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // messages.add(Message(id: messages.length + 1, assignmentId: assignmentId, isMe: true, attachment: Attachment.formFile(File(imagePath))));
-          AppRouter.pop(context);
-        },
+        onPressed: () => AppRouter.pop(context),
         child: const Icon(Icons.send),
       ),
     );

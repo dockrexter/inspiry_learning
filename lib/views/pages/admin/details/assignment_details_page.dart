@@ -6,7 +6,8 @@ import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
-  const AssignmentDetailsPage({Key? key, required this.assignment}) : super(key: key);
+  const AssignmentDetailsPage({Key? key, required this.assignment})
+      : super(key: key);
 
   final Assignment assignment;
 
@@ -15,7 +16,6 @@ class AssignmentDetailsPage extends StatefulWidget {
 }
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,8 +71,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomCard2(
-                        assignment: widget.assignment,
-                        onSelected: (_) {}),
+                        assignment: widget.assignment, onSelected: (_) {}),
                     SizedBox(height: 20.h),
                     Padding(
                       padding: EdgeInsets.only(left: 16.w),
@@ -98,10 +97,17 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                             ),
                           ),
                           SizedBox(height: 14.h),
-                          ..._buildImagesGrid(
-                            context,
-                            imagesPath: AppAssets.attachments,
-                          ),
+                          if (widget.assignment.attachments != null)
+                            ..._buildImagesGrid(
+                              context,
+                              imagesPath: [],
+                              //imagesPath: widget.assignment.attachments!.map((e) => e.downloadUrl!).toList(),
+                            )
+                          else
+                            Text(
+                              AppStrings.noAttachments,
+                              style: AppStyle.textstylepoppinsregular12,
+                            ),
                           SizedBox(height: 46.h),
                         ],
                       ),

@@ -33,18 +33,24 @@ class Message {
     timeStamp ??= DateTime.now();
   }
 
-  factory Message.fromJson(Map<String, dynamic> json) {
-    int? userId = json["user_id"] ?? json["admin_id"];
+  factory Message.fromJson(dynamic json) {
+    int? userId = UserTypeHelper.isAdmin() ? json["admin_id"] : json["user_id"];
     return Message(
-      id: json['id'] as int?,
-      // attachment: json['attachment'],
-      message: json['message'] as String?,
-      paymentStatus: json['status'] as int?,
-      paymentAmount: json['amount'] as double?,
-      assignmentId: json['assignment_id'] as int,
-      type: MessageType.values[json['type'] as int],
-      timeStamp: DateTime.parse(json['time_stamp']),
+      id: json["id"] as int?,
+      message: json["message"] as String?,
+      paymentStatus: json["status"] as int?,
+      paymentAmount: json["amount"] as double?,
+      assignmentId: json["assignment_id"] as int,
+      type: MessageType.values[json["type"] as int],
+      timeStamp: DateTime.parse(json["time_stamp"] as String),
       isMe: userId == null ? false : userId == ActiveUser.instance.user!.userId,
+      attachment: json["attachment"] != null
+          ? Attachment(
+              size: int.tryParse(json["file_size"] as String) ?? 0,
+              name:  json["file_name"] as String,
+              downloadUrl: json["download_url"] as String?,
+            )
+          : null,
     );
   }
 
@@ -55,10 +61,13 @@ class Message {
       'type': type.index,
       'amount': paymentAmount,
       'status': paymentStatus,
-      'assignment_id': assignmentId.toString(),
+      'assignment_id': assignmentId,
       'time_stamp': timeStamp?.toUtc().toString(),
       'user_type': UserTypeHelper.isAdmin() ? 1 : 0,
-      'attachment': attachment == null ? null : attachment!.toJson(),
+      'attachment': attachment == null ? null : "1",
+      'file_size': attachment == null ? null : attachment!.size.toString(),
+      'file_name': attachment == null ? null : attachment!.name,
+      'download_url': attachment == null ? null : attachment!.downloadUrl,
     };
   }
 }

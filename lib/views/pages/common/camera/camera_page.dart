@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
@@ -84,6 +83,7 @@ class _CameraPageState extends State<CameraPage> {
                 imagePath: image.path,
                 assignmentId: widget.assignmentId,
               ),
+              data: image.path,
             );
           } catch (_) {}
         },

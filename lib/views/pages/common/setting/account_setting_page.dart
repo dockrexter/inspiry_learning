@@ -212,7 +212,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   Future<void> _saveBtnClickHandler() async {
     if (_isLoading) return;
     if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allfieldsarerequired);
+      Utils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
     setState(() => _isLoading = true);

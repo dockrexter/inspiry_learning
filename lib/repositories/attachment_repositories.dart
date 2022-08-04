@@ -24,12 +24,12 @@ class AttachmentRepository {
     final response = await _apiManager.post(
       ApiEndpoints.uploadAttachments,
       data: FormData.fromMap({
-        'file': await MultipartFile.fromFile(attachment.path!),
+        "file": await MultipartFile.fromFile(attachment.path!),
       }),
     );
     if (response != null) {
-      if (response['status'] == 'ok') {
-        return response['url'];
+      if (response["status"] == "ok") {
+        return response["url"];
       }
       Utils.showToast(AppStrings.somethingWentWrong);
       return null;

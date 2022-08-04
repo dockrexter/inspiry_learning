@@ -1,13 +1,14 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:inspiry_learning/models/message_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
-import 'package:inspiry_learning/providers/chat_provider.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
@@ -24,41 +25,37 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  late ChatProvider _chatProvider;
-  late List<Message> filteredMessages;
+  bool online = false;
+  final List<Message> _messages = [];
   final _scrollController = ScrollController();
   final bool _isAdmin = UserTypeHelper.isAdmin();
   final _messageController = TextEditingController();
+  final allowedExtensions = ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'zip'];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _scrollToEnd(updateState: false));
+    SocketManager().connect();
+    SocketManager().joinRoom(
+        userId: ActiveUser.instance.user!.userId!,
+        assignmentId: widget.assignment.id);
+    SocketManager().onOnline(_handelOnline);
+    SocketManager().onMessage(_handelMessage);
+    SocketManager().onDBChat(_handelMessages);
+    // WidgetsBinding.instance
+    //     .addPostFrameCallback((_) => _scrollToEnd(updateState: false));
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     _messageController.dispose();
-    _chatProvider.disconnect();
+    SocketManager().disconnect();
     super.dispose();
-  }
-
-  void _scrollToEnd({bool updateState = true}) {
-    if (_scrollController.hasClients) {
-      _scrollController
-          .jumpTo(_scrollController.position.maxScrollExtent + 10.0);
-      if (updateState) setState(() {});
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _chatProvider = Provider.of<ChatProvider>(context);
-    filteredMessages = _chatProvider.messages
-        .where((msg) => msg.assignmentId == widget.assignment.id)
-        .toList();
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Column(
@@ -90,6 +87,22 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
           ),
+          Row(
+            children: [
+              Text(
+                online ? AppStrings.online : AppStrings.offline,
+                style: AppStyle.textstyleinterbold23
+                    .copyWith(color: AppColors.white, fontSize: 11.sp),
+              ),
+              SizedBox(width: 3.w),
+              Icon(
+                Icons.circle_rounded,
+                color: online ? Colors.green : Colors.red,
+                size: 4.w,
+              ),
+            ],
+          ),
+          SizedBox(height: 4.h),
           Expanded(
             child: Container(
               padding: EdgeInsets.only(
@@ -150,18 +163,20 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                   if (_isAdmin) Divider(color: AppColors.teal400, height: 12.h),
                   Expanded(
-                    child: filteredMessages.isEmpty
+                    child: _messages.isEmpty
                         ? Center(
-                            child: Text("Say hi!",
-                                style: AppStyle.textstylepoppinsbold17))
+                            child: Text(
+                              AppStrings.sayHi,
+                              style: AppStyle.textstylepoppinsbold17,
+                            ),
+                          )
                         : ListView.builder(
                             controller: _scrollController,
                             physics: const BouncingScrollPhysics(),
-                            itemCount: filteredMessages.length + 1,
+                            itemCount: _messages.length + 1,
                             itemBuilder: (context, index) =>
-                                index < filteredMessages.length
-                                    ? MessageWidget(
-                                        message: filteredMessages[index])
+                                index < _messages.length
+                                    ? MessageWidget(message: _messages[index])
                                     : SizedBox(height: 20.h),
                           ),
                   ),
@@ -233,14 +248,16 @@ class _ChatPageState extends State<ChatPage> {
                 onPressed: () {
                   if (priceController.text.isNotEmpty &&
                       descriptionController.text.isNotEmpty) {
-                    _chatProvider.sendMessage(
+                    _sendMessage(
                       Message(
                         id: 1,
-                        assignmentId: widget.assignment.id,
                         isMe: true,
+                        paymentStatus: 0,
+                        type: MessageType.offer,
+                        assignmentId: widget.assignment.id,
                         paymentAmount: double.tryParse(priceController.text),
                         message:
-                            "Price: ${priceController.text}\nDescription: ${descriptionController.text}",
+                            "Title: ${widget.assignment.subject} Charges: ${priceController.text} Description: ${descriptionController.text}",
                       ),
                     );
                     _scrollToEnd();
@@ -299,10 +316,10 @@ class _ChatPageState extends State<ChatPage> {
             InkWell(
               onTap: () {
                 if (_messageController.text.isNotEmpty) {
-                  _chatProvider.sendMessage(Message(
+                  _sendMessage(Message(
                       id: 1,
-                      assignmentId: widget.assignment.id,
                       isMe: true,
+                      assignmentId: widget.assignment.id,
                       message: _messageController.text));
                   _scrollToEnd();
                   _messageController.clear();
@@ -333,8 +350,18 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _openCamera() async {
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
-    AppRouter.push(context,
+    final image = await AppRouter.push(context,
         CameraPage(camera: firstCamera, assignmentId: widget.assignment.id));
+    if (image != null) {
+      _sendMessage(Message(
+        id: 1,
+        isMe: true,
+        type: MessageType.attachment,
+        assignmentId: widget.assignment.id,
+        attachment: Attachment.formFile(File(image as String)),
+      ));
+    }
+    _scrollToEnd();
   }
 
   Future<void> _openFilePicker() async {
@@ -343,13 +370,14 @@ class _ChatPageState extends State<ChatPage> {
       allowMultiple: true,
       withReadStream: false,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'zip'],
+      allowedExtensions: allowedExtensions,
     );
     if (result != null) {
       for (var f in result.files) {
-        _chatProvider.sendMessage(Message(
+        _sendMessage(Message(
           id: 1,
           isMe: true,
+          type: MessageType.attachment,
           assignmentId: widget.assignment.id,
           attachment: Attachment.formPlatformFile(f),
         ));
@@ -357,5 +385,40 @@ class _ChatPageState extends State<ChatPage> {
     }
     setState(() {});
     _scrollToEnd();
+  }
+
+  void _sendMessage(Message message) {
+    _messages.add(message);
+    if (message.type != MessageType.attachment) {
+      SocketManager().sendMessage(message.toJson());
+    }
+  }
+
+  void _handelOnline(data) {
+    online = data as bool;
+    setState(() {});
+  }
+
+  void _handelMessages(data) {
+    if (data["status"] == "ok") {
+      for (var message in data["data"]) {
+        _messages.add(Message.fromJson(message));
+      }
+      setState(() {});
+    }
+  }
+
+  void _handelMessage(data) {
+    _messages.add(Message.fromJson(data));
+    setState(() {});
+    _scrollToEnd();
+  }
+
+  void _scrollToEnd({bool updateState = true}) {
+    if (_scrollController.hasClients) {
+      _scrollController
+          .jumpTo(_scrollController.position.maxScrollExtent + 60.0);
+      if (updateState) setState(() {});
+    }
   }
 }

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -12,10 +13,9 @@ class FBNotificationManager {
       FBNotificationManager._internal();
 
   final _channel = const AndroidNotificationChannel(
-    'high_importance_channel',
-    'High Importance Notifications',
-    description:
-        'This channel is used for important notifications.', // description
+    AppStrings.notificationId,
+    AppStrings.notificationName,
+    description: AppStrings.notificationDescription,
     importance: Importance.high,
     playSound: true,
   );
@@ -65,10 +65,9 @@ class FBNotificationManager {
               android: AndroidNotificationDetails(
                 _channel.id,
                 _channel.name,
-                channelDescription: _channel.description,
-                color: Colors.blue,
                 playSound: true,
-                icon: '@mipmap/ic_launcher',
+                color: AppColors.teal400,
+                channelDescription: _channel.description,
               ),
             ),
           );

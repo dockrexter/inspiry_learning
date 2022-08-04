@@ -1,6 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:inspiry_learning/globals/app_utils.dart';
+import 'package:inspiry_learning/models/attachment_model.dart';
 
 class Assignment {
   int id;
@@ -8,7 +7,7 @@ class Assignment {
   String? assignTo;
   WorkStatus status;
   String? subject, summary;
-  List<Uint8List?>? attachments;
+  List<Attachment>? attachments;
   DateTime? createdDate, deadline;
 
   Assignment({
@@ -42,7 +41,7 @@ class Assignment {
       'subject': subject ?? '',
       'summary': summary ?? '',
       'assignee': assignTo ?? '',
-      'attachments': [], // attachments,
+      'attachments': attachments,
       'status': Utils.getStatus(status),
       'deadline': deadline?.toIso8601String(),
       'created_date': (createdDate ?? DateTime.now()).toIso8601String(),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:inspiry_learning/repositories/attachment_repositories.dart';
 
@@ -10,11 +11,11 @@ class Attachment {
     this.downloadUrl,
   }) : _path = path;
 
-  factory Attachment.fromMap(Map data, {Stream<List<int>>? readStream}) {
+  factory Attachment.fromJson(dynamic data) {
     return Attachment(
-      name: data['file_name'],
-      size: data['file_size'],
-      downloadUrl: data['download_url'],
+      name: data["file_name"] as String,
+      size: data["file_size"] as int,
+      downloadUrl: data["download_url"] as String?,
     );
   }
 
@@ -42,9 +43,16 @@ class Attachment {
     );
   }
 
-  Future<void> upload() async {
+  Future<bool> upload() async {
     downloadUrl ??=
         await AttachmentRepository().uploadAttachment(attachment: this);
+    return downloadUrl != null;
+  }
+
+  Future<bool> download() async {
+    if (downloadUrl == null) return false;
+    _path ??= await Utils.downloadFile(downloadUrl!, name);
+    return _path != null;
   }
 
   String? get path {
@@ -53,6 +61,10 @@ class Attachment {
 
   bool get isUploaded {
     return downloadUrl != null;
+  }
+
+  bool get isDownloaded {
+    return _path != null;
   }
 
   String? _path;

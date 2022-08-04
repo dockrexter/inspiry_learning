@@ -24,13 +24,13 @@ class UserRepository {
     bool rememberMe = true,
   }) async {
     final response = await _apiManager.post(ApiEndpoints.login, data: {
-      'email': email,
-      'password': password,
-      'role': role,
+      "email": email,
+      "password": password,
+      "role": role,
     });
     if (response != null) {
-      if (response['status'] == 'ok') {
-        var user = User.fromJson(response['user']);
+      if (response["status"] == "ok") {
+        var user = User.fromJson(response["user"]);
         if (rememberMe) await user.save();
         return user;
       }
@@ -45,13 +45,13 @@ class UserRepository {
     final response =
         await _apiManager.post(ApiEndpoints.signup, data: user.toJson());
     if (response != null) {
-      if (response['status'] == 'ok') {
-        var user = User.fromJson(response['user']);
+      if (response["status"] == "ok") {
+        var user = User.fromJson(response["user"]);
         if (!addSubAdmin) {
           await user.save();
         }
         return user;
-      } else if (response['status'] == 'error') {
+      } else if (response["status"] == "error") {
         Utils.showToast(AppStrings.emailAlreadyExist);
         return null;
       }
@@ -67,7 +67,7 @@ class UserRepository {
       "values": user.toJsonForUpdate(),
     });
     if (response != null) {
-      if (response['status'] == 'ok') {
+      if (response["status"] == "ok") {
         user.save();
         return user;
       }
@@ -84,17 +84,17 @@ class UserRepository {
       required String newPassword}) async {
     final response = await _apiManager.post(ApiEndpoints.changePassword, data: {
       "values": {
-        'user_id': userId,
-        'currentPassword': oldPassword,
-        'changePassword': newPassword,
-        'confirmPassword': newPassword,
+        "user_id": userId,
+        "currentPassword": oldPassword,
+        "changePassword": newPassword,
+        "confirmPassword": newPassword,
       }
     });
     if (response != null) {
-      if (response['status'] == 'ok') {
+      if (response["status"] == "ok") {
         return true;
-      } else if (response['status'] == 'error') {
-        Utils.showToast(response['message']);
+      } else if (response["status"] == "error") {
+        Utils.showToast(response["message"]);
         return false;
       }
     } else {

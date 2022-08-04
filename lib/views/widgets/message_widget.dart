@@ -5,6 +5,8 @@ import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/models/message_model.dart';
+import 'package:inspiry_learning/manager/socket_manager.dart';
+import 'package:inspiry_learning/repositories/payment_repositories.dart';
 
 class MessageWidget extends StatefulWidget {
   final Message message;
@@ -19,16 +21,31 @@ class MessageWidget extends StatefulWidget {
 }
 
 class _MessageWidgetState extends State<MessageWidget> {
+  bool isError = false;
+
   @override
   void initState() {
     super.initState();
-    _uploadFile();
+    widget.message.isMe ? _uploadFile() : _downloadFile();
   }
 
   void _uploadFile() async {
     if (widget.message.attachment != null) {
-      await widget.message.attachment!.upload();
+      if (await widget.message.attachment!.upload()) {
+        SocketManager().sendMessage(widget.message.toJson());
+      } else {
+        isError = true;
+      }
       setState(() {});
+    }
+  }
+
+  void _downloadFile() async {
+    if (widget.message.attachment != null) {
+      if (!await widget.message.attachment!.download()) {
+        isError = true;
+        setState(() {});
+      }
     }
   }
 
@@ -38,10 +55,12 @@ class _MessageWidgetState extends State<MessageWidget> {
       onTap: widget.message.message != null
           ? null
           : () async {
-              final res =
-                  await Utils.openFile(widget.message.attachment!.path!);
-              if (res.message != "done") {
-                Utils.showToast(res.message);
+              if (widget.message.attachment!.path != null) {
+                final res =
+                    await Utils.openFile(widget.message.attachment!.path!);
+                if (res.message != "done") {
+                  Utils.showToast(res.message);
+                }
               }
             },
       child: Row(
@@ -85,18 +104,19 @@ class _MessageWidgetState extends State<MessageWidget> {
                         text: AppStrings.pay,
                         color: AppColors.primary,
                         icon: Icons.send,
-                        onTap: widget.message.type.index == 1
-                            ? null
-                            : () async => await Utils.launchURL(
-                                "https://github.com/Usama-Azad"),
+                        onTap: () async {
+                          final url = await PaymentRepository().payWithPapal(
+                              amount: widget.message.paymentAmount!);
+                          if (url != null) {
+                            await Utils.launchURL(url);
+                          }
+                        },
                       ),
                     _buildCustomButtons(
                       text: AppStrings.reject,
                       color: AppColors.red300,
-                      onTap: widget.message.type.index == 1
-                          ? null
-                          : () async => await Utils.launchURL(
-                              "https://github.com/Usama-Azad"),
+                      onTap: () async => await Utils.launchURL(
+                          "https://github.com/Usama-Azad"),
                     ),
                   ],
                 ),
@@ -154,6 +174,18 @@ class _MessageWidgetState extends State<MessageWidget> {
                           ),
                         ],
                       ),
+                    if (!widget.message.attachment!.isUploaded)
+                      _buildUploadDownloadButtons(onPressed: () {
+                        isError = false;
+                        setState(() {});
+                        _uploadFile();
+                      }),
+                    if (widget.message.attachment!.path == null)
+                      _buildUploadDownloadButtons(onPressed: () {
+                        isError = false;
+                        setState(() {});
+                        _downloadFile();
+                      })
                   ],
                 ),
               ),
@@ -180,6 +212,28 @@ class _MessageWidgetState extends State<MessageWidget> {
               ),
             ],
           );
+  }
+
+  Widget _buildUploadDownloadButtons({void Function()? onPressed}) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        IconButton(
+          onPressed: isError ? onPressed : null,
+          icon: Icon(
+            widget.message.isMe ? Icons.upload_rounded : Icons.download_rounded,
+            size: 18.sp,
+            color: AppColors.gray600,
+          ),
+        ),
+        CircularProgressIndicator(
+          value: isError ? 0 : null,
+          strokeWidth: 2.w,
+          valueColor: const AlwaysStoppedAnimation(AppColors.gray600),
+          backgroundColor: AppColors.gray100,
+        ),
+      ],
+    );
   }
 
   Widget _buildCustomButtons({

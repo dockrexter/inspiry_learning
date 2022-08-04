@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
@@ -103,20 +107,19 @@ class Utils {
     );
   }
 
-  static Future<void> showNotification({String? title, String? body}) async {
+  static Future<void> showNotification(
+      {String? title, String? body, bool playSound = true}) async {
     return await FlutterLocalNotificationsPlugin().show(
       1,
       title,
       body,
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
-          "high_importance_channel",
-          "High Importance Notifications",
-          channelDescription:
-              "This channel is used for important notifications.",
-          color: Colors.blue,
-          playSound: true,
-          icon: "@mipmap/ic_launcher",
+          AppStrings.notificationId,
+          AppStrings.notificationName,
+          playSound: playSound,
+          color: AppColors.teal400,
+          channelDescription: AppStrings.notificationDescription,
         ),
       ),
     );
@@ -176,5 +179,42 @@ class Utils {
     for (final controller in controllers) {
       controller.clear();
     }
+  }
+
+  static Future<String?> downloadFile(String url, String fileName) async {
+    var directory = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationSupportDirectory();
+
+    if (directory == null) {
+      return null;
+    }
+
+    String dir = directory.path;
+
+    File file = File('$dir/$fileName');
+
+    if (await file.exists()) {
+      return file.path;
+    } else {
+      HttpClient httpClient = HttpClient();
+
+      try {
+        var request = await httpClient.getUrl(Uri.parse(url));
+        var response = await request.close();
+        if (response.statusCode == 200) {
+          var bytes = await consolidateHttpClientResponseBytes(response);
+          await file.writeAsBytes(bytes);
+          httpClient.close(force: true);
+          return file.path;
+        }
+      } catch (ex) {
+        httpClient.close(force: true);
+        return null;
+      } finally {
+        httpClient.close(force: true);
+      }
+    }
+    return null;
   }
 }

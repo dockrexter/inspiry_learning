@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/models/attachment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
@@ -25,6 +26,13 @@ class _AssignmentFormSubmissionPageState
   final List<PlatformFile> _files = [];
   final _subjectController = TextEditingController();
   final _summaryController = TextEditingController();
+
+  @override
+  void dispose() {
+    _subjectController.dispose();
+    _summaryController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +168,7 @@ class _AssignmentFormSubmissionPageState
       summary: _summaryController.text,
       status: WorkStatus.newRequest,
       userId: ActiveUser.instance.user?.userId,
-      attachments: _files.map((file) => file.bytes).toList(),
+      attachments: _files.map((file) => Attachment.formPlatformFile(file)).toList(),
       deadline: DateTime(
         _date.year,
         _date.month,
@@ -254,53 +262,6 @@ class _AssignmentFormSubmissionPageState
       ),
     );
   }
-
-  // Widget _buildFile(PlatformFile file) {
-  //   return Padding(
-  //     padding: EdgeInsets.only(right: 10.w),
-  //     child: Stack(
-  //       children: [
-  //         Container(
-  //           width: 50.w,
-  //           height: 50.h,
-  //           alignment: Alignment.center,
-  //           decoration: BoxDecoration(
-  //             color: AppColors.gray100,
-  //             borderRadius: BorderRadius.all(
-  //               Radius.circular(12.r),
-  //             ),
-  //             border: Border.all(
-  //               color: AppColors.gray800,
-  //               width: 1.w,
-  //             ),
-  //           ),
-  //           child: (file.extension == 'jpg' || file.extension == 'png')
-  //               ? Image.file(File(file.path.toString()), fit: BoxFit.contain, height: 40.h)
-  //               : Image.asset(AppAssets.imageNotFound),
-  //         ),
-  //         Positioned(
-  //           top: -2,
-  //           right: -2,
-  //           child: InkWell(
-  //             onTap: () {
-  //               _files.remove(file);
-  //               setState(() {});
-  //             },
-  //             child: CircleAvatar(
-  //               radius: 10.r,
-  //               backgroundColor: AppColors.gray100,
-  //               child: Icon(
-  //                 Icons.close,
-  //                 size: 12.w,
-  //                 color: Colors.red,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildFile(PlatformFile file) {
     return Padding(

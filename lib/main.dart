@@ -13,10 +13,8 @@ import 'package:inspiry_learning/manager/firebase_notifications_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
   await SharedPreferencesManager.instance.initPrefrences();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   ActiveUser.instance.user = await User.getUser();
   runApp(
     ScreenUtilInit(

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppRouter {
-  static void push(BuildContext context, Widget page) {
+  static dynamic push(BuildContext context, Widget page) {
     closeKeyboard(context);
-    Navigator.of(context).push(
+    return Navigator.of(context).push(
       CupertinoPageRoute(builder: (context) => page),
     );
   }
@@ -21,11 +21,12 @@ class AppRouter {
     });
   }
 
-  static void replace(BuildContext context, Widget page,
-      {bool bottomToUp = false}) {
-    Navigator.of(context).pushReplacement(
+  static dynamic replace(BuildContext context, Widget page,
+      {Object? data, bool bottomToUp = false}) {
+    return Navigator.of(context).pushReplacement(
       CupertinoPageRoute(
           fullscreenDialog: bottomToUp, builder: (context) => page),
+      result: data,
     );
   }
 
@@ -40,8 +41,8 @@ class AppRouter {
     Navigator.of(context).popUntil((predicate) => predicate.isFirst);
   }
 
-  static void pop(BuildContext context) {
-    Navigator.of(context).pop();
+  static void pop(BuildContext context, [Object? result]) {
+    Navigator.of(context).pop(result);
   }
 
   static void dismissAlert(context) {

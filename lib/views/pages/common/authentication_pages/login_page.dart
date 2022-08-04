@@ -184,11 +184,11 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _loginBtnClickHandler() async {
     if (_isLoading) return;
     if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allfieldsarerequired);
+      Utils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
     if (_passwordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordmustbe6characters);
+      Utils.showToast(AppStrings.passwordMustBe6Characters);
       return;
     }
     setState(() => _isLoading = true);

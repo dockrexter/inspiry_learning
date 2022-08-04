@@ -12,10 +12,4 @@ class AppAssets {
   static const String askRevision = 'assets/images/img_ask_revision.png';
   static const String imageNotFound = 'assets/images/image_not_found.png';
   static const String calanderIcon = 'assets/images/img_calander_icon.png';
-
-  static const List<String> attachments = [
-    "assets/images/img_i_texture.png",
-    "assets/images/img_laptops.png",
-    "assets/images/img_macbook.png",
-  ];
 }

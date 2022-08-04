@@ -139,16 +139,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Future<void> _changePasswordBtnClickHandler() async {
     if (_isLoading) return;
     if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allfieldsarerequired);
+      Utils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
     if (!Utils.isPasswordMatched(
         controllers: [_newPasswordController, _confirmPasswordController])) {
-      Utils.showToast(AppStrings.passworddoesnotmatch);
+      Utils.showToast(AppStrings.passwordDoesNotMatch);
       return;
     }
     if (_newPasswordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordmustbe6characters);
+      Utils.showToast(AppStrings.passwordMustBe6Characters);
       return;
     }
     if (ActiveUser.instance.user == null || ActiveUser.instance.user?.userId == null) {
@@ -163,7 +163,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     );
     setState(() => _isLoading = false);
     if (status) {
-      Utils.showToast(AppStrings.passwordchangedsuccessfully);
+      Utils.showToast(AppStrings.passwordChangedSuccessfully);
       Utils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(context,
           UserTypeHelper.isAdmin() ? const AdminHomePage() : const HomePage());

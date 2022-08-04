@@ -175,11 +175,11 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
   Future<void> _registerBtnClickHandler() async {
     if (_isLoading) return;
     if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allfieldsarerequired);
+      Utils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
     if (_passwordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordmustbe6characters);
+      Utils.showToast(AppStrings.passwordMustBe6Characters);
       return;
     }
     setState(() => _isLoading = true);
@@ -202,7 +202,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
     setState(() => _isLoading = false);
     if (user != null) {
       Utils.clearAllFields(controllers: getControllers());
-      Utils.showToast(AppStrings.subadminaddedsuccessfully);
+      Utils.showToast(AppStrings.subAdminAddedSuccessfully);
       AppRouter.makeFirst(context, const AdminHomePage());
     }
   }
