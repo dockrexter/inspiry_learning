@@ -8,72 +8,72 @@ class SocketManager {
     return _socketManager;
   }
 
-  SocketManager._internal()
-      : _socket = io.io(AppStrings.baseUrl, {
-          "transports": ["websocket"],
-          "autoConnect": false,
-        }).connect();
+  SocketManager._internal();
 
-  final io.Socket _socket;
+  io.Socket socket = io.io(AppStrings.baseUrl, <String, dynamic>{
+    "transports": ["websocket"],
+    "autoConnect": false,
+    "forceNew": true,
+  }).connect();
 
   void connect() {
-    _socket.connect();
+    socket.connect();
   }
 
   void disconnect() {
-    _socket.disconnect();
+    socket.disconnect();
   }
 
   void dispose() {
-    _socket.dispose();
+    socket.dispose();
   }
 
   void onConnect(dynamic Function(dynamic) handler) {
-    _socket.onConnect(handler);
+    socket.onConnect(handler);
   }
 
   void onDisconnect(dynamic Function(dynamic) handler) {
-    _socket.onDisconnect(handler);
+    socket.onDisconnect(handler);
   }
 
   void onJoinRoom(dynamic Function(dynamic) handler) {
-    _socket.on("userJoined", handler);
+    socket.on("userJoined", handler);
   }
 
   void onLeftRoom(dynamic Function(dynamic) handler) {
-    _socket.on("userLeft", handler);
+    socket.on("userLeft", handler);
   }
 
   void onOnline(dynamic Function(dynamic) handler) {
-    _socket.on("online", handler);
+    socket.on("online", handler);
   }
 
   void onTyping(dynamic Function(dynamic) handler) {
-    _socket.on("typing", handler);
+    socket.on("typing", handler);
   }
 
   void onDBChat(dynamic Function(dynamic) handler) {
-    _socket.once("getChat", handler);
+    socket.once("getChat", handler);
   }
 
   void onMessage(dynamic Function(dynamic) handler) {
-    _socket.on("message", handler);
+    socket.on("message", handler);
   }
 
   void sendMessage(dynamic data) {
-    _socket.emit("sendMessage", data);
+    socket.emit("sendMessage", data);
   }
 
   void emitTyping(dynamic data) {
-    _socket.emit("typing", data);
+    socket.emit("typing", data);
   }
 
   void removeAllListeners() {
-    _socket.clearListeners();
+    socket.clearListeners();
   }
 
   void joinRoom({required int userId, required int assignmentId}) {
-    _socket.emit("join", {
+    socket.emit("join", {
       "user_id": userId,
       "assignment_id": assignmentId,
     });

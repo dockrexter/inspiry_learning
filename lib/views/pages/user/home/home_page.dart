@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
@@ -18,6 +19,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Assignment>? assignments;
+
+  @override
+  void initState() {
+    super.initState();
+    _getAssignments();
+  }
+
+  Future<void> _getAssignments() async {
+    assignments = await AssignmentRepository()
+        .getAssignments(ActiveUser.instance.user!.userId!);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,39 +111,21 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: RefreshIndicator(
               displacement: 10.h,
-              onRefresh: () async {
-                await Future.delayed(const Duration(seconds: 1));
-                setState(() {});
-              },
-              child: FutureBuilder(
-                future: AssignmentRepository()
-                    .getAssignments(ActiveUser.instance.user!.userId!),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    final assignments = snapshot.data;
-                    return ListView.builder(
-                      itemCount: assignments.length,
+              onRefresh: () async => await _getAssignments(),
+              child: assignments == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
                       shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
+                      itemCount: assignments!.length,
+                      physics: const AlwaysScrollableScrollPhysics(),
                       itemBuilder: (context, index) => CustomCard(
-                        assignment: assignments[index],
+                        assignment: assignments![index],
                         onPressed: () => AppRouter.push(
                           context,
-                          ChatPage(assignment: assignments[index]),
+                          ChatPage(assignment: assignments![index]),
                         ),
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return const Center(
-                      child: Text(AppStrings.somethingWentWrong),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  }
-                },
-              ),
+                    ),
             ),
           ),
           SizedBox(height: 36.h),
@@ -142,8 +139,10 @@ class _HomePageState extends State<HomePage> {
           child: CustomButton(
             AppStrings.submitNewAssignmentForm,
             outlineBoarder: true,
-            onPressed: () =>
-                AppRouter.push(context, const AssignmentFormSubmissionPage()),
+            onPressed: () async {
+              await AppRouter.push(context, const AssignmentFormSubmissionPage());
+              await _getAssignments();
+            },
           ),
         ),
       ),

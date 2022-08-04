@@ -39,15 +39,16 @@ class Message {
       id: json["id"] as int?,
       message: json["message"] as String?,
       paymentStatus: json["status"] as int?,
-      paymentAmount: json["amount"] as double?,
-      assignmentId: json["assignment_id"] as int,
+      paymentAmount: double.tryParse(json["amount"].toString()) ??
+          int.tryParse(json["amount"].toString())?.toDouble(),
       type: MessageType.values[json["type"] as int],
+      assignmentId: int.tryParse(json["assignment_id"].toString()) ?? 0,
       timeStamp: DateTime.parse(json["time_stamp"] as String),
       isMe: userId == null ? false : userId == ActiveUser.instance.user!.userId,
       attachment: json["attachment"] != null
           ? Attachment(
               size: int.tryParse(json["file_size"] as String) ?? 0,
-              name:  json["file_name"] as String,
+              name: json["file_name"] as String,
               downloadUrl: json["download_url"] as String?,
             )
           : null,

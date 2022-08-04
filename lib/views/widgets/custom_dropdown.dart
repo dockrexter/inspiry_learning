@@ -41,8 +41,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   void initState() {
     super.initState();
 
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
     _expandAnimation = CurvedAnimation(
       parent: _animationController!,
       curve: Curves.easeInOut,
@@ -114,8 +114,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 top: topOffset,
                 width: widget.dropdownStyle.width ?? size.width,
                 child: CompositedTransformFollower(
-                  offset:
-                      widget.dropdownStyle.offset ?? Offset(offsetX < 0 ? offsetX : 0, size.height + 5),
+                  offset: widget.dropdownStyle.offset ??
+                      Offset(offsetX < 0 ? offsetX : 0, size.height + 5),
                   link: _layerLink,
                   showWhenUnlinked: false,
                   child: Material(
@@ -129,9 +129,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       child: ConstrainedBox(
                         constraints: widget.dropdownStyle.constraints ??
                             BoxConstraints(
-                              maxHeight: ScreenSize.height -
-                                  topOffset -
-                                  15,
+                              maxHeight:
+                                  (ScreenSize.height - topOffset - 15) < 0
+                                      ? 5
+                                      : (ScreenSize.height - topOffset - 15),
                             ),
                         child: ListView(
                           padding:
@@ -180,7 +181,8 @@ class DropdownItem<T> extends StatelessWidget {
   final T value;
   final Widget child;
 
-  const DropdownItem({Key? key, required this.value, required this.child}) : super(key: key);
+  const DropdownItem({Key? key, required this.value, required this.child})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return child;

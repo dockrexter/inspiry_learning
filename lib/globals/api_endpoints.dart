@@ -10,5 +10,6 @@ class ApiEndpoints {
   static const String createAssignment = '/assignment/postAssignments';
   static const String updateAssignmentStatus = '/assignment/changeStatus';
   static const String getAssignmentsByDate = '/assignment/getAssignmentsAdmin';
+  static const String getAllDueAssignments = '/assignment/getAllDueAssignments';
   static const String getAssignmentsByMonth = '/assignment/getCurrentMonthAssignments';
 }

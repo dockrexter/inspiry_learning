@@ -30,23 +30,25 @@ class _MessageWidgetState extends State<MessageWidget> {
   }
 
   void _uploadFile() async {
-    if (widget.message.attachment != null) {
-      if (await widget.message.attachment!.upload()) {
-        SocketManager().sendMessage(widget.message.toJson());
-      } else {
-        isError = true;
-      }
-      setState(() {});
-    }
+    // if (widget.message.attachment != null) {
+    //   if (await widget.message.attachment!.upload()) {
+    //     SocketManager().sendMessage(widget.message.toJson());
+    //   } else {
+    //     isError = true;
+    //   }
+    //   if (mounted){
+    //     setState(() {});
+    //   }
+    // }
   }
 
   void _downloadFile() async {
-    if (widget.message.attachment != null) {
-      if (!await widget.message.attachment!.download()) {
-        isError = true;
-        setState(() {});
-      }
-    }
+    // if (widget.message.attachment != null) {
+    //   if (!await widget.message.attachment!.download()) {
+    //     isError = true;
+    //     setState(() {});
+    //   }
+    // }
   }
 
   @override
@@ -180,7 +182,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                         setState(() {});
                         _uploadFile();
                       }),
-                    if (widget.message.attachment!.path == null)
+                    if (widget.message.attachment!.path == null && !widget.message.isMe)
                       _buildUploadDownloadButtons(onPressed: () {
                         isError = false;
                         setState(() {});
@@ -227,9 +229,9 @@ class _MessageWidgetState extends State<MessageWidget> {
           ),
         ),
         CircularProgressIndicator(
-          value: isError ? 0 : null,
+          value: isError ? 0.3 : null,
           strokeWidth: 2.w,
-          valueColor: const AlwaysStoppedAnimation(AppColors.gray600),
+          valueColor: const AlwaysStoppedAnimation( AppColors.gray800),
           backgroundColor: AppColors.gray100,
         ),
       ],

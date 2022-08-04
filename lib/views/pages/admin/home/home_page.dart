@@ -18,14 +18,15 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  List<Assignment>? assignments;
   DateTime _selectedDate = DateTime.now();
+  List<Assignment>? assignments, otherDueAssignments;
   static const _narrowWeekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   @override
   void initState() {
     super.initState();
     _getAssignments();
+    _getOtherDueAssignments();
   }
 
   @override
@@ -71,9 +72,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                       SizedBox(width: 18.w),
                       InkWell(
-                        onTap: () {
-                          AppRouter.push(context, const AccountSettingsPage());
-                        },
+                        onTap: () => AppRouter.push(
+                            context, const AccountSettingsPage()),
                         child: Image.asset(
                           AppAssets.settingIcon,
                           color: AppColors.white,
@@ -104,9 +104,14 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   )
                 : RefreshIndicator(
                     displacement: 10.h,
-                    onRefresh: () async => await _getAssignments(
-                        month: _selectedDate.month.toString(),
-                        year: _selectedDate.year.toString()),
+                    onRefresh: () async {
+                      await _getAssignments(
+                          month: _selectedDate.month.toString(),
+                          year: _selectedDate.year.toString());
+                      if (Utils.compare2Dates(_selectedDate, DateTime.now())) {
+                        await _getOtherDueAssignments();
+                      }
+                    },
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
@@ -131,10 +136,95 @@ class _AdminHomePageState extends State<AdminHomePage> {
     setState(() {});
   }
 
+  Future<void> _getOtherDueAssignments() async {
+    otherDueAssignments = await AssignmentRepository().getAllDueAssignments();
+    setState(() {});
+  }
+
   Widget _buildAssignments() {
     final filteredAssignments = assignments!
         .where((e) => Utils.compare2Dates(e.deadline!, _selectedDate))
         .toList();
+
+    if (Utils.compare2Dates(_selectedDate, DateTime.now())) {
+      return otherDueAssignments == null
+          ? Padding(
+              padding: EdgeInsets.only(top: 40.h),
+              child: const Center(
+                  child: CircularProgressIndicator(color: AppColors.yellow701)),
+            )
+          : ListView.builder(
+              shrinkWrap: true,
+              itemCount:
+                  filteredAssignments.length + otherDueAssignments!.length + 2,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return filteredAssignments.isEmpty ? const SizedBox() : Padding(
+                    padding: EdgeInsets.only(bottom: 20.h, left: 22.w),
+                    child: Text(
+                      AppStrings.dueToday,
+                      style: AppStyle.textstylepoppinsbold17.copyWith(
+                        color: AppColors.black,
+                      ),
+                    ),
+                  );
+                } else if (index <= filteredAssignments.length) {
+                  return CustomCard2(
+                          assignment: filteredAssignments[index - 1],
+                          onSelected: (String status) async {
+                            var assignment = assignments![Utils.findIndexByID(
+                                assignments,
+                                filteredAssignments[index - 1].id)];
+                            await AssignmentRepository()
+                                .updateAssignmentStatus(assignment.id, status);
+                            assignment.status = Utils.getWorkStatus(status);
+                            setState(() {});
+                          },
+                          onPressed: () => AppRouter.push(
+                            context,
+                            ChatPage(
+                                assignment: filteredAssignments[index - 1]),
+                          ),
+                        );
+                } else if (index == filteredAssignments.length + 1) {
+                  return otherDueAssignments!.isEmpty
+                      ? const SizedBox()
+                      :  Padding(
+                    padding: EdgeInsets.only(bottom: 20.h, left: 22.w),
+                    child: Text(
+                      AppStrings.allDueAssignments,
+                      style: AppStyle.textstylepoppinsbold17.copyWith(
+                        color: AppColors.black,
+                      ),
+                    ),
+                  );
+                }
+                return CustomCard2(
+                  assignment: otherDueAssignments![
+                      index - filteredAssignments.length - 2],
+                  onSelected: (String status) async {
+                    var assignment = assignments![Utils.findIndexByID(
+                        assignments,
+                        otherDueAssignments![
+                                index - filteredAssignments.length - 2]
+                            .id)];
+                    await AssignmentRepository()
+                        .updateAssignmentStatus(assignment.id, status);
+                    assignment.status = Utils.getWorkStatus(status);
+                    setState(() {});
+                  },
+                  onPressed: () => AppRouter.push(
+                    context,
+                    ChatPage(
+                        assignment: otherDueAssignments![
+                            index - filteredAssignments.length - 2]),
+                  ),
+                );
+              },
+            );
+    }
+
     return ListView.builder(
       shrinkWrap: true,
       itemCount: filteredAssignments.length,

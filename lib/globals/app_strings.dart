@@ -5,7 +5,7 @@ class AppStrings {
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
   // static const String baseUrl = "https://inspiry.texus.tech";
-  // static const String baseUrl = "http://192.168.100.145:8000";
+  // static const String baseUrl = "http://192.168.100.125:8000";
   static const String baseUrl = "https://inspirylearning-web.herokuapp.com";
 
   // Login Page
@@ -43,8 +43,10 @@ class AppStrings {
   static const String marley = "Marley";
   static const String triangleDown = "  ▼";
   static const String dueDate = "Due Date";
+  static const String dueToday = "Due Today";
   static const String startingDate = "Starting Date";
   static const String noAttachments = "Attachment not Found";
+  static const String allDueAssignments = "All Due Assignments";
   static const String submitNewAssignmentForm = "Submit New Assignment Form";
   static const String submittedFormList = "List of assignments forms submitted";
 

@@ -18,20 +18,38 @@ class AssignmentRepository {
     _apiManager = APIManager();
   }
 
-  Future<dynamic> getAssignments(int userId) async {
+  Future<List<Assignment>> getAssignments(int userId) async {
     final response = await _apiManager.get(
       ApiEndpoints.getAssignments,
       params: {"user_id": userId},
     );
     if (response != null) {
-      final assignments = response['assignments']
-          .map((assignment) => Assignment.fromJson(assignment))
-          .toList();
+      final List<Assignment> assignments =
+          (response["assignments"] as List<dynamic>)
+              .map((assignment) => Assignment.fromJson(assignment))
+              .toList();
       return assignments;
     } else {
       Utils.showToast(AppStrings.somethingWentWrong);
     }
-    return null;
+    return [];
+  }
+
+  Future<List<Assignment>> getAllDueAssignments() async {
+    final response = await _apiManager.post(
+      ApiEndpoints.getAllDueAssignments,
+      data: {"current_date": DateTime.now().toString().split(' ')[0]},
+    );
+    if (response != null) {
+      final List<Assignment> assignments =
+          (response["assignments"] as List<dynamic>)
+              .map((assignment) => Assignment.fromJson(assignment))
+              .toList();
+      return assignments;
+    } else {
+      Utils.showToast(AppStrings.somethingWentWrong);
+      return [];
+    }
   }
 
   Future<dynamic> getAssignmentsByDate(DateTime date) async {

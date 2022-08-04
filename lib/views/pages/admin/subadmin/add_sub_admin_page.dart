@@ -7,7 +7,6 @@ import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
-import 'package:inspiry_learning/views/pages/common/authentication_pages/forgot_password_page.dart';
 
 class AddSubAdminPage extends StatefulWidget {
   const AddSubAdminPage({Key? key}) : super(key: key);
@@ -17,7 +16,6 @@ class AddSubAdminPage extends StatefulWidget {
 }
 
 class _AddSubAdminPageState extends State<AddSubAdminPage> {
-  bool rememberMe = false;
   bool _isLoading = false;
 
   final _emailController = TextEditingController();
@@ -111,39 +109,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                         icon: const Icon(Icons.lock),
                         controller: _passwordController,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: rememberMe,
-                                onChanged: (value) =>
-                                    setState(() => rememberMe = value ?? false),
-                                activeColor: AppColors.yellow701,
-                                side: BorderSide(
-                                  width: 1.5.w,
-                                  color: AppColors.yellow701,
-                                ),
-                              ),
-                              Text(
-                                AppStrings.rememberMe,
-                                style: AppStyle.textstylerobotoromanregular12,
-                              )
-                            ],
-                          ),
-                          InkWell(
-                            onTap: () => AppRouter.push(
-                              context,
-                              const ForgotPasswordPage(),
-                            ),
-                            child: Text(
-                              AppStrings.forgotPassword,
-                              style: AppStyle.textstylerobotoromanregular12,
-                            ),
-                          )
-                        ],
-                      ),
+                      SizedBox(height: 50.h),
                       _isLoading
                           ? const CircularProgressIndicator.adaptive(
                               valueColor: AlwaysStoppedAnimation<Color>(

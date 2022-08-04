@@ -51,6 +51,7 @@ class _ChatPageState extends State<ChatPage> {
     _scrollController.dispose();
     _messageController.dispose();
     SocketManager().disconnect();
+    SocketManager().dispose();
     super.dispose();
   }
 
@@ -409,6 +410,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handelMessage(data) {
+    print(data);
     _messages.add(Message.fromJson(data));
     setState(() {});
     _scrollToEnd();
