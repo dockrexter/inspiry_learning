@@ -44,12 +44,16 @@ class Attachment {
   }
 
   Future<bool> upload() async {
+    if (downloadUrl != null) return true;
+    _path = await Utils.copyFile(_path, name);
+    if (_path == null) return false;
     downloadUrl ??=
         await AttachmentRepository().uploadAttachment(attachment: this);
     return downloadUrl != null;
   }
 
   Future<bool> download() async {
+    if (path != null) return true;
     if (downloadUrl == null) return false;
     _path ??= await Utils.downloadFile(downloadUrl!, name);
     return _path != null;

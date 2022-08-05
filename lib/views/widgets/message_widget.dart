@@ -30,25 +30,25 @@ class _MessageWidgetState extends State<MessageWidget> {
   }
 
   void _uploadFile() async {
-    // if (widget.message.attachment != null) {
-    //   if (await widget.message.attachment!.upload()) {
-    //     SocketManager().sendMessage(widget.message.toJson());
-    //   } else {
-    //     isError = true;
-    //   }
-    //   if (mounted){
-    //     setState(() {});
-    //   }
-    // }
+    if (widget.message.attachment != null) {
+      if (await widget.message.attachment!.upload()) {
+        SocketManager().sendMessage(widget.message.toJson());
+      } else {
+        isError = true;
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 
   void _downloadFile() async {
-    // if (widget.message.attachment != null) {
-    //   if (!await widget.message.attachment!.download()) {
-    //     isError = true;
-    //     setState(() {});
-    //   }
-    // }
+    if (widget.message.attachment != null) {
+      if (!await widget.message.attachment!.download()) {
+        isError = true;
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -90,11 +90,34 @@ class _MessageWidgetState extends State<MessageWidget> {
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.message.message!,
-                style: AppStyle.textstylepoppinsmedium12.copyWith(
-                  color: AppColors.gray80099,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.message.message!,
+                    style: AppStyle.textstylepoppinsmedium14.copyWith(
+                      color: AppColors.black90087,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (widget.message.timeStamp != null)
+                        Text(
+                          Utils.fromatTime(widget.message.timeStamp!),
+                          style: AppStyle.textstylepoppinsmedium10.copyWith(
+                            color: AppColors.black90075,
+                          ),
+                        ),
+                      if (widget.message.isMe) SizedBox(width: 4.w),
+                      if (widget.message.isMe)
+                        const Icon(Icons.check,
+                            color: AppColors.black90075, size: 14),
+                    ],
+                  ),
+                ],
               ),
               if (widget.message.type.index == 1) SizedBox(height: 12.h),
               if (widget.message.type.index == 1)
@@ -107,6 +130,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                         color: AppColors.primary,
                         icon: Icons.send,
                         onTap: () async {
+                          Utils.showToast("Initiating Payment Process ...");
                           final url = await PaymentRepository().payWithPapal(
                               amount: widget.message.paymentAmount!);
                           if (url != null) {
@@ -146,9 +170,9 @@ class _MessageWidgetState extends State<MessageWidget> {
                         ),
                         SizedBox(width: 6.w),
                         Text(
-                          widget.message.attachment!.name.length > 16
+                          widget.message.attachment!.name.length > 14
                               ? widget.message.attachment!.name
-                                      .substring(0, 16) +
+                                      .substring(0, 14) +
                                   '...'
                               : widget.message.attachment!.name,
                           style: AppStyle.textstylepoppinsregular14.copyWith(
@@ -157,32 +181,14 @@ class _MessageWidgetState extends State<MessageWidget> {
                         ),
                       ],
                     ),
-                    if (!widget.message.attachment!.isUploaded)
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Icon(
-                            widget.message.isMe
-                                ? Icons.upload_rounded
-                                : Icons.download_rounded,
-                            size: 18.sp,
-                            color: AppColors.gray600,
-                          ),
-                          CircularProgressIndicator(
-                            strokeWidth: 2.w,
-                            valueColor:
-                                const AlwaysStoppedAnimation(AppColors.gray600),
-                            backgroundColor: AppColors.gray100,
-                          ),
-                        ],
-                      ),
-                    if (!widget.message.attachment!.isUploaded)
+                    if (!widget.message.attachment!.isUploaded &&
+                        widget.message.isMe)
                       _buildUploadDownloadButtons(onPressed: () {
                         isError = false;
                         setState(() {});
                         _uploadFile();
                       }),
-                    if (widget.message.attachment!.path == null && !widget.message.isMe)
+                    if (widget.message.attachment!.path == null)
                       _buildUploadDownloadButtons(onPressed: () {
                         isError = false;
                         setState(() {});
@@ -203,13 +209,21 @@ class _MessageWidgetState extends State<MessageWidget> {
                       color: AppColors.gray80099,
                     ),
                   ),
-                  if (widget.message.timeStamp != null)
-                    Text(
-                      Utils.fromatTime(widget.message.timeStamp!),
-                      style: AppStyle.textstylepoppinsmedium12.copyWith(
-                        color: AppColors.gray80099,
-                      ),
-                    ),
+                  Row(
+                    children: [
+                      if (widget.message.timeStamp != null)
+                        Text(
+                          Utils.fromatTime(widget.message.timeStamp!),
+                          style: AppStyle.textstylepoppinsmedium12.copyWith(
+                            color: AppColors.gray80099,
+                          ),
+                        ),
+                      if (widget.message.isMe) SizedBox(width: 4.w),
+                      if (widget.message.isMe)
+                        const Icon(Icons.check,
+                            color: AppColors.black90075, size: 15),
+                    ],
+                  )
                 ],
               ),
             ],
@@ -231,7 +245,7 @@ class _MessageWidgetState extends State<MessageWidget> {
         CircularProgressIndicator(
           value: isError ? 0.3 : null,
           strokeWidth: 2.w,
-          valueColor: const AlwaysStoppedAnimation( AppColors.gray800),
+          valueColor: const AlwaysStoppedAnimation(AppColors.gray800),
           backgroundColor: AppColors.gray100,
         ),
       ],

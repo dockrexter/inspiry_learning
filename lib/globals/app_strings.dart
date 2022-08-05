@@ -5,7 +5,7 @@ class AppStrings {
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
   // static const String baseUrl = "https://inspiry.texus.tech";
-  // static const String baseUrl = "http://192.168.100.125:8000";
+  // static const String baseUrl = "http://192.168.100.180:8000";
   static const String baseUrl = "https://inspirylearning-web.herokuapp.com";
 
   // Login Page

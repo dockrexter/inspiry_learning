@@ -5,6 +5,7 @@ import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
@@ -68,9 +69,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Row(
                       children: [
-                        Image.asset(
-                          AppAssets.bellIcon,
-                          scale: 4,
+                        InkWell(
+                          onTap: () => customNotificationsPopup(context),
+                          child: Image.asset(
+                            AppAssets.bellIcon,
+                            scale: 4,
+                          ),
                         ),
                         SizedBox(width: 18.w),
                         InkWell(

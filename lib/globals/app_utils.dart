@@ -57,12 +57,14 @@ class Utils {
   }
 
   static String fromatTime(DateTime dateTime) {
+    String hour = dateTime.hour.toString().padLeft(2, '0');
+    String minute = dateTime.minute.toString().padLeft(2, '0');
     if (dateTime.hour < 12) {
-      return "${dateTime.hour}:${dateTime.minute} AM";
+      return "$hour:$minute AM";
     } else if (dateTime.hour == 12) {
-      return "${dateTime.hour}:${dateTime.minute} PM";
+      return "$hour:$minute PM";
     } else {
-      return "${dateTime.hour - 12}:${dateTime.minute} PM";
+      return "${(dateTime.hour - 12).toString().padLeft(2, '0')}:$minute PM";
     }
   }
 
@@ -181,6 +183,50 @@ class Utils {
     }
   }
 
+  static Future<String?> copyFile(String? orignalPath, String fileName) async {
+    var directory = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationSupportDirectory();
+
+    if (directory == null) {
+      return null;
+    }
+
+    var dir = Directory(directory.path + "/Uploads");
+
+    if (!await dir.exists()) {
+      dir = await dir.create();
+    }
+
+    File file = File('${dir.path}/$fileName');
+
+    bool exists = await file.exists();
+
+    if (orignalPath == null) {
+      if (exists) {
+        return file.path;
+      } else {
+        return null;
+      }
+    }
+
+    if (await file.exists()) {
+      return file.path;
+    } else {
+      try {
+        File originalFile = File(orignalPath);
+        if (await originalFile.exists()) {
+          await originalFile.copy(file.path);
+          return file.path;
+        } else {
+          return null;
+        }
+      } catch (ex) {
+        return null;
+      }
+    }
+  }
+
   static Future<String?> downloadFile(String url, String fileName) async {
     var directory = Platform.isAndroid
         ? await getExternalStorageDirectory()
@@ -190,17 +236,21 @@ class Utils {
       return null;
     }
 
-    String dir = directory.path;
+    var dir = Directory(directory.path + "/Downloads");
 
-    File file = File('$dir/$fileName');
+    if (!await dir.exists()) {
+      dir = await dir.create();
+    }
+
+    File file = File('${dir.path}/$fileName');
 
     if (await file.exists()) {
       return file.path;
     } else {
       HttpClient httpClient = HttpClient();
-
       try {
-        var request = await httpClient.getUrl(Uri.parse(url));
+        var request =
+            await httpClient.getUrl(Uri.parse('${AppStrings.baseUrl}/$url'));
         var response = await request.close();
         if (response.statusCode == 200) {
           var bytes = await consolidateHttpClientResponseBytes(response);

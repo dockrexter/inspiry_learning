@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
+import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
@@ -65,10 +66,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                   Row(
                     children: [
-                      Image.asset(
-                        AppAssets.bellIcon,
-                        color: AppColors.white,
-                        scale: 4,
+                      InkWell(
+                        onTap: () => customNotificationsPopup(context),
+                        child: Image.asset(
+                          AppAssets.bellIcon,
+                          color: AppColors.white,
+                          scale: 4,
+                        ),
                       ),
                       SizedBox(width: 18.w),
                       InkWell(
@@ -160,45 +164,45 @@ class _AdminHomePageState extends State<AdminHomePage> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  return filteredAssignments.isEmpty ? const SizedBox() : Padding(
-                    padding: EdgeInsets.only(bottom: 20.h, left: 22.w),
-                    child: Text(
-                      AppStrings.dueToday,
-                      style: AppStyle.textstylepoppinsbold17.copyWith(
-                        color: AppColors.black,
-                      ),
-                    ),
-                  );
-                } else if (index <= filteredAssignments.length) {
-                  return CustomCard2(
-                          assignment: filteredAssignments[index - 1],
-                          onSelected: (String status) async {
-                            var assignment = assignments![Utils.findIndexByID(
-                                assignments,
-                                filteredAssignments[index - 1].id)];
-                            await AssignmentRepository()
-                                .updateAssignmentStatus(assignment.id, status);
-                            assignment.status = Utils.getWorkStatus(status);
-                            setState(() {});
-                          },
-                          onPressed: () => AppRouter.push(
-                            context,
-                            ChatPage(
-                                assignment: filteredAssignments[index - 1]),
+                  return filteredAssignments.isEmpty
+                      ? const SizedBox()
+                      : Padding(
+                          padding: EdgeInsets.only(bottom: 20.h, left: 22.w),
+                          child: Text(
+                            AppStrings.dueToday,
+                            style: AppStyle.textstylepoppinsbold17.copyWith(
+                              color: AppColors.black,
+                            ),
                           ),
                         );
+                } else if (index <= filteredAssignments.length) {
+                  return CustomCard2(
+                    assignment: filteredAssignments[index - 1],
+                    onSelected: (String status) async {
+                      var assignment = assignments![Utils.findIndexByID(
+                          assignments, filteredAssignments[index - 1].id)];
+                      await AssignmentRepository()
+                          .updateAssignmentStatus(assignment.id, status);
+                      assignment.status = Utils.getWorkStatus(status);
+                      setState(() {});
+                    },
+                    onPressed: () => AppRouter.push(
+                      context,
+                      ChatPage(assignment: filteredAssignments[index - 1]),
+                    ),
+                  );
                 } else if (index == filteredAssignments.length + 1) {
                   return otherDueAssignments!.isEmpty
                       ? const SizedBox()
-                      :  Padding(
-                    padding: EdgeInsets.only(bottom: 20.h, left: 22.w),
-                    child: Text(
-                      AppStrings.allDueAssignments,
-                      style: AppStyle.textstylepoppinsbold17.copyWith(
-                        color: AppColors.black,
-                      ),
-                    ),
-                  );
+                      : Padding(
+                          padding: EdgeInsets.only(bottom: 20.h, left: 22.w),
+                          child: Text(
+                            AppStrings.allDueAssignments,
+                            style: AppStyle.textstylepoppinsbold17.copyWith(
+                              color: AppColors.black,
+                            ),
+                          ),
+                        );
                 }
                 return CustomCard2(
                   assignment: otherDueAssignments![

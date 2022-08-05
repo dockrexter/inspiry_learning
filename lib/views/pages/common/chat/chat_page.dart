@@ -25,7 +25,9 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  bool online = false;
+  bool _isOnline = false;
+  bool _isTyping = false;
+  String _typingMsg = '';
   final List<Message> _messages = [];
   final _scrollController = ScrollController();
   final bool _isAdmin = UserTypeHelper.isAdmin();
@@ -40,16 +42,26 @@ class _ChatPageState extends State<ChatPage> {
         userId: ActiveUser.instance.user!.userId!,
         assignmentId: widget.assignment.id);
     SocketManager().onOnline(_handelOnline);
+    SocketManager().onTyping(_handelTyping);
     SocketManager().onMessage(_handelMessage);
     SocketManager().onDBChat(_handelMessages);
-    // WidgetsBinding.instance
-    //     .addPostFrameCallback((_) => _scrollToEnd(updateState: false));
+
+    _messageController.addListener(() {
+      if (_messageController.text.isNotEmpty) {
+        SocketManager().emitTyping(
+            {"typing": true, "message": ActiveUser.instance.user!.firstname});
+        Future.delayed(const Duration(milliseconds: 3000), () {
+          SocketManager().emitTyping({"typing": false, "message": ""});
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     _messageController.dispose();
+    SocketManager().emitTyping({"typing": false, "message": ""});
     SocketManager().disconnect();
     SocketManager().dispose();
     super.dispose();
@@ -89,18 +101,31 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                online ? AppStrings.online : AppStrings.offline,
-                style: AppStyle.textstyleinterbold23
-                    .copyWith(color: AppColors.white, fontSize: 11.sp),
+              SizedBox(width: 4.w),
+              Row(
+                children: [
+                  Text(
+                    _isOnline ? AppStrings.online : AppStrings.offline,
+                    style: AppStyle.textstyleinterbold23
+                        .copyWith(color: AppColors.white, fontSize: 12.sp),
+                  ),
+                  SizedBox(width: 3.w),
+                  Icon(
+                    Icons.circle_rounded,
+                    color: _isOnline ? Colors.green : Colors.red,
+                    size: 7.w,
+                  ),
+                ],
               ),
-              SizedBox(width: 3.w),
-              Icon(
-                Icons.circle_rounded,
-                color: online ? Colors.green : Colors.red,
-                size: 4.w,
-              ),
+              if (_isTyping && _isOnline)
+                Text(
+                  _typingMsg,
+                  style: AppStyle.textstyleinterbold23
+                      .copyWith(color: AppColors.white, fontSize: 12.sp),
+                ),
+              if (_isTyping && _isOnline) SizedBox(width: 4.w),
             ],
           ),
           SizedBox(height: 4.h),
@@ -197,6 +222,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _showBottomQuatationSheet() {
+    SocketManager().emitTyping({"typing": false, "message": ""});
     final priceController = TextEditingController();
     final descriptionController = TextEditingController();
     AppRouter.closeKeyboard(context);
@@ -317,6 +343,7 @@ class _ChatPageState extends State<ChatPage> {
             InkWell(
               onTap: () {
                 if (_messageController.text.isNotEmpty) {
+                  SocketManager().emitTyping({"typing": false, "message": ""});
                   _sendMessage(Message(
                       id: 1,
                       isMe: true,
@@ -349,6 +376,7 @@ class _ChatPageState extends State<ChatPage> {
       );
 
   Future<void> _openCamera() async {
+    SocketManager().emitTyping({"typing": false, "message": ""});
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
     final image = await AppRouter.push(context,
@@ -366,6 +394,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _openFilePicker() async {
+    SocketManager().emitTyping({"typing": false, "message": ""});
     final result = await FilePicker.platform.pickFiles(
       withData: false,
       allowMultiple: true,
@@ -396,7 +425,14 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handelOnline(data) {
-    online = data as bool;
+    _isOnline = data as bool;
+    setState(() {});
+  }
+
+  void _handelTyping(data) {
+    _isTyping = data["typing"] as bool;
+    _typingMsg = data["message"] as String;
+    _typingMsg = _typingMsg + " is typing...";
     setState(() {});
   }
 
@@ -410,7 +446,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handelMessage(data) {
-    print(data);
     _messages.add(Message.fromJson(data));
     setState(() {});
     _scrollToEnd();
