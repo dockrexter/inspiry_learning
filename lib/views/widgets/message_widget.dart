@@ -9,12 +9,14 @@ import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/repositories/payment_repositories.dart';
 
 class MessageWidget extends StatefulWidget {
+  final bool fromDataBase;
   final Message message;
 
   const MessageWidget({
-    Key? key,
+    super.key,
     required this.message,
-  }) : super(key: key);
+    this.fromDataBase = false,
+  });
 
   @override
   State<MessageWidget> createState() => _MessageWidgetState();
@@ -26,7 +28,11 @@ class _MessageWidgetState extends State<MessageWidget> {
   @override
   void initState() {
     super.initState();
-    widget.message.isMe ? _uploadFile() : _downloadFile();
+    if (!widget.fromDataBase) {
+      widget.message.isMe ? _uploadFile() : _downloadFile();
+    } else {
+      widget.message.attachment!.resolvePath(widget.message.isMe);
+    }
   }
 
   void _uploadFile() async {
@@ -243,7 +249,7 @@ class _MessageWidgetState extends State<MessageWidget> {
           ),
         ),
         CircularProgressIndicator(
-          value: isError ? 0.3 : null,
+          value: isError ? 0 : null,
           strokeWidth: 2.w,
           valueColor: const AlwaysStoppedAnimation(AppColors.gray800),
           backgroundColor: AppColors.gray100,

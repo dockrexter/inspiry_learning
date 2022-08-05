@@ -183,6 +183,30 @@ class Utils {
     }
   }
 
+  static Future<String?> resolvePath(String name, bool isUploaded) async {
+    var directory = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationSupportDirectory();
+
+    if (directory == null) {
+      return null;
+    }
+
+    var dir =
+        Directory(directory.path + (isUploaded ? "/Uploads" : "/Downloads"));
+
+    if (!await dir.exists()) {
+      return null;
+    }
+
+    var file = File(dir.path + "/$name");
+
+    if (!await file.exists()) {
+      return null;
+    }
+    return file.path;
+  }
+
   static Future<String?> copyFile(String? orignalPath, String fileName) async {
     var directory = Platform.isAndroid
         ? await getExternalStorageDirectory()

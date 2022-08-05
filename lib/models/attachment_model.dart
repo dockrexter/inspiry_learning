@@ -59,6 +59,12 @@ class Attachment {
     return _path != null;
   }
 
+  Future<bool> resolvePath(bool isUploaded) async {
+    if (path != null) return true;
+    _path = await Utils.resolvePath(name, isUploaded);
+    return _path != null;
+  }
+
   String? get path {
     return _path;
   }

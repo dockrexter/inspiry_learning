@@ -103,7 +103,7 @@ class _ChatPageState extends State<ChatPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(width: 4.w),
+              if (_isTyping && _isOnline) SizedBox(width: 4.w),
               Row(
                 children: [
                   Text(
