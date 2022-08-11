@@ -5,11 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 
 class DisplayPicturePage extends StatelessWidget {
-  final int assignmentId;
   final String imagePath;
+  final Function sendCameraPicture;
 
   const DisplayPicturePage(
-      {super.key, required this.imagePath, required this.assignmentId});
+      {super.key, required this.imagePath, required this.sendCameraPicture});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,10 @@ class DisplayPicturePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => AppRouter.pop(context),
+        onPressed: () {
+          sendCameraPicture(imagePath);
+          AppRouter.pop(context);
+        },
         child: const Icon(Icons.send),
       ),
     );

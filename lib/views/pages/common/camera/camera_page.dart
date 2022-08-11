@@ -9,11 +9,11 @@ class CameraPage extends StatefulWidget {
   const CameraPage({
     super.key,
     required this.camera,
-    required this.assignmentId,
+    required this.sendCameraPicture,
   });
 
-  final int assignmentId;
   final CameraDescription camera;
+  final Function sendCameraPicture;
 
   @override
   _CameraPageState createState() => _CameraPageState();
@@ -81,7 +81,7 @@ class _CameraPageState extends State<CameraPage> {
               context,
               DisplayPicturePage(
                 imagePath: image.path,
-                assignmentId: widget.assignmentId,
+                sendCameraPicture: widget.sendCameraPicture,
               ),
               data: image.path,
             );

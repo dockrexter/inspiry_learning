@@ -251,22 +251,29 @@ class Utils {
     }
   }
 
-  static Future<String?> downloadFile(String url, String fileName) async {
-    var directory = Platform.isAndroid
-        ? await getExternalStorageDirectory()
-        : await getApplicationSupportDirectory();
+  static Future<String?> downloadFile(
+      String url, String fileName, String? path) async {
+    late File file;
 
-    if (directory == null) {
-      return null;
+    if (path == null) {
+      var directory = Platform.isAndroid
+          ? await getExternalStorageDirectory()
+          : await getApplicationSupportDirectory();
+
+      if (directory == null) {
+        return null;
+      }
+
+      var dir = Directory(directory.path + "/Downloads");
+
+      if (!await dir.exists()) {
+        dir = await dir.create();
+      }
+
+      file = File('${dir.path}/$fileName');
+    } else {
+      file = File(path);
     }
-
-    var dir = Directory(directory.path + "/Downloads");
-
-    if (!await dir.exists()) {
-      dir = await dir.create();
-    }
-
-    File file = File('${dir.path}/$fileName');
 
     if (await file.exists()) {
       return file.path;

@@ -29,8 +29,9 @@ class _ChatPageState extends State<ChatPage> {
   bool _isTyping = false;
   String _typingMsg = '';
   final List<Message> _messages = [];
+  bool _isLoadingMessagesFromDB = true;
+  final _isAdmin = UserTypeHelper.isAdmin();
   final _scrollController = ScrollController();
-  final bool _isAdmin = UserTypeHelper.isAdmin();
   final _messageController = TextEditingController();
   final allowedExtensions = ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'zip'];
 
@@ -189,22 +190,29 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                   if (_isAdmin) Divider(color: AppColors.teal400, height: 12.h),
                   Expanded(
-                    child: _messages.isEmpty
-                        ? Center(
-                            child: Text(
-                              AppStrings.sayHi,
-                              style: AppStyle.textstylepoppinsbold17,
+                    child: _isLoadingMessagesFromDB
+                        ? const Center(
+                            child: CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation(AppColors.yellow701),
                             ),
                           )
-                        : ListView.builder(
-                            controller: _scrollController,
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: _messages.length + 1,
-                            itemBuilder: (context, index) =>
-                                index < _messages.length
+                        : _messages.isEmpty
+                            ? Center(
+                                child: Text(
+                                  AppStrings.sayHi,
+                                  style: AppStyle.textstylepoppinsbold17,
+                                ),
+                              )
+                            : ListView.builder(
+                                controller: _scrollController,
+                                // reverse: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: _messages.length + 1,
+                                itemBuilder: (context, index) => index <
+                                        _messages.length
                                     ? MessageWidget(message: _messages[index])
                                     : SizedBox(height: 20.h),
-                          ),
+                              ),
                   ),
                   SizedBox(height: 52.h),
                 ],
@@ -287,7 +295,6 @@ class _ChatPageState extends State<ChatPage> {
                             "Title: ${widget.assignment.subject} Charges: ${priceController.text} Description: ${descriptionController.text}",
                       ),
                     );
-                    _scrollToEnd();
                     _messageController.clear();
                   }
                   AppRouter.pop(context);
@@ -349,7 +356,6 @@ class _ChatPageState extends State<ChatPage> {
                       isMe: true,
                       assignmentId: widget.assignment.id,
                       message: _messageController.text));
-                  _scrollToEnd();
                   _messageController.clear();
                 }
               },
@@ -379,18 +385,8 @@ class _ChatPageState extends State<ChatPage> {
     SocketManager().emitTyping({"typing": false, "message": ""});
     final cameras = await availableCameras();
     final firstCamera = cameras.first;
-    final image = await AppRouter.push(context,
-        CameraPage(camera: firstCamera, assignmentId: widget.assignment.id));
-    if (image != null) {
-      _sendMessage(Message(
-        id: 1,
-        isMe: true,
-        type: MessageType.attachment,
-        assignmentId: widget.assignment.id,
-        attachment: Attachment.formFile(File(image as String)),
-      ));
-    }
-    _scrollToEnd();
+    AppRouter.push(context,
+        CameraPage(camera: firstCamera, sendCameraPicture: _sendCameraPicture));
   }
 
   Future<void> _openFilePicker() async {
@@ -413,8 +409,16 @@ class _ChatPageState extends State<ChatPage> {
         ));
       }
     }
-    setState(() {});
-    _scrollToEnd();
+  }
+
+  void _sendCameraPicture(String path) {
+    _sendMessage(Message(
+      id: 1,
+      isMe: true,
+      type: MessageType.attachment,
+      assignmentId: widget.assignment.id,
+      attachment: Attachment.formFile(File(path)),
+    ));
   }
 
   void _sendMessage(Message message) {
@@ -422,6 +426,8 @@ class _ChatPageState extends State<ChatPage> {
     if (message.type != MessageType.attachment) {
       SocketManager().sendMessage(message.toJson());
     }
+    setState(() {});
+    _scrollToEnd();
   }
 
   void _handelOnline(data) {
@@ -439,10 +445,13 @@ class _ChatPageState extends State<ChatPage> {
   void _handelMessages(data) {
     if (data["status"] == "ok") {
       for (var message in data["data"]) {
-        _messages.add(Message.fromJson(message));
+        final msg = Message.fromJson(message);
+        msg.fromDB = true;
+        _messages.add(msg);
       }
-      setState(() {});
     }
+    _isLoadingMessagesFromDB = false;
+    setState(() {});
   }
 
   void _handelMessage(data) {

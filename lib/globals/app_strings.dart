@@ -112,6 +112,8 @@ class AppStrings {
   static const String updatedSuccessfully = "Updated Successfully";
   static const String allFieldsAreRequired = "all fields are required";
   static const String passwordDoesNotMatch = "password does not match";
+  static const String initialingPaymentProcess =
+      "Initiating Payment Process ...";
   static const String subAdminAddedSuccessfully =
       "sub admin added successfully";
   static const String passwordChangedSuccessfully =

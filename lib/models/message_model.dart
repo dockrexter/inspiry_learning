@@ -10,6 +10,7 @@ enum MessageType {
 class Message {
   int? id;
   bool isMe;
+  bool fromDB;
   String? message;
   int assignmentId;
   MessageType type;
@@ -27,6 +28,7 @@ class Message {
     this.attachment,
     this.paymentStatus,
     this.paymentAmount,
+    this.fromDB = false,
     this.type = MessageType.text,
   }) : assert(message != null || attachment != null,
             'Message or Attachment must be provided') {

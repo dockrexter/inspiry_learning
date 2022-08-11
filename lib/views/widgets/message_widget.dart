@@ -9,13 +9,11 @@ import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/repositories/payment_repositories.dart';
 
 class MessageWidget extends StatefulWidget {
-  final bool fromDataBase;
   final Message message;
 
   const MessageWidget({
     super.key,
     required this.message,
-    this.fromDataBase = false,
   });
 
   @override
@@ -23,24 +21,25 @@ class MessageWidget extends StatefulWidget {
 }
 
 class _MessageWidgetState extends State<MessageWidget> {
-  bool isError = false;
+  bool _isError = false;
+  bool _showDownLoadButton = false;
 
   @override
   void initState() {
     super.initState();
-    if (!widget.fromDataBase) {
-      widget.message.isMe ? _uploadFile() : _downloadFile();
-    } else {
-      widget.message.attachment!.resolvePath(widget.message.isMe);
+    if (!widget.message.fromDB) {
+      if (widget.message.isMe) {
+        _uploadFile();
+      }
     }
   }
 
-  void _uploadFile() async {
+  Future<void> _uploadFile() async {
     if (widget.message.attachment != null) {
       if (await widget.message.attachment!.upload()) {
         SocketManager().sendMessage(widget.message.toJson());
       } else {
-        isError = true;
+        _isError = true;
       }
       if (mounted) {
         setState(() {});
@@ -48,10 +47,14 @@ class _MessageWidgetState extends State<MessageWidget> {
     }
   }
 
-  void _downloadFile() async {
+  Future<void> _downloadFile() async {
     if (widget.message.attachment != null) {
       if (!await widget.message.attachment!.download()) {
-        isError = true;
+        _isError = true;
+      } else {
+        _showDownLoadButton = false;
+      }
+      if (mounted) {
         setState(() {});
       }
     }
@@ -63,6 +66,16 @@ class _MessageWidgetState extends State<MessageWidget> {
       onTap: widget.message.message != null
           ? null
           : () async {
+              if (!await widget.message.attachment!
+                  .resolvePath(widget.message.isMe)) {
+                if (widget.message.attachment!.isUploaded) {
+                  _showDownLoadButton = true;
+                  if (mounted) {
+                    setState(() {});
+                  }
+                  await _downloadFile();
+                }
+              }
               if (widget.message.attachment!.path != null) {
                 final res =
                     await Utils.openFile(widget.message.attachment!.path!);
@@ -136,7 +149,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                         color: AppColors.primary,
                         icon: Icons.send,
                         onTap: () async {
-                          Utils.showToast("Initiating Payment Process ...");
+                          Utils.showToast(AppStrings.initialingPaymentProcess);
                           final url = await PaymentRepository().payWithPapal(
                               amount: widget.message.paymentAmount!);
                           if (url != null) {
@@ -187,16 +200,15 @@ class _MessageWidgetState extends State<MessageWidget> {
                         ),
                       ],
                     ),
-                    if (!widget.message.attachment!.isUploaded &&
-                        widget.message.isMe)
+                    if (!widget.message.attachment!.isUploaded)
                       _buildUploadDownloadButtons(onPressed: () {
-                        isError = false;
+                        _isError = false;
                         setState(() {});
                         _uploadFile();
                       }),
-                    if (widget.message.attachment!.path == null)
+                    if (_showDownLoadButton)
                       _buildUploadDownloadButtons(onPressed: () {
-                        isError = false;
+                        _isError = false;
                         setState(() {});
                         _downloadFile();
                       })
@@ -241,15 +253,15 @@ class _MessageWidgetState extends State<MessageWidget> {
       alignment: Alignment.center,
       children: [
         IconButton(
-          onPressed: isError ? onPressed : null,
+          onPressed: _isError ? onPressed : null,
           icon: Icon(
-            widget.message.isMe ? Icons.upload_rounded : Icons.download_rounded,
+            (widget.message.isMe && !_showDownLoadButton) ? Icons.upload_rounded : Icons.download_rounded,
             size: 18.sp,
             color: AppColors.gray600,
           ),
         ),
         CircularProgressIndicator(
-          value: isError ? 0 : null,
+          value: _isError ? 0 : null,
           strokeWidth: 2.w,
           valueColor: const AlwaysStoppedAnimation(AppColors.gray800),
           backgroundColor: AppColors.gray100,
