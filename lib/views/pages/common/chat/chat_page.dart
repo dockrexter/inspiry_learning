@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:inspiry_learning/models/message_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/manager/socket_manager.dart';
@@ -12,7 +12,6 @@ import 'package:inspiry_learning/models/attachment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
-import 'package:inspiry_learning/views/pages/common/camera/camera_page.dart';
 import 'package:inspiry_learning/views/pages/admin/details/assignment_details_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -383,10 +382,16 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _openCamera() async {
     SocketManager().emitTyping({"typing": false, "message": ""});
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
-    AppRouter.push(context,
-        CameraPage(camera: firstCamera, sendCameraPicture: _sendCameraPicture));
+    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (image != null) {
+      _sendMessage(Message(
+        id: 1,
+        isMe: true,
+        type: MessageType.attachment,
+        assignmentId: widget.assignment.id,
+        attachment: Attachment.formFile(File(image.path)),
+      ));
+    }
   }
 
   Future<void> _openFilePicker() async {
@@ -409,16 +414,6 @@ class _ChatPageState extends State<ChatPage> {
         ));
       }
     }
-  }
-
-  void _sendCameraPicture(String path) {
-    _sendMessage(Message(
-      id: 1,
-      isMe: true,
-      type: MessageType.attachment,
-      assignmentId: widget.assignment.id,
-      attachment: Attachment.formFile(File(path)),
-    ));
   }
 
   void _sendMessage(Message message) {
