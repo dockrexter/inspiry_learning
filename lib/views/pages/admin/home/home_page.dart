@@ -5,10 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
-import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
+import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
 import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -110,8 +110,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     displacement: 10.h,
                     onRefresh: () async {
                       await _getAssignments(
-                          month: _selectedDate.month.toString(),
-                          year: _selectedDate.year.toString());
+                          month: _selectedDate.month,
+                          year: _selectedDate.year);
                       if (Utils.compare2Dates(_selectedDate, DateTime.now())) {
                         await _getOtherDueAssignments();
                       }
@@ -133,10 +133,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  Future<void> _getAssignments({String? month, String? year}) async {
+  Future<void> _getAssignments({int? month, int? year}) async {
     assignments = await AssignmentRepository().getAssignmentsByMonth(
-        month ?? DateTime.now().month.toString(),
-        year ?? DateTime.now().year.toString());
+        month ?? DateTime.now().month,
+        year ?? DateTime.now().year);
     setState(() {});
   }
 
@@ -178,12 +178,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 } else if (index <= filteredAssignments.length) {
                   return CustomCard2(
                     assignment: filteredAssignments[index - 1],
-                    onSelected: (String status) async {
+                    onSelected: (int status) async {
                       var assignment = assignments![Utils.findIndexByID(
                           assignments, filteredAssignments[index - 1].id)];
                       await AssignmentRepository()
                           .updateAssignmentStatus(assignment.id, status);
-                      assignment.status = Utils.getWorkStatus(status);
+                      assignment.status = WorkStatus.values[status];
                       setState(() {});
                     },
                     onPressed: () => AppRouter.push(
@@ -207,7 +207,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 return CustomCard2(
                   assignment: otherDueAssignments![
                       index - filteredAssignments.length - 2],
-                  onSelected: (String status) async {
+                  onSelected: (int status) async {
                     var assignment = assignments![Utils.findIndexByID(
                         assignments,
                         otherDueAssignments![
@@ -215,7 +215,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             .id)];
                     await AssignmentRepository()
                         .updateAssignmentStatus(assignment.id, status);
-                    assignment.status = Utils.getWorkStatus(status);
+                    assignment.status = WorkStatus.values[status];
                     setState(() {});
                   },
                   onPressed: () => AppRouter.push(
@@ -235,12 +235,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => CustomCard2(
         assignment: filteredAssignments[index],
-        onSelected: (String status) async {
+        onSelected: (int status) async {
           var assignment = assignments![
               Utils.findIndexByID(assignments, filteredAssignments[index].id)];
           await AssignmentRepository()
               .updateAssignmentStatus(assignment.id, status);
-          assignment.status = Utils.getWorkStatus(status);
+          assignment.status = WorkStatus.values[status];
           setState(() {});
         },
         onPressed: () => AppRouter.push(
@@ -313,7 +313,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
             _selectedDate = dt;
           }
 
-          _getAssignments(month: dt.month.toString(), year: dt.year.toString());
+          _getAssignments(month: dt.month, year: dt.year);
         },
         onDaySelected: (dt, _) => setState(() => _selectedDate = dt),
         holidayPredicate: (dt) => Utils.selectedDates(assignments!, dt),

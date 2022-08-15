@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/manager/api_manager.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
@@ -19,19 +20,18 @@ class AssignmentRepository {
   }
 
   Future<List<Assignment>> getAssignments(int userId) async {
-    final response = await _apiManager.get(
-      ApiEndpoints.getAssignments,
-      params: {"user_id": userId},
-    );
+    final response = await _apiManager.get(ApiEndpoints.getAssignments);
     if (response != null) {
-      final List<Assignment> assignments =
-          (response["assignments"] as List<dynamic>)
-              .map((assignment) => Assignment.fromJson(assignment))
-              .toList();
-      return assignments;
-    } else {
-      Utils.showToast(AppStrings.somethingWentWrong);
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        final List<Assignment> assignments = (response["data"] as List<dynamic>)
+            .map((assignment) => Assignment.fromJson(assignment))
+            .toList();
+        return assignments;
+      }
+      Utils.showToast(response["message"]);
+      return [];
     }
+    Utils.showToast(AppStrings.somethingWentWrong);
     return [];
   }
 
@@ -41,63 +41,92 @@ class AssignmentRepository {
       data: {"current_date": DateTime.now().toString().split(' ')[0]},
     );
     if (response != null) {
-      final List<Assignment> assignments =
-          (response["assignments"] as List<dynamic>)
-              .map((assignment) => Assignment.fromJson(assignment))
-              .toList();
-      return assignments;
-    } else {
-      Utils.showToast(AppStrings.somethingWentWrong);
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        final List<Assignment> assignments = (response["data"] as List<dynamic>)
+            .map((assignment) => Assignment.fromJson(assignment))
+            .toList();
+        return assignments;
+      }
+      Utils.showToast(response["message"]);
       return [];
     }
+    Utils.showToast(AppStrings.somethingWentWrong);
+    return [];
   }
 
-  Future<List<Assignment>> getAssignmentsByMonth(
-      String month, String year) async {
+  Future<List<Assignment>> getAssignmentsByMonth(int month, int year) async {
     final response = await _apiManager.post(
       ApiEndpoints.getAssignmentsByMonth,
-      data: {"currentMonth": month, "currentYear": year},
+      data: {"current_month": month, "current_year": year},
     );
     if (response != null) {
-      final List<Assignment> assignments =
-          (response["assignments"] as List<dynamic>)
-              .map((assignment) => Assignment.fromJson(assignment))
-              .toList();
-      return assignments;
-    } else {
-      Utils.showToast(AppStrings.somethingWentWrong);
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        final List<Assignment> assignments = (response["data"] as List<dynamic>)
+            .map((assignment) => Assignment.fromJson(assignment))
+            .toList();
+        return assignments;
+      }
+      Utils.showToast(response["message"]);
+      return [];
     }
+    Utils.showToast(AppStrings.somethingWentWrong);
     return [];
   }
 
   Future<bool> createAssignment(Assignment assignment) async {
+    List<MultipartFile> files = [];
     if (assignment.attachments != null) {
       for (var attachment in assignment.attachments!) {
-        if (!await attachment.upload()) return false;
+        files.add(await MultipartFile.fromFile(attachment.path!));
       }
     }
     final response = await _apiManager.post(
       ApiEndpoints.createAssignment,
-      data: {"values": assignment.toJson()},
+      data: FormData.fromMap({
+        "files": files,
+        "subject": assignment.subject,
+        "summary": assignment.summary,
+        "deadline": assignment.deadline,
+      }),
     );
-    return (response != null &&
-        response["status"] == "ok" &&
-        response["message"] == "insertion sucess");
+    if (response != null) {
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        return true;
+      }
+      Utils.showToast(response["message"]);
+      return false;
+    }
+    Utils.showToast(AppStrings.somethingWentWrong);
+    return false;
   }
 
-  Future<bool> updateAssignmentStatus(int assignmentId, String status) async {
+  Future<bool> updateAssignmentStatus(int assignmentId, int status) async {
     final response = await _apiManager.post(
       ApiEndpoints.updateAssignmentStatus,
-      data: {"id": assignmentId, "status": status},
+      data: {"assignment_id": assignmentId, "status": status},
     );
-    return (response != null);
+    if (response != null) {
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        return true;
+      }
+      Utils.showToast(response["message"]);
+      return false;
+    }
+    return false;
   }
 
   Future<bool> updateAssignee(int assignmentId, String assignee) async {
     final response = await _apiManager.post(
       ApiEndpoints.updateAssignee,
-      data: {"id": assignmentId, "assignee": assignee},
+      data: {"assignment_id": assignmentId, "assignee": assignee},
     );
-    return (response != null);
+    if (response != null) {
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        return true;
+      }
+      Utils.showToast(response["message"]);
+      return false;
+    }
+    return false;
   }
 }

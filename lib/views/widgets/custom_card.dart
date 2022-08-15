@@ -223,7 +223,7 @@ class CustomCard2 extends StatelessWidget {
                           child: Text(AppStrings.status,
                               style: AppStyle.textstylepoppinssemibold10),
                           onChange: (s, i) {
-                            onSelected(s);
+                            onSelected(Utils.getWorkStatus(s as String).index);
                           },
                           icon: const Icon(Icons.arrow_drop_down, size: 18),
                           dropdownStyle: DropdownStyle(

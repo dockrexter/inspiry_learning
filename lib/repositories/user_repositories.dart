@@ -26,7 +26,7 @@ class UserRepository {
     final response = await _apiManager.post(ApiEndpoints.login, data: {
       "email": email,
       "password": password,
-      // "role": role,
+      "role": role,
     });
     if (response != null) {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
