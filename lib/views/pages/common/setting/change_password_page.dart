@@ -157,13 +157,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     }
     setState(() => _isLoading = true);
     final status = await UserRepository().changePassword(
-      userId: ActiveUser.instance.user!.userId!,
       oldPassword: _oldPasswordController.text,
       newPassword: _newPasswordController.text,
     );
     setState(() => _isLoading = false);
     if (status) {
-      Utils.showToast(AppStrings.passwordChangedSuccessfully);
       Utils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(context,
           UserTypeHelper.isAdmin() ? const AdminHomePage() : const HomePage());

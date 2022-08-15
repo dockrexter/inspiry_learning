@@ -5,7 +5,6 @@ import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
 class User {
   int? userId;
 
-  String? username;
   String? password;
   String? firstname;
   String? lastname;
@@ -18,7 +17,6 @@ class User {
 
   User({
     this.userId,
-    this.username,
     this.password,
     this.firstname,
     this.lastname,
@@ -29,10 +27,9 @@ class User {
   });
 
   User.fromJson(Map<String, dynamic> json) {
-    userId = json['user_id'] as int?;
-    username = json['username'];
-    firstname = json['firstname'];
-    lastname = json['lastname'];
+    userId = json['id'] as int?;
+    firstname = json['firstName'];
+    lastname = json['lastName'];
     role = json['role'];
     email = json['email'];
     phone = json['phone'];
@@ -42,8 +39,8 @@ class User {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['password'] = password;
-    data['firstname'] = firstname;
-    data['lastname'] = lastname;
+    data['firstName'] = firstname;
+    data['lastName'] = lastname;
     data['role'] = role;
     data['phone'] = phone;
     data['email'] = email;
@@ -52,9 +49,9 @@ class User {
 
   Map<String, dynamic> toJsonForSave() {
     final data = <String, dynamic>{};
-    data['user_id'] = userId;
-    data['firstname'] = firstname;
-    data['lastname'] = lastname;
+    data['id'] = userId;
+    data['firstName'] = firstname;
+    data['lastName'] = lastname;
     data['email'] = email;
     data['phone'] = phone;
     data['role'] = role;
@@ -67,7 +64,6 @@ class User {
     data['firstName'] = firstname;
     data['lastName'] = lastname;
     data['phone'] = phone;
-    data['user_id'] = userId;
     return data;
   }
 
@@ -84,7 +80,6 @@ class User {
   }) {
     return User(
       userId: userId ?? this.userId,
-      username: username ?? this.username,
       password: password ?? this.password,
       firstname: firstname ?? this.firstname,
       lastname: lastname ?? this.lastname,

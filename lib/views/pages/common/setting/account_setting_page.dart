@@ -229,7 +229,6 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     ActiveUser.instance.user = await UserRepository().updateUser(user: user!);
     setState(() => _isLoading = false);
     if (ActiveUser.instance.user != null) {
-      Utils.showToast(AppStrings.updatedSuccessfully);
       AppRouter.pop(context);
     }
   }

@@ -52,22 +52,6 @@ class AssignmentRepository {
     }
   }
 
-  Future<dynamic> getAssignmentsByDate(DateTime date) async {
-    final response = await _apiManager.post(
-      ApiEndpoints.getAssignmentsByDate,
-      data: {"deadline": date.toString().split(' ')[0]},
-    );
-    if (response != null) {
-      final assignments = response
-          .map((assignment) => Assignment.fromJson(assignment))
-          .toList();
-      return assignments;
-    } else {
-      Utils.showToast(AppStrings.somethingWentWrong);
-    }
-    return null;
-  }
-
   Future<List<Assignment>> getAssignmentsByMonth(
       String month, String year) async {
     final response = await _apiManager.post(

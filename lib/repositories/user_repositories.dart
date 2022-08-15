@@ -26,15 +26,15 @@ class UserRepository {
     final response = await _apiManager.post(ApiEndpoints.login, data: {
       "email": email,
       "password": password,
-      "role": role,
+      // "role": role,
     });
     if (response != null) {
-      if (response["status"] == "ok") {
-        var user = User.fromJson(response["user"]);
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        var user = User.fromJson(response["data"]);
         if (rememberMe) await user.save();
         return user;
       }
-      Utils.showToast(AppStrings.userNameOrPasswordIncorrect);
+      Utils.showToast(response["message"]);
       return null;
     }
     Utils.showToast(AppStrings.somethingWentWrong);
@@ -42,20 +42,19 @@ class UserRepository {
   }
 
   Future<User?> signUp({required User user, bool addSubAdmin = false}) async {
-    final response =
-        await _apiManager.post(ApiEndpoints.signup, data: user.toJson());
+    final response = await _apiManager.post(
+      ApiEndpoints.signup,
+      data: user.toJson(),
+    );
     if (response != null) {
-      if (response["status"] == "ok") {
-        var user = User.fromJson(response["user"]);
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        var user = User.fromJson(response["data"]);
         if (!addSubAdmin) {
           await user.save();
         }
         return user;
-      } else if (response["status"] == "error") {
-        Utils.showToast(AppStrings.emailAlreadyExist);
-        return null;
       }
-      Utils.showToast(AppStrings.somethingWentWrong);
+      Utils.showToast(response["message"]);
       return null;
     }
     Utils.showToast(AppStrings.somethingWentWrong);
@@ -63,48 +62,38 @@ class UserRepository {
   }
 
   Future<User?> updateUser({required User user}) async {
-    final response = await _apiManager.post(ApiEndpoints.updateUser, data: {
-      "values": user.toJsonForUpdate(),
-    });
+    final response = await _apiManager.post(
+      ApiEndpoints.updateUser,
+      data: user.toJsonForUpdate(),
+    );
     if (response != null) {
-      if (response["status"] == "ok") {
-        user.save();
+      Utils.showToast(response["message"]);
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        await user.save();
         return user;
       }
-      Utils.showToast(AppStrings.somethingWentWrong);
       return null;
     }
     Utils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
-  Future<bool> changePassword(
-      {required int userId,
-      required String oldPassword,
-      required String newPassword}) async {
+  Future<bool> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
     final response = await _apiManager.post(ApiEndpoints.changePassword, data: {
-      "values": {
-        "user_id": userId,
-        "currentPassword": oldPassword,
-        "changePassword": newPassword,
-        "confirmPassword": newPassword,
-      }
+      "oldPassword": oldPassword,
+      "newPassword": newPassword,
     });
     if (response != null) {
-      if (response["status"] == "ok") {
+      Utils.showToast(response["message"]);
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
-      } else if (response["status"] == "error") {
-        Utils.showToast(response["message"]);
-        return false;
       }
-    } else {
-      Utils.showToast(AppStrings.somethingWentWrong);
       return false;
     }
+    Utils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
-
-  // Future<bool> deleteUser({required int id}) async {
-  //   return ((await _apiManager.delete(APIEndPoint.userEndPoint + '/$id')) != null);
-  // }
 }
