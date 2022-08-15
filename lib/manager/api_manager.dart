@@ -10,9 +10,7 @@ class APIManager {
   }
 
   APIManager._internal() {
-    _dio = Dio(
-      BaseOptions(baseUrl: AppStrings.baseUrl),
-    );
+    _dio = Dio(BaseOptions(baseUrl: AppStrings.baseUrl));
   }
 
   late Dio _dio;
@@ -32,7 +30,9 @@ class APIManager {
       _addTokenToHeader();
       final response = await _dio.get(endPoint, queryParameters: params);
       responseJson = response.data;
-    } on DioError catch (_) {}
+    } on DioError catch (e) {
+      responseJson = e.response?.data;
+    }
     return responseJson;
   }
 
@@ -42,7 +42,9 @@ class APIManager {
       _addTokenToHeader();
       final response = await _dio.post(endPoint, data: data);
       responseJson = response.data;
-    } on DioError catch (_) {}
+    } on DioError catch (e) {
+      responseJson = e.response?.data;
+    }
     return responseJson;
   }
 
@@ -52,7 +54,9 @@ class APIManager {
       _addTokenToHeader();
       final response = await _dio.put(endPoint, data: data);
       responseJson = response.data;
-    } on DioError catch (_) {}
+    } on DioError catch (e) {
+      responseJson = e.response?.data;
+    }
     return responseJson;
   }
 
@@ -62,7 +66,9 @@ class APIManager {
       _addTokenToHeader();
       final response = await _dio.delete(endPoint);
       responseJson = response.data;
-    } on DioError catch (_) {}
+    } on DioError catch (e) {
+      responseJson = e.response?.data;
+    }
     return responseJson;
   }
 }
