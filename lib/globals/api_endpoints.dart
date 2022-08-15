@@ -1,15 +1,15 @@
 class ApiEndpoints {
-  static const String login = '/login';
-  static const String signup = '/signup';
-  static const String payment = '/payment/pay';
-  static const String updateUser = '/user/updateUser';
-  static const String uploadAttachments = '/api/upload';
-  static const String changePassword = '/user/changePassword';
-  static const String getAssignments = '/assignment/getAssignments';
-  static const String updateAssignee = '/assignment/updateAssignee';
-  static const String createAssignment = '/assignment/postAssignments';
-  static const String updateAssignmentStatus = '/assignment/changeStatus';
-  static const String getAssignmentsByDate = '/assignment/getAssignmentsAdmin';
-  static const String getAllDueAssignments = '/assignment/getAllDueAssignments';
-  static const String getAssignmentsByMonth = '/assignment/getCurrentMonthAssignments';
+  static const String login = '/api/users/login';
+  static const String payment = '/api/payment/pay';
+  static const String signup = '/api/users/register';
+  static const String updateUser = '/api/users/updateUser';
+  static const String changePassword = '/api/users/changePassword';
+  static const String uploadAttachments = '/api/attachments/upload';
+  static const String getAttachments = '/api/assignments/getAttachments';
+  static const String updateAssignee = '/api/assignments/updateAssignee';
+  static const String getAssignments = '/api/assignments/getUserAssignments';
+  static const String updateAssignmentStatus = '/api/assignments/updateStatus';
+  static const String createAssignment = '/api/assignments/createUserAssignment';
+  static const String getAllDueAssignments = '/api/assignments/getAllDueAssignments';
+  static const String getAssignmentsByMonth = '/api/assignments/getCurrentMonthAssignments';
 }

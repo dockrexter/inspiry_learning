@@ -4,9 +4,7 @@ class AppStrings {
 
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
-  // static const String baseUrl = "https://inspiry.texus.tech";
-  // static const String baseUrl = "http://192.168.100.180:8000";
-  static const String baseUrl = "https://inspirylearning-web.herokuapp.com";
+  static const String baseUrl = "https://inspirylearning-server.herokuapp.com";
 
   // Login Page
   static const String login = "Login";
@@ -107,19 +105,13 @@ class AppStrings {
 
   // Toast Messages
   static const String subjectRequired = "subject is required";
-  static const String emailAlreadyExist = "email already exist";
   static const String somethingWentWrong = "something went wrong";
-  static const String updatedSuccessfully = "Updated Successfully";
   static const String allFieldsAreRequired = "all fields are required";
-  static const String passwordDoesNotMatch = "password does not match";
+  static const String passwordDoesNotMatch = "confirm password does not match";
   static const String initialingPaymentProcess =
       "Initiating Payment Process ...";
   static const String subAdminAddedSuccessfully =
       "sub admin added successfully";
-  static const String passwordChangedSuccessfully =
-      "password changed successfully";
-  static const String userNameOrPasswordIncorrect =
-      "user name or password is incorrect";
   static const String passwordMustBe6Characters =
       "password must be at least 6 characters";
 
