@@ -192,7 +192,8 @@ class _ChatPageState extends State<ChatPage> {
                     child: _isLoadingMessagesFromDB
                         ? const Center(
                             child: CircularProgressIndicator.adaptive(
-                              valueColor: AlwaysStoppedAnimation(AppColors.yellow701),
+                              valueColor:
+                                  AlwaysStoppedAnimation(AppColors.yellow701),
                             ),
                           )
                         : _messages.isEmpty
@@ -284,11 +285,10 @@ class _ChatPageState extends State<ChatPage> {
                       descriptionController.text.isNotEmpty) {
                     _sendMessage(
                       Message(
-                        id: 1,
-                        isMe: true,
                         paymentStatus: 0,
                         type: MessageType.offer,
                         assignmentId: widget.assignment.id,
+                        userId: ActiveUser.instance.user!.userId!,
                         paymentAmount: double.tryParse(priceController.text),
                         message:
                             "Title: ${widget.assignment.subject} Charges: ${priceController.text} Description: ${descriptionController.text}",
@@ -351,10 +351,10 @@ class _ChatPageState extends State<ChatPage> {
                 if (_messageController.text.isNotEmpty) {
                   SocketManager().emitTyping({"typing": false, "message": ""});
                   _sendMessage(Message(
-                      id: 1,
-                      isMe: true,
-                      assignmentId: widget.assignment.id,
-                      message: _messageController.text));
+                    assignmentId: widget.assignment.id,
+                    userId: ActiveUser.instance.user!.userId!,
+                    message: _messageController.text,
+                  ));
                   _messageController.clear();
                 }
               },
@@ -385,10 +385,9 @@ class _ChatPageState extends State<ChatPage> {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
     if (image != null) {
       _sendMessage(Message(
-        id: 1,
-        isMe: true,
         type: MessageType.attachment,
         assignmentId: widget.assignment.id,
+        userId: ActiveUser.instance.user!.userId!,
         attachment: Attachment.formFile(File(image.path)),
       ));
     }
@@ -406,10 +405,9 @@ class _ChatPageState extends State<ChatPage> {
     if (result != null) {
       for (var f in result.files) {
         _sendMessage(Message(
-          id: 1,
-          isMe: true,
           type: MessageType.attachment,
           assignmentId: widget.assignment.id,
+          userId: ActiveUser.instance.user!.userId!,
           attachment: Attachment.formPlatformFile(f),
         ));
       }
@@ -438,8 +436,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handelMessages(data) {
-    if (data["status"] == "ok") {
-      for (var message in data["data"]) {
+    if (data != null) {
+      for (var message in data) {
         final msg = Message.fromJson(message);
         msg.fromDB = true;
         _messages.add(msg);

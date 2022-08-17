@@ -10,6 +10,7 @@ enum MessageType {
 class Message {
   int? id;
   bool isMe;
+  int userId;
   bool fromDB;
   String? message;
   int assignmentId;
@@ -21,7 +22,7 @@ class Message {
 
   Message({
     this.id,
-    required this.isMe,
+    required this.userId,
     required this.assignmentId,
     this.message,
     this.timeStamp,
@@ -30,28 +31,28 @@ class Message {
     this.paymentAmount,
     this.fromDB = false,
     this.type = MessageType.text,
-  }) : assert(message != null || attachment != null,
+  })  : isMe = userId == ActiveUser.instance.user!.userId,
+        assert(message != null || attachment != null,
             'Message or Attachment must be provided') {
     timeStamp ??= DateTime.now();
   }
 
   factory Message.fromJson(dynamic json) {
-    int? userId = UserTypeHelper.isAdmin() ? json["admin_id"] : json["user_id"];
     return Message(
       id: json["id"] as int?,
+      userId: json["userId"] as int,
       message: json["message"] as String?,
-      paymentStatus: json["status"] as int?,
+      paymentStatus: json["paymentStatus"] as int?,
       paymentAmount: double.tryParse(json["amount"].toString()) ??
           int.tryParse(json["amount"].toString())?.toDouble(),
       type: MessageType.values[json["type"] as int],
-      assignmentId: int.tryParse(json["assignment_id"].toString()) ?? 0,
-      timeStamp: DateTime.parse(json["time_stamp"] as String),
-      isMe: userId == null ? false : userId == ActiveUser.instance.user!.userId,
-      attachment: json["attachment"] != null
+      assignmentId: int.tryParse(json["assignmentId"].toString()) ?? 0,
+      timeStamp: DateTime.parse(json["createdAt"] as String),
+      attachment: json["message"] == null
           ? Attachment(
-              size: int.tryParse(json["file_size"] as String) ?? 0,
-              name: json["file_name"] as String,
-              downloadUrl: json["download_url"] as String?,
+              size: json["fileSize"] as int,
+              name: json["fileName"] as String,
+              downloadUrl: json["url"] as String?,
             )
           : null,
     );
@@ -60,17 +61,16 @@ class Message {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'message': message,
       'type': type.index,
       'amount': paymentAmount,
-      'status': paymentStatus,
-      'assignment_id': assignmentId,
-      'time_stamp': timeStamp?.toUtc().toString(),
-      'user_type': UserTypeHelper.isAdmin() ? 1 : 0,
-      'attachment': attachment == null ? null : "1",
-      'file_size': attachment == null ? null : attachment!.size.toString(),
-      'file_name': attachment == null ? null : attachment!.name,
-      'download_url': attachment == null ? null : attachment!.downloadUrl,
+      'paymentStatus': paymentStatus,
+      'assignmentId': assignmentId,
+      'createdAt': timeStamp?.toUtc().toString(),
+      'fileSize': attachment == null ? null : attachment!.size,
+      'fileName': attachment == null ? null : attachment!.name,
+      'url': attachment == null ? null : attachment!.downloadUrl,
     };
   }
 }

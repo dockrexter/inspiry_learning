@@ -151,6 +151,8 @@ class _MessageWidgetState extends State<MessageWidget> {
                         onTap: () async {
                           Utils.showToast(AppStrings.initialingPaymentProcess);
                           final url = await PaymentRepository().payWithPapal(
+                              itemName: "Payment for Assignment",
+                              description: widget.message.message!,
                               amount: widget.message.paymentAmount!);
                           if (url != null) {
                             await Utils.launchURL(url);
@@ -255,7 +257,9 @@ class _MessageWidgetState extends State<MessageWidget> {
         IconButton(
           onPressed: _isError ? onPressed : null,
           icon: Icon(
-            (widget.message.isMe && !_showDownLoadButton) ? Icons.upload_rounded : Icons.download_rounded,
+            (widget.message.isMe && !_showDownLoadButton)
+                ? Icons.upload_rounded
+                : Icons.download_rounded,
             size: 18.sp,
             color: AppColors.gray600,
           ),

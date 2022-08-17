@@ -28,10 +28,10 @@ class AttachmentRepository {
       }),
     );
     if (response != null) {
-      if (response["status"] == "ok") {
-        return response["url"];
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        return response["data"]["url"];
       }
-      Utils.showToast(AppStrings.somethingWentWrong);
+      Utils.showToast(response["message"]);
       return null;
     }
     Utils.showToast(AppStrings.somethingWentWrong);

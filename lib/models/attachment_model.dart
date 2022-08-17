@@ -13,17 +13,17 @@ class Attachment {
 
   factory Attachment.fromJson(dynamic data) {
     return Attachment(
-      name: data["file_name"] as String,
-      size: data["file_size"] as int,
-      downloadUrl: data["download_url"] as String?,
+      name: data["fileName"] as String,
+      size: data["fileSize"] as int,
+      downloadUrl: data["url"] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['file_name'] = name;
-    data['file_size'] = size;
-    data['download_url'] = size;
+    data['fileName'] = name;
+    data['fileSize'] = size;
+    data['url'] = size;
     return data;
   }
 
