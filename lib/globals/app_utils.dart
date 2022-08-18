@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:inspiry_learning/repositories/fcmtoken_repositories.dart';
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:inspiry_learning/models/user_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -161,6 +163,21 @@ class Utils {
     return -1;
   }
 
+  static Future<void> addTokenToBackend() async {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      await FcmTokenRepository().addToken(token: token);
+    }
+  }
+
+  static Future<void> removeTokenToBackend() async {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      await FcmTokenRepository().removeToken(token: token);
+    }
+    await FirebaseMessaging.instance.deleteToken();
+  }
+
   static bool checkIsAnyFieldIsEmpty(
       {required List<TextEditingController> controllers}) {
     for (final controller in controllers) {
@@ -281,7 +298,7 @@ class Utils {
       HttpClient httpClient = HttpClient();
       try {
         var request =
-            await httpClient.getUrl(Uri.parse('${AppStrings.baseUrl}/$url'));
+            await httpClient.getUrl(Uri.parse(AppStrings.baseUrl + url));
         var response = await request.close();
         if (response.statusCode == 200) {
           var bytes = await consolidateHttpClientResponseBytes(response);

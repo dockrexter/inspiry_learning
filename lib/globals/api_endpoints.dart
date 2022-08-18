@@ -1,7 +1,9 @@
 class ApiEndpoints {
   static const String login = '/api/users/login';
+  static const String addToken = '/api/token/add';
   static const String payment = '/api/payment/pay';
   static const String signup = '/api/users/register';
+  static const String removeToken = '/api/token/remove';
   static const String updateUser = '/api/users/updateUser';
   static const String changePassword = '/api/users/changePassword';
   static const String uploadAttachments = '/api/attachments/upload';

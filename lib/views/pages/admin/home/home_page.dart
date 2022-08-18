@@ -87,6 +87,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       SizedBox(width: 18.w),
                       InkWell(
                         onTap: () async {
+                          await Utils.removeTokenToBackend();
                           await User.remove();
                           AppRouter.makeFirst(context, const UserInfoPage());
                         },

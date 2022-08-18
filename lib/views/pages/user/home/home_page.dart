@@ -90,6 +90,7 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(width: 18.w),
                         InkWell(
                           onTap: () async {
+                            await Utils.removeTokenToBackend();
                             await User.remove();
                             AppRouter.makeFirst(context, const UserInfoPage());
                           },

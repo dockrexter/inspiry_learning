@@ -55,22 +55,6 @@ class _HandleNotificationState extends State<HandleNotification> {
   void initState() {
     super.initState();
     FBNotificationManager().startFirebaseMessagingListener();
-    FBNotificationManager().startFirebaseListenerOnMessageOpenedApp(
-      (notification) => showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text(notification.title!),
-            content: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text(notification.body!)],
-              ),
-            ),
-          );
-        },
-      ),
-    );
   }
 
   @override

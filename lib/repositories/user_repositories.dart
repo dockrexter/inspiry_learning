@@ -32,6 +32,7 @@ class UserRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         var user = User.fromJson(response["data"]);
         if (rememberMe) await user.save();
+        await Utils.addTokenToBackend();
         return user;
       }
       Utils.showToast(response["message"]);
@@ -51,6 +52,7 @@ class UserRepository {
         var user = User.fromJson(response["data"]);
         if (!addSubAdmin) {
           await user.save();
+          await Utils.addTokenToBackend();
         }
         return user;
       }
