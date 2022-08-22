@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/models/attachment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/repositories/attachment_repositories.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
   const AssignmentDetailsPage({Key? key, required this.assignment})
@@ -16,6 +18,23 @@ class AssignmentDetailsPage extends StatefulWidget {
 }
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
+
+  List<Attachment>? _attachments;
+
+  void getAttachments(){
+    AttachmentRepository().getAttachment(widget.assignment.id).then((attachments){
+      setState(() {
+        _attachments = attachments;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAttachments();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,11 +116,11 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                             ),
                           ),
                           SizedBox(height: 14.h),
-                          if (widget.assignment.attachments != null)
+                          if (_attachments != null)
                             ..._buildImagesGrid(
                               context,
-                              imagesPath: [],
-                              //imagesPath: widget.assignment.attachments!.map((e) => e.downloadUrl!).toList(),
+                              // imagesPath: [],
+                              imagesPath: _attachments!.map((e) => e.downloadUrl!).toList(),
                             )
                           else
                             Text(
@@ -153,8 +172,8 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                 if (i + j < imagesPath.length)
                   Padding(
                     padding: EdgeInsets.only(left: j == 0 ? 0 : 8.w),
-                    child: Image.asset(
-                      imagesPath[i + j],
+                    child: Image.network(
+                      AppStrings.baseUrl + imagesPath[i + j],
                       width: width,
                     ),
                   ),

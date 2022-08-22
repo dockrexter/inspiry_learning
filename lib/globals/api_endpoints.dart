@@ -5,8 +5,10 @@ class ApiEndpoints {
   static const String signup = '/api/users/register';
   static const String removeToken = '/api/token/remove';
   static const String updateUser = '/api/users/updateUser';
+  static const String rejectPayment = '/api/payment/reject';
   static const String changePassword = '/api/users/changePassword';
   static const String uploadAttachments = '/api/attachments/upload';
+  static const String forgotPassword = 'api/users/sendPasswordResetLink';
   static const String getAttachments = '/api/assignments/getAttachments';
   static const String updateAssignee = '/api/assignments/updateAssignee';
   static const String getAssignments = '/api/assignments/getUserAssignments';

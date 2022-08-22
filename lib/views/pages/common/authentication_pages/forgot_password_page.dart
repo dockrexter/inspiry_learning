@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 
@@ -13,6 +14,14 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +90,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       InputTextField(
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
-                        controller: TextEditingController(),
+                        controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
@@ -91,7 +100,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ),
                       CustomButton(
                         AppStrings.send,
-                        onPressed: () => _buildDialog(context),
+                        onPressed: () async {
+                          await UserRepository().forgotPassword(
+                            email: _emailController.text,
+                          );
+                          await _buildDialog(context);
+                        },
                       ),
                     ],
                   ),
@@ -133,7 +147,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   color: AppColors.white,
                 ),
               ),
-              SizedBox(height: 20.h),              
+              SizedBox(height: 20.h),
               Text(
                 AppStrings.emailSent,
                 style: AppStyle.textstylepoppinssemibold14.copyWith(

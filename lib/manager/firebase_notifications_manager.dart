@@ -22,9 +22,9 @@ class FBNotificationManager {
 
   final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  Future<String?> getToken() async {
-    return await FirebaseMessaging.instance.getToken();
-  }
+  // Future<String?> getToken() async {
+  //   return await FirebaseMessaging.instance.getToken();
+  // }
 
   Future<void> regiterNotificationService() async {
     FirebaseMessaging.onBackgroundMessage(

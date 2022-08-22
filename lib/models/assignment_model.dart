@@ -22,7 +22,7 @@ class Assignment {
     this.status = WorkStatus.newRequest,
   });
 
-  // {id: 1, userId: 1, subject: Data Mining, summary: Hi Please Solve This Assignment ASAP, assignee: null, status: 0, deadline: 2022-08-12 07:49:20.986Z, paymentStatus: 0, createdAt: 2022-08-12T11:46:36.237Z, updatedAt: 2022-08-12T12:50:49.335Z}
+  
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
     return Assignment(

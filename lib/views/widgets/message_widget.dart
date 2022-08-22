@@ -140,33 +140,48 @@ class _MessageWidgetState extends State<MessageWidget> {
               ),
               if (widget.message.type.index == 1) SizedBox(height: 12.h),
               if (widget.message.type.index == 1)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (!widget.message.isMe)
-                      _buildCustomButtons(
-                        text: AppStrings.pay,
-                        color: AppColors.primary,
-                        icon: Icons.send,
-                        onTap: () async {
-                          Utils.showToast(AppStrings.initialingPaymentProcess);
-                          final url = await PaymentRepository().payWithPapal(
-                              itemName: "Payment for Assignment",
-                              description: widget.message.message!,
-                              amount: widget.message.paymentAmount!);
-                          if (url != null) {
-                            await Utils.launchURL(url);
-                          }
-                        },
-                      ),
-                    _buildCustomButtons(
-                      text: AppStrings.reject,
-                      color: AppColors.red300,
-                      onTap: () async => await Utils.launchURL(
-                          "https://github.com/Usama-Azad"),
-                    ),
-                  ],
-                ),
+                widget.message.paymentStatus == 2
+                    ? const Text("Rejected",
+                        style: TextStyle(color: AppColors.red300))
+                    : widget.message.paymentStatus == 1
+                        ? const Text("Payed",
+                            style: TextStyle(color: AppColors.primary))
+                        : 
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (!widget.message.isMe)
+                                _buildCustomButtons(
+                                  text: AppStrings.pay,
+                                  color: AppColors.primary,
+                                  icon: Icons.send,
+                                  onTap: () async {
+                                    Utils.showToast(
+                                        AppStrings.initialingPaymentProcess);
+                                    final url = await PaymentRepository()
+                                        .payWithPapal(
+                                            messageId: widget.message.id!,
+                                            assignmentId:
+                                                widget.message.assignmentId,
+                                            itemName: "Payment for Assignment",
+                                            description:
+                                                widget.message.message!,
+                                            amount:
+                                                widget.message.paymentAmount!);
+                                    if (url != null) {
+                                      await Utils.launchURL(url);
+                                    }
+                                  },
+                                ),
+                              _buildCustomButtons(
+                                text: AppStrings.reject,
+                                color: AppColors.red300,
+                                onTap: () async => await PaymentRepository()
+                                    .rejectPayment(
+                                        messageId: widget.message.id!),
+                              ),
+                            ],
+                          ),
             ],
           )
         : Column(
