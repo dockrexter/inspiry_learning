@@ -3,6 +3,7 @@ import 'package:inspiry_learning/models/user_model.dart';
 import 'package:inspiry_learning/manager/api_manager.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/api_endpoints.dart';
+import 'package:inspiry_learning/models/notification_model.dart';
 
 class UserRepository {
   late APIManager _apiManager;
@@ -97,6 +98,26 @@ class UserRepository {
     }
     Utils.showToast(AppStrings.somethingWentWrong);
     return false;
+  }
+
+  Future<List<Notification>?> getAllNotification() async {
+    final response = await _apiManager.post(ApiEndpoints.getAllNotification);
+    if (response != null) {
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        return response["data"]
+            .map<Notification>((attachment) => Notification(
+                  id: attachment["id"],
+                  userId: attachment["userId"],
+                  notification: attachment["notification"],
+                  timeStamp: attachment["createdAt"],
+                ))
+            .toList();
+      }
+      Utils.showToast(response["message"]);
+      return null;
+    }
+    Utils.showToast(AppStrings.somethingWentWrong);
+    return null;
   }
 
   Future<bool> forgotPassword({required String email}) async {

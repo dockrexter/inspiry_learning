@@ -5,15 +5,19 @@ class AppStrings {
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
   static const String baseUrl = "https://inspirylearning-server.herokuapp.com";
+  static const String termsAndConditionsUrl =
+      "https://inspiry-learning.surge.sh/termsandconditions";
 
   // Login Page
   static const String login = "Login";
   static const String signUp = "Sign Up";
   static const String rememberMe = "Remember Me";
+  static const String agreeToAll = "Agrees to all";
   static const String loginAsUser = "Login as User";
   static const String enterPassword = "Enter Password";
   static const String forgotPassword = "Forgot Password?";
   static const String enterEmailAddress = "Enter Email Address";
+  static const String termsAndConditions = "terms and conditions";
   static const String dontHaveAnAccount = "Don't have an account?";
   static const String loginAsProfessional = "Login as Professional";
   static const String needAssignmentHelp = "Need Assignment Help?";

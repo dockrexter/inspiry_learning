@@ -147,21 +147,47 @@ class _LoginPageState extends State<LoginPage> {
                                   await _loginBtnClickHandler(),
                             ),
                       if (!_isAdmin)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
                           children: [
-                            Text(
-                              AppStrings.dontHaveAnAccount,
-                              style: AppStyle.textstylepoppinsmedium14,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  AppStrings.agreeToAll,
+                                  style: AppStyle.textstylepoppinsmedium14,
+                                ),
+                                SizedBox(width: 6.w),
+                                GestureDetector(
+                                  onTap: () async => await Utils.launchURL(
+                                      AppStrings.termsAndConditionsUrl),
+                                  child: Text(
+                                    AppStrings.termsAndConditions,
+                                    style: AppStyle.textstylepoppinsbold14
+                                        .copyWith(
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 6.w),
-                            GestureDetector(
-                              onTap: () => AppRouter.makeFirst(
-                                  context, const SignUpPage()),
-                              child: Text(
-                                AppStrings.signUp,
-                                style: AppStyle.textstylepoppinsbold14,
-                              ),
+                            SizedBox(height: 20.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  AppStrings.dontHaveAnAccount,
+                                  style: AppStyle.textstylepoppinsmedium14,
+                                ),
+                                SizedBox(width: 6.w),
+                                GestureDetector(
+                                  onTap: () => AppRouter.makeFirst(
+                                      context, const SignUpPage()),
+                                  child: Text(
+                                    AppStrings.signUp,
+                                    style: AppStyle.textstylepoppinsbold14,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

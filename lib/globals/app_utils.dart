@@ -165,7 +165,6 @@ class Utils {
 
   static Future<void> addTokenToBackend() async {
     final token = await FirebaseMessaging.instance.getToken();
-    print(token);
     if (token != null) {
       await FcmTokenRepository().addToken(token: token);
     }

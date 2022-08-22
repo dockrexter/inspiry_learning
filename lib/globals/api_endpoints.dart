@@ -11,6 +11,7 @@ class ApiEndpoints {
   static const String forgotPassword = 'api/users/sendPasswordResetLink';
   static const String getAttachments = '/api/assignments/getAttachments';
   static const String updateAssignee = '/api/assignments/updateAssignee';
+  static const String getAllNotification = '/api/users/getAllNotification';
   static const String getAssignments = '/api/assignments/getUserAssignments';
   static const String updateAssignmentStatus = '/api/assignments/updateStatus';
   static const String createAssignment = '/api/assignments/createUserAssignment';

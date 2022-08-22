@@ -44,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: Column(
         children: [
           SizedBox(
-            height: ScreenSize.height * 0.20,
+            height: ScreenSize.height * 0.18,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20.h),
               child: Align(
@@ -139,21 +139,47 @@ class _SignUpPageState extends State<SignUpPage> {
                               onPressed: () async =>
                                   await _signUpBtnClickHandler(),
                             ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Column(
                         children: [
-                          Text(
-                            AppStrings.haveAnAccount,
-                            style: AppStyle.textstylepoppinsmedium14,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                AppStrings.agreeToAll,
+                                style: AppStyle.textstylepoppinsmedium14,
+                              ),
+                              SizedBox(width: 6.w),
+                              GestureDetector(
+                                onTap: () async => await Utils.launchURL(
+                                    AppStrings.termsAndConditionsUrl),
+                                child: Text(
+                                  AppStrings.termsAndConditions,
+                                  style:
+                                      AppStyle.textstylepoppinsbold14.copyWith(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 6.w),
-                          GestureDetector(
-                            onTap: () =>
-                                AppRouter.makeFirst(context, const LoginPage()),
-                            child: Text(
-                              AppStrings.signIn,
-                              style: AppStyle.textstylepoppinsbold14,
-                            ),
+                          SizedBox(height: 8.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                AppStrings.haveAnAccount,
+                                style: AppStyle.textstylepoppinsmedium14,
+                              ),
+                              SizedBox(width: 6.w),
+                              GestureDetector(
+                                onTap: () =>
+                                    AppRouter.makeFirst(context, const LoginPage()),
+                                child: Text(
+                                  AppStrings.signIn,
+                                  style: AppStyle.textstylepoppinsbold14,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       )
