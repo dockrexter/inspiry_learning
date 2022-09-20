@@ -1,4 +1,6 @@
 class ApiEndpoints {
+  ///api/users/notificationReaded
+  ///api/users/singleNotificationReaded
   static const String login = '/api/users/login';
   static const String addToken = '/api/token/add';
   static const String payment = '/api/payment/pay';
@@ -11,10 +13,18 @@ class ApiEndpoints {
   static const String forgotPassword = 'api/users/sendPasswordResetLink';
   static const String getAttachments = '/api/assignments/getAttachments';
   static const String updateAssignee = '/api/assignments/updateAssignee';
-  static const String getAllNotification = '/api/users/getAllNotification';
+  static const String getAllNotification = '/api/users/getAllNotifications';
+  static const String readSingleNotification =
+      '/api/users/singleNotificationReaded';
+  static const String allSingleNotificationread = '/api/users/notificationReaded';
   static const String getAssignments = '/api/assignments/getUserAssignments';
+  static const String getAssignmentsSingledetail =
+      '/api/assignments/getAssignmentById';
   static const String updateAssignmentStatus = '/api/assignments/updateStatus';
-  static const String createAssignment = '/api/assignments/createUserAssignment';
-  static const String getAllDueAssignments = '/api/assignments/getAllDueAssignments';
-  static const String getAssignmentsByMonth = '/api/assignments/getCurrentMonthAssignments';
+  static const String createAssignment =
+      '/api/assignments/createUserAssignment';
+  static const String getAllDueAssignments =
+      '/api/assignments/getAllDueAssignments';
+  static const String getAssignmentsByMonth =
+      '/api/assignments/getCurrentMonthAssignments';
 }

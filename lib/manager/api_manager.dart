@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 
 class APIManager {
   static final APIManager _apiManager = APIManager._internal();

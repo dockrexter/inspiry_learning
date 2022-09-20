@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:inspiry_learning/globals/api_endpoints.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/manager/api_manager.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
-import 'package:inspiry_learning/globals/api_endpoints.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/models/single_assaignment_model.dart';
 
 class AssignmentRepository {
   late APIManager _apiManager;
@@ -17,6 +18,28 @@ class AssignmentRepository {
 
   AssignmentRepository._internal() {
     _apiManager = APIManager();
+  }
+  /* Assignment Detail */
+  Future<AssignmentDetail?> getassignmentdetail({String? assaignmentId}) async {
+    final response = await _apiManager.post(
+      ApiEndpoints.getAssignmentsSingledetail,
+      data: {"assignment_id": assaignmentId},
+    );
+    if (response != null) {
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        final AssignmentDetail assignments =
+            AssignmentDetail.fromJson(response['data']);
+
+        // (response["data"] as List<dynamic>)
+        //     .map((assignment) => AssignmentDetail.fromJson(assignment))
+        //     .toList();
+        return assignments;
+      }
+      Utils.showToast(response["message"]);
+      return null;
+    }
+    Utils.showToast(AppStrings.somethingWentWrong);
+    return null;
   }
 
   Future<List<Assignment>> getAssignments(int userId) async {

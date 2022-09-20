@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/app_style.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inspiry_learning/models/message_model.dart';
+import 'package:inspiry_learning/globals/app_style.dart';
+import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/manager/socket_manager.dart';
+import 'package:inspiry_learning/models/message_model.dart';
 import 'package:inspiry_learning/repositories/payment_repositories.dart';
 
 class MessageWidget extends StatefulWidget {
@@ -77,8 +77,10 @@ class _MessageWidgetState extends State<MessageWidget> {
                 }
               }
               if (widget.message.attachment!.path != null) {
-                final res =
-                    await Utils.openFile(widget.message.attachment!.path!);
+                print(widget.message.attachment!.path!);
+                String path = widget.message.attachment!.path!;
+                final res = await Utils.openFile(path);
+
                 if (res.message != "done") {
                   Utils.showToast(res.message);
                 }
@@ -146,8 +148,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                     : widget.message.paymentStatus == 1
                         ? const Text("Payed",
                             style: TextStyle(color: AppColors.primary))
-                        : 
-                        Row(
+                        : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               if (!widget.message.isMe)
@@ -195,7 +196,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                   color: Colors.transparent.withOpacity(0.04),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Row(
                       children: [

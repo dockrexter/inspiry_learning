@@ -1,17 +1,17 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:inspiry_learning/repositories/fcmtoken_repositories.dart';
-import 'package:open_file/open_file.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:inspiry_learning/models/user_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:inspiry_learning/models/user_model.dart';
+import 'package:inspiry_learning/repositories/fcmtoken_repositories.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum WorkStatus {
   compleated,
@@ -166,6 +166,8 @@ class Utils {
   static Future<void> addTokenToBackend() async {
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
+      print("/////////////////////");
+      print(token);
       await FcmTokenRepository().addToken(token: token);
     }
   }
@@ -293,6 +295,7 @@ class Utils {
     }
 
     if (await file.exists()) {
+      print(file.path);
       return file.path;
     } else {
       HttpClient httpClient = HttpClient();
@@ -304,6 +307,7 @@ class Utils {
           var bytes = await consolidateHttpClientResponseBytes(response);
           await file.writeAsBytes(bytes);
           httpClient.close(force: true);
+          print(file.path);
           return file.path;
         }
       } catch (ex) {

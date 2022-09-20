@@ -1,16 +1,23 @@
+import 'dart:async';
+
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/all_notification_model.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
-import 'package:inspiry_learning/views/widgets/custom_card.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
-import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
-import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
-import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
+import 'package:inspiry_learning/models/user_model.dart';
+import 'package:inspiry_learning/repositories/allnotification_repo.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
+import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/views/pages/user/submission/assignment_submission_form.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/widgets/custom_card.dart';
+
+import '../../../widgets/custom_notifications_popup.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,19 +26,46 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with ChangeNotifier {
   List<Assignment>? assignments;
+  List<AllNotificationData>? allnotification;
+  String? assignmentid;
+  final Box _countBox = Hive.box('notificationcounter');
 
   @override
   void initState() {
     super.initState();
     _getAssignments();
+    _getAllNotification();
+    // Utils.addTokenToBackend();
+  }
+
+  Future<void> _getAllNotification() async {
+    allnotification = await AllNotifactionRepository().getallNotification();
+    setState(() {});
   }
 
   Future<void> _getAssignments() async {
     assignments = await AssignmentRepository()
         .getAssignments(ActiveUser.instance.user!.userId!);
     setState(() {});
+  }
+
+  Widget notificationCounter() {
+    return ValueListenableBuilder<Box>(
+        valueListenable: _countBox.listenable(),
+        builder: (context, box, widget) {
+          print({box.get('count', defaultValue: 0)});
+          return box.get("count", defaultValue: 0) <= 1
+              ? Container()
+              : Text(
+                  '${box.get('count', defaultValue: 0)}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 8.sp,
+                  ),
+                );
+        });
   }
 
   @override
@@ -70,11 +104,26 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         InkWell(
-                          onTap: () => customNotificationsPopup(context),
-                          child: Image.asset(
-                            AppAssets.bellIcon,
-                            scale: 4,
+                          onTap: () async {
+                            await _getAllNotification();
+                            customNotificationsPopup(context,
+                                allnotification: allnotification);
+                          },
+                          child: Badge(
+                            position: BadgePosition.topEnd(top: -5, end: -5),
+                            animationDuration:
+                                const Duration(milliseconds: 300),
+                            animationType: BadgeAnimationType.slide,
+                            badgeContent: notificationCounter(),
+                            child: const Icon(
+                              Icons.notifications,
+                              size: 26,
+                            ),
                           ),
+                          // child: Image.asset(
+                          //   AppAssets.bellIcon,
+                          //   scale: 4,
+                          // ),
                         ),
                         SizedBox(width: 18.w),
                         InkWell(
@@ -116,7 +165,10 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: RefreshIndicator(
               displacement: 10.h,
-              onRefresh: () async => await _getAssignments(),
+              onRefresh: () async {
+                await _getAssignments();
+                await _getAllNotification();
+              },
               child: assignments == null
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
@@ -145,7 +197,8 @@ class _HomePageState extends State<HomePage> {
             AppStrings.submitNewAssignmentForm,
             outlineBoarder: true,
             onPressed: () async {
-              await AppRouter.push(context, const AssignmentFormSubmissionPage());
+              await AppRouter.push(
+                  context, const AssignmentFormSubmissionPage());
               await _getAssignments();
             },
           ),

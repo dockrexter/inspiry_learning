@@ -1,23 +1,29 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:inspiry_learning/models/message_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inspiry_learning/manager/socket_manager.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
-import 'package:inspiry_learning/views/widgets/message_widget.dart';
-import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/models/message_model.dart';
+import 'package:inspiry_learning/models/single_assaignment_model.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 import 'package:inspiry_learning/views/pages/admin/details/assignment_details_page.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/widgets/message_widget.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key, required this.assignment}) : super(key: key);
-
-  final Assignment assignment;
+  const ChatPage({
+    Key? key,
+    this.assignment,
+    this.assaignmentid,
+  }) : super(key: key);
+  final String? assaignmentid;
+  final Assignment? assignment;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -33,14 +39,27 @@ class _ChatPageState extends State<ChatPage> {
   final _scrollController = ScrollController();
   final _messageController = TextEditingController();
   final allowedExtensions = ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'zip'];
+  Assignment? assignment;
+  AssignmentDetail? assignmentdetail;
 
   @override
   void initState() {
     super.initState();
-    SocketManager().connect();
-    SocketManager().joinRoom(
-        userId: ActiveUser.instance.user!.userId!,
-        assignmentId: widget.assignment.id);
+    if (widget.assignment == null) {
+      _getAssignmentsdetails();
+    } else {
+      assignment = widget.assignment;
+      SocketManager().connect();
+      SocketManager().joinRoom(
+          userId: ActiveUser.instance.user!.userId!,
+          assignmentId: assignment!.id);
+    }
+
+    // SocketManager().connect();
+    //   SocketManager().joinRoom(
+    //       userId: ActiveUser.instance.user!.userId!,
+    //       assignmentId: assignment!.id);
+
     SocketManager().onOnline(_handelOnline);
     SocketManager().onTyping(_handelTyping);
     SocketManager().onMessage(_handelMessage);
@@ -65,6 +84,26 @@ class _ChatPageState extends State<ChatPage> {
     SocketManager().disconnect();
     SocketManager().dispose();
     super.dispose();
+  }
+
+  Future<void> _getAssignmentsdetails() async {
+    assignmentdetail = await AssignmentRepository()
+        .getassignmentdetail(assaignmentId: widget.assaignmentid);
+    assignment = Assignment(
+        id: assignmentdetail!.id,
+        assignTo: assignmentdetail!.assignTo,
+        attachments: assignmentdetail!.attachments,
+        createdDate: assignmentdetail!.createdDate,
+        deadline: assignmentdetail!.deadline,
+        status: assignmentdetail!.status,
+        subject: assignmentdetail!.subject,
+        summary: assignmentdetail!.summary,
+        userId: assignmentdetail!.userId);
+    SocketManager().connect();
+    SocketManager().joinRoom(
+        userId: ActiveUser.instance.user!.userId!,
+        assignmentId: assignment!.id);
+    setState(() {});
   }
 
   @override
@@ -159,8 +198,7 @@ class _ChatPageState extends State<ChatPage> {
                           InkWell(
                             onTap: () => AppRouter.push(
                               context,
-                              AssignmentDetailsPage(
-                                  assignment: widget.assignment),
+                              AssignmentDetailsPage(assignment: assignment),
                             ),
                             child: Text(
                               AppStrings.assignmentDetails,
@@ -287,11 +325,11 @@ class _ChatPageState extends State<ChatPage> {
                       Message(
                         paymentStatus: 0,
                         type: MessageType.offer,
-                        assignmentId: widget.assignment.id,
+                        assignmentId: assignment!.id,
                         userId: ActiveUser.instance.user!.userId!,
                         paymentAmount: double.tryParse(priceController.text),
                         message:
-                            "Title: ${widget.assignment.subject} Charges: ${priceController.text} Description: ${descriptionController.text}",
+                            "Title: ${widget.assignment!.subject} Charges: ${priceController.text} Description: ${descriptionController.text}",
                       ),
                     );
                     _messageController.clear();
@@ -351,7 +389,7 @@ class _ChatPageState extends State<ChatPage> {
                 if (_messageController.text.isNotEmpty) {
                   SocketManager().emitTyping({"typing": false, "message": ""});
                   _sendMessage(Message(
-                    assignmentId: widget.assignment.id,
+                    assignmentId: assignment!.id,
                     userId: ActiveUser.instance.user!.userId!,
                     message: _messageController.text,
                   ));
@@ -386,7 +424,7 @@ class _ChatPageState extends State<ChatPage> {
     if (image != null) {
       _sendMessage(Message(
         type: MessageType.attachment,
-        assignmentId: widget.assignment.id,
+        assignmentId: assignment!.id,
         userId: ActiveUser.instance.user!.userId!,
         attachment: Attachment.formFile(File(image.path)),
       ));
@@ -406,7 +444,7 @@ class _ChatPageState extends State<ChatPage> {
       for (var f in result.files) {
         _sendMessage(Message(
           type: MessageType.attachment,
-          assignmentId: widget.assignment.id,
+          assignmentId: assignment!.id,
           userId: ActiveUser.instance.user!.userId!,
           attachment: Attachment.formPlatformFile(f),
         ));

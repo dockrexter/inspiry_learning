@@ -10,7 +10,8 @@ class SocketManager {
 
   SocketManager._internal();
 
-  io.Socket socket = io.io(AppStrings.baseUrl, <String, dynamic>{
+  io.Socket socket = io.io(AppStrings.socketbaseUrl, <String, dynamic>{
+    "path": "/newSocket",
     "transports": ["websocket"],
     "autoConnect": false,
     "forceNew": true,

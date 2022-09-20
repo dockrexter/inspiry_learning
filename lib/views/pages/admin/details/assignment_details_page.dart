@@ -1,28 +1,31 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
-import 'package:inspiry_learning/views/widgets/custom_card.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/attachment_repositories.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/widgets/custom_card.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
   const AssignmentDetailsPage({Key? key, required this.assignment})
       : super(key: key);
 
-  final Assignment assignment;
+  final Assignment? assignment;
 
   @override
   State<AssignmentDetailsPage> createState() => _AssignmentDetailsPageState();
 }
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
-
   List<Attachment>? _attachments;
 
-  void getAttachments(){
-    AttachmentRepository().getAttachment(widget.assignment.id).then((attachments){
+  void getAttachments() {
+    AttachmentRepository()
+        .getAttachment(widget.assignment!.id)
+        .then((attachments) {
       setState(() {
         _attachments = attachments;
       });
@@ -105,7 +108,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            widget.assignment.summary ?? '',
+                            widget.assignment!.summary ?? '',
                             style: AppStyle.textstylepoppinsregular10,
                           ),
                           SizedBox(height: 16.h),
@@ -120,7 +123,9 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                             ..._buildImagesGrid(
                               context,
                               // imagesPath: [],
-                              imagesPath: _attachments!.map((e) => e.downloadUrl!).toList(),
+                              imagesPath: _attachments!
+                                  .map((e) => e.downloadUrl!)
+                                  .toList(),
                             )
                           else
                             Text(
@@ -172,13 +177,57 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                 if (i + j < imagesPath.length)
                   Padding(
                     padding: EdgeInsets.only(left: j == 0 ? 0 : 8.w),
-                    child: Image.network(
-                      AppStrings.baseUrl + imagesPath[i + j],
-                      width: width,
+                    child: Stack(
+                      children: [
+                        Image.network(
+                          AppStrings.baseUrl + imagesPath[i + j],
+                          width: width,
+                        ),
+                        Positioned(
+                          bottom: 30,
+                          right: 0,
+                          left: 70,
+                          child: IconButton(
+                            onPressed: () async {
+                              String _downloadurl = imagesPath[i + j];
+
+                              String split = imagesPath[i + j].split("/").last;
+                              String rendomnmbr = split.split(".").last;
+                              var r = Random();
+
+                              String? image = await Utils.downloadFile(
+                                      _downloadurl,
+                                      rendomnmbr + r.nextInt(10).toString(),
+                                      null)
+                                  .then((value) async {
+                                print(value);
+                                final res = await Utils.openFile(value!);
+                                print(res.message);
+
+                                if (res.message != "done") {
+                                  Utils.showToast(res.message);
+                                }
+                                return null;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.download,
+                              color: AppColors.orange800,
+                            ),
+                          ),
+                        )
+                      ],
+
+                      // child: Image.network(
+                      //   AppStrings.baseUrl + imagesPath[i + j],
+                      //   width: width,
+                      // ),
                     ),
                   ),
             ],
           ),
+
+          //Download Images from
         ),
       );
     }

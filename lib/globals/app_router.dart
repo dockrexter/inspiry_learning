@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class AppRouter {
   static dynamic push(BuildContext context, Widget page) {
@@ -47,6 +47,7 @@ class AppRouter {
 
   static void dismissAlert(context) {
     Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 
   static closeKeyboard(context) {

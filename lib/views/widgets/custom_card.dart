@@ -118,7 +118,7 @@ class CustomCard2 extends StatelessWidget {
 
   final Function onSelected;
   final VoidCallback? onPressed;
-  final Assignment assignment;
+  final Assignment? assignment;
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +150,7 @@ class CustomCard2 extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  Utils.convertDateToString(assignment.deadline!),
+                  Utils.convertDateToString(assignment!.deadline!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
@@ -159,7 +159,7 @@ class CustomCard2 extends StatelessWidget {
                   height: ScreenSize.width * 0.075,
                   child: InkWell(
                     onTap: () =>
-                        _showTextInputDialog(context, assignment.assignTo),
+                        _showTextInputDialog(context, assignment!.assignTo),
                     child: Container(
                       width: 55.w,
                       height: 20.h,
@@ -169,7 +169,7 @@ class CustomCard2 extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          assignment.assignTo ?? AppStrings.marley,
+                          assignment!.assignTo ?? AppStrings.marley,
                           style: AppStyle.textstylepoppinsregular7,
                         ),
                       ),
@@ -194,11 +194,11 @@ class CustomCard2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          assignment.subject!,
+                          assignment!.subject!,
                           style: AppStyle.textstylepoppinssemibold14,
                         ),
                         Icon(
-                          assignment.status == WorkStatus.compleated
+                          assignment!.status == WorkStatus.compleated
                               ? Icons.check_circle
                               : Icons.circle_outlined,
                           color: AppColors.teal400,
@@ -212,7 +212,7 @@ class CustomCard2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          Utils.getStatus(assignment.status),
+                          Utils.getStatus(assignment!.status),
                           style: AppStyle.textstylepoppinsmedium10,
                         ),
                         CustomDropdown(
@@ -282,7 +282,7 @@ class CustomCard2 extends StatelessWidget {
             onPressed: () async {
               if (assigneeController.text.isNotEmpty) {
                 await AssignmentRepository()
-                    .updateAssignee(assignment.id, assigneeController.text);
+                    .updateAssignee(assignment!.id, assigneeController.text);
               }
               assigneeController.dispose();
               AppRouter.pop(context);
