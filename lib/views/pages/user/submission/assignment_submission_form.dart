@@ -324,7 +324,7 @@ class _AssignmentFormSubmissionPageState
     final date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(DateTime.now().year),
+      firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 1),
     );
     _date = date ?? _date;
@@ -336,7 +336,7 @@ class _AssignmentFormSubmissionPageState
       onTap: () async =>
           await (index == 1 ? _openDatePicker() : _openTimePicker()),
       child: Container(
-        width: 72,
+        width: 80,
         height: 25,
         decoration: BoxDecoration(
           color: AppColors.white,

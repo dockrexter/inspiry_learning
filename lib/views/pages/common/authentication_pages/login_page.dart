@@ -7,6 +7,7 @@ import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/views/pages/user/signup/signup_page.dart';
 import 'package:inspiry_learning/views/pages/common/authentication_pages/forgot_password_page.dart';
 
@@ -39,19 +40,29 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         children: [
           SizedBox(
-            height: ScreenSize.height * 0.20,
+            height: ScreenSize.height * 0.16,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 20.h),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  _isAdmin
-                      ? AppStrings.loginAsProfessional
-                      : AppStrings.loginAsUser,
-                  style: AppStyle.textstyleinterbold23.copyWith(
-                    color: AppColors.white,
+              padding: EdgeInsets.only(top: 20.h, left: 20.h),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_outlined,
+                      color: AppColors.white,
+                    ),
+                    onPressed: () =>
+                        AppRouter.makeFirst(context, const UserInfoPage()),
                   ),
-                ),
+                  SizedBox(width: UserTypeHelper.isAdmin() ? 14.w : 46.w),
+                  Text(
+                    _isAdmin
+                        ? AppStrings.loginAsProfessional
+                        : AppStrings.loginAsUser,
+                    style: AppStyle.textstyleinterbold23.copyWith(
+                      color: AppColors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

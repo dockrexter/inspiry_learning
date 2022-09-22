@@ -129,7 +129,6 @@ class AppStrings extends ChangeNotifier {
       "password must be at least 6 characters";
 
   static const List<String> items = [
-    "New Request",
     "Under Review",
     "Pending Payment",
     "Work in Progress",

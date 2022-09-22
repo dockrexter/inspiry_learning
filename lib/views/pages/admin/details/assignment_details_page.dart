@@ -6,7 +6,6 @@ import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/attachment_repositories.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
@@ -21,6 +20,7 @@ class AssignmentDetailsPage extends StatefulWidget {
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
   List<Attachment>? _attachments;
+    final _isAdmin = UserTypeHelper.isAdmin();
 
   void getAttachments() {
     AttachmentRepository()
@@ -92,8 +92,8 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomCard2(
-                        assignment: widget.assignment, onSelected: (_) {}),
+                   _isAdmin ? CustomCard2(
+                        assignment: widget.assignment, onSelected: (_) {}) : SizedBox(width: ScreenSize.width),
                     SizedBox(height: 20.h),
                     Padding(
                       padding: EdgeInsets.only(left: 16.w),
@@ -109,7 +109,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                           SizedBox(height: 8.h),
                           Text(
                             widget.assignment!.summary ?? '',
-                            style: AppStyle.textstylepoppinsregular10,
+                            style: AppStyle.textstylepoppinsregular14.copyWith(color: AppColors.bluegray90099),
                           ),
                           SizedBox(height: 16.h),
                           Text(
@@ -142,22 +142,6 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 5.h),
-        child: _buildFloatingActionButton(context),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-
-  Widget _buildFloatingActionButton(BuildContext context) {
-    return SizedBox(
-      width: ScreenSize.width * 0.5,
-      child: CustomButton(
-        AppStrings.done,
-        onPressed: () => Navigator.pop(context),
-        color: AppColors.teal400,
       ),
     );
   }

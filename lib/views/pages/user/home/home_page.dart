@@ -55,7 +55,6 @@ class _HomePageState extends State<HomePage> with ChangeNotifier {
     return ValueListenableBuilder<Box>(
         valueListenable: _countBox.listenable(),
         builder: (context, box, widget) {
-          print({box.get('count', defaultValue: 0)});
           return box.get("count", defaultValue: 0) <= 1
               ? Container()
               : Text(

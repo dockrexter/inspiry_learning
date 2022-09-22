@@ -188,12 +188,12 @@ class _ChatPageState extends State<ChatPage> {
               ),
               child: Column(
                 children: [
-                  if (_isAdmin)
+                  
                     Padding(
                       padding:
                           EdgeInsets.only(right: 16.w, left: 16.w, top: 10.h),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: _isAdmin ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () => AppRouter.push(
@@ -210,6 +210,7 @@ class _ChatPageState extends State<ChatPage> {
                               ),
                             ),
                           ),
+                          if (_isAdmin)
                           InkWell(
                             onTap: _showBottomQuatationSheet,
                             child: Text(

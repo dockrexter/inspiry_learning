@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -37,6 +38,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
     _getAllNotification();
 
     _getOtherDueAssignments();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
   }
 
   Future<void> _getAllNotification() async {
@@ -125,11 +131,30 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                       SizedBox(width: 18.w),
                       InkWell(
-                        onTap: () async {
-                          await Utils.removeTokenToBackend();
-                          await User.remove();
-                          AppRouter.makeFirst(context, const UserInfoPage());
-                        },
+                        onTap: () async => await showDialog(
+                          context: context,
+                          builder: (context) => CupertinoAlertDialog(
+                            title: const Text("logout"),
+                            content: const Text("Please You Want That?"),
+                            actions: [
+                              CupertinoDialogAction(
+                                child: const Text("Yes"),
+                                onPressed: () async {
+                                  await Utils.removeTokenToBackend();
+                                  await User.remove();
+                                  AppRouter.makeFirst(
+                                      context, const UserInfoPage());
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                child: const Text("No"),
+                                onPressed: () async {
+                                  AppRouter.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                         child: const Icon(
                           Icons.logout,
                           color: AppColors.white,
@@ -341,8 +366,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
         daysOfWeekStyle: DaysOfWeekStyle(
           dowTextFormatter: (dt, _) =>
               _narrowWeekdays[dt.weekday == 7 ? 0 : dt.weekday],
-          weekdayStyle: AppStyle.textstylepoppinsbold14,
-          weekendStyle: AppStyle.textstylepoppinsbold14,
+          weekdayStyle: AppStyle.textstylepoppinsbold14.copyWith(fontSize: 13),
+          weekendStyle: AppStyle.textstylepoppinsbold14.copyWith(fontSize: 13),
         ),
         onPageChanged: (dt) {
           if (dt.month == now.month && dt.year == now.year) {
