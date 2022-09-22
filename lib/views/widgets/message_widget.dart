@@ -77,7 +77,6 @@ class _MessageWidgetState extends State<MessageWidget> {
                 }
               }
               if (widget.message.attachment!.path != null) {
-                print(widget.message.attachment!.path!);
                 String path = widget.message.attachment!.path!;
                 final res = await Utils.openFile(path);
 

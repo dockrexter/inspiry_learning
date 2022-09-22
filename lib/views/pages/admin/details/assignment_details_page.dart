@@ -5,9 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
-import 'package:inspiry_learning/repositories/attachment_repositories.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/repositories/attachment_repositories.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
   const AssignmentDetailsPage({Key? key, required this.assignment})
@@ -162,6 +162,27 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
     );
   }
 
+  Widget _buildThumbnils(String path) {
+    final extension = path.split('.').last.toLowerCase();
+    return Padding(
+      padding: EdgeInsets.only(right: 10.w),
+      child: CircleAvatar(
+        backgroundColor: AppColors.gray100,
+        backgroundImage:
+            (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
+                ? NetworkImage(AppStrings.baseUrl + path, scale: 5.0)
+                : (extension == 'doc' || extension == 'docx')
+                    ? const Icon(Icons.article) as ImageProvider
+                    : (extension == 'pdf')
+                        ? const Icon(Icons.picture_as_pdf) as ImageProvider
+                        : (extension == 'zip')
+                            ? const Icon(Icons.folder_zip) as ImageProvider
+                            : const Icon(Icons.filter_none) as ImageProvider,
+        child: const SizedBox(),
+      ),
+    );
+  }
+
   List<Widget> _buildImagesGrid(BuildContext context,
       {required List<String> imagesPath, double? width, int imagesPerRow = 3}) {
     width ??= ScreenSize.width * 0.25;
@@ -179,55 +200,39 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                     padding: EdgeInsets.only(left: j == 0 ? 0 : 8.w),
                     child: Stack(
                       children: [
-                        Image.network(
-                          AppStrings.baseUrl + imagesPath[i + j],
-                          width: width,
-                        ),
-                        Positioned(
-                          bottom: 30,
-                          right: 0,
-                          left: 70,
-                          child: IconButton(
-                            onPressed: () async {
-                              String _downloadurl = imagesPath[i + j];
+                        _buildThumbnils(imagesPath[i + j]),
+                        IconButton(
+                          onPressed: () async {
+                            var random = Random();
+                            String _downloadurl = imagesPath[i + j];
 
-                              String split = imagesPath[i + j].split("/").last;
-                              String rendomnmbr = split.split(".").last;
-                              var r = Random();
+                            String split = imagesPath[i + j].split("/").last;
+                            String rendomnmbr = split.split(".").last;
 
-                              String? image = await Utils.downloadFile(
-                                      _downloadurl,
-                                      rendomnmbr + r.nextInt(10).toString(),
-                                      null)
-                                  .then((value) async {
-                                print(value);
-                                final res = await Utils.openFile(value!);
-                                print(res.message);
+                            String? file = await Utils.downloadFile(
+                              _downloadurl,
+                              rendomnmbr +
+                                  random.nextInt(10).toString() +
+                                  imagesPath[i + j]
+                                      .split('.')
+                                      .last
+                                      .toLowerCase(),
+                              null,
+                            );
 
-                                if (res.message != "done") {
-                                  Utils.showToast(res.message);
-                                }
-                                return null;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.download,
-                              color: AppColors.orange800,
-                            ),
-                          ),
+                            final res = await Utils.openFile(file!);
+
+                            if (res.message != "done") {
+                              Utils.showToast(res.message);
+                            }
+                          },
+                          icon: const SizedBox(),
                         )
                       ],
-
-                      // child: Image.network(
-                      //   AppStrings.baseUrl + imagesPath[i + j],
-                      //   width: width,
-                      // ),
                     ),
                   ),
             ],
           ),
-
-          //Download Images from
         ),
       );
     }

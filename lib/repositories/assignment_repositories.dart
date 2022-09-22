@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:inspiry_learning/globals/api_endpoints.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/manager/api_manager.dart';
+import 'package:inspiry_learning/globals/api_endpoints.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/single_assaignment_model.dart';
 
@@ -29,10 +29,6 @@ class AssignmentRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         final AssignmentDetail assignments =
             AssignmentDetail.fromJson(response['data']);
-
-        // (response["data"] as List<dynamic>)
-        //     .map((assignment) => AssignmentDetail.fromJson(assignment))
-        //     .toList();
         return assignments;
       }
       Utils.showToast(response["message"]);

@@ -1,6 +1,6 @@
+import 'package:inspiry_learning/manager/api_manager.dart';
 import 'package:inspiry_learning/globals/api_endpoints.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/manager/api_manager.dart';
 import 'package:inspiry_learning/models/all_notification_model.dart';
 import 'package:inspiry_learning/models/all_notification_read_model.dart';
 import 'package:inspiry_learning/models/single_notification_read_model.dart';
@@ -26,7 +26,6 @@ class AllNotifactionRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         final SingleNotificationRead assignments =
             SingleNotificationRead.fromJson(response);
-
         return assignments;
       }
       Utils.showToast(response["message"]);
@@ -45,7 +44,6 @@ class AllNotifactionRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         final AllNotificationRead assignments =
             AllNotificationRead.fromJson(response);
-
         return assignments;
       }
       Utils.showToast(response["message"]);

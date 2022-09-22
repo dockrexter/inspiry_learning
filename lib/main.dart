@@ -1,32 +1,34 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/manager/firebase_notifications_manager.dart';
-import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:inspiry_learning/models/user_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
-import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
+import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
+import 'package:inspiry_learning/manager/firebase_notifications_manager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
   await Hive.openBox('notificationcounter');
+  Hive.box('notificationcounter').put('count', 0);
 
   await Firebase.initializeApp();
-
-  // Hive.box('notificationcounter').put('count', 0);
   await SharedPreferencesManager.instance.initPrefrences();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   ActiveUser.instance.user = await User.getUser();
+
   runApp(
     ScreenUtilInit(
       builder: (context, _) => const MyApp(),
@@ -65,16 +67,8 @@ class _HandleNotificationState extends State<HandleNotification> {
   @override
   void initState() {
     super.initState();
-    hivebox();
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
-
     FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-    // print(ActiveUser.instance.user!.token);
-  }
-
-  void hivebox() async {
-    await Hive.initFlutter();
-    await Hive.openBox('notificationcounter');
   }
 
   @override

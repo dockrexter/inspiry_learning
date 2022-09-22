@@ -69,7 +69,9 @@ class CustomCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    assignment.subject!,
+                    assignment.subject!.length > 20
+                        ? assignment.subject!.substring(0, 22) + '...'
+                        : assignment.subject!,
                     style: AppStyle.textstylepoppinssemibold14,
                   ),
                   SizedBox(
@@ -194,7 +196,7 @@ class CustomCard2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          assignment!.subject!,
+                          assignment!.subject!.length > 20 ? assignment!.subject!.substring(0, 22) + '...' : assignment!.subject!,
                           style: AppStyle.textstylepoppinssemibold14,
                         ),
                         Icon(

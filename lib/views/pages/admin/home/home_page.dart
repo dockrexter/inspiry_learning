@@ -1,19 +1,19 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/models/all_notification_model.dart';
-import 'package:inspiry_learning/models/assignment_model.dart';
-import 'package:inspiry_learning/models/user_model.dart';
-import 'package:inspiry_learning/repositories/allnotification_repo.dart';
-import 'package:inspiry_learning/repositories/assignment_repositories.dart';
-import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
-import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
-import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
-import 'package:inspiry_learning/views/widgets/custom_card.dart';
-import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:inspiry_learning/models/user_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/views/widgets/custom_card.dart';
+import 'package:inspiry_learning/models/all_notification_model.dart';
+import 'package:inspiry_learning/repositories/allnotification_repo.dart';
+import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
+import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
+import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
@@ -48,7 +48,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     return ValueListenableBuilder<Box>(
         valueListenable: _countBox.listenable(),
         builder: (context, box, widget) {
-          print({box.get('count', defaultValue: 0)});
           return box.get("count", defaultValue: 0) <= 1
               ? Container()
               : Text(
@@ -103,7 +102,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           customNotificationsPopup(context,
                               allnotification: allnotification);
                         },
-                        // onTap: () => customNotificationsPopup(context),
                         child: Badge(
                           position: BadgePosition.topEnd(top: -5, end: -5),
                           animationDuration: const Duration(milliseconds: 300),
@@ -114,11 +112,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             size: 26,
                           ),
                         ),
-                        // child: Image.asset(
-                        //   AppAssets.bellIcon,
-                        //   color: AppColors.white,
-                        //   scale: 4,
-                        // ),
                       ),
                       SizedBox(width: 18.w),
                       InkWell(

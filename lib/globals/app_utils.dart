@@ -166,8 +166,6 @@ class Utils {
   static Future<void> addTokenToBackend() async {
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
-      print("/////////////////////");
-      print(token);
       await FcmTokenRepository().addToken(token: token);
     }
   }
@@ -295,7 +293,6 @@ class Utils {
     }
 
     if (await file.exists()) {
-      print(file.path);
       return file.path;
     } else {
       HttpClient httpClient = HttpClient();
@@ -307,7 +304,6 @@ class Utils {
           var bytes = await consolidateHttpClientResponseBytes(response);
           await file.writeAsBytes(bytes);
           httpClient.close(force: true);
-          print(file.path);
           return file.path;
         }
       } catch (ex) {

@@ -1,9 +1,9 @@
-import 'package:inspiry_learning/globals/api_endpoints.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/manager/api_manager.dart';
-import 'package:inspiry_learning/models/notification_model.dart';
 import 'package:inspiry_learning/models/user_model.dart';
+import 'package:inspiry_learning/manager/api_manager.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:inspiry_learning/globals/api_endpoints.dart';
+import 'package:inspiry_learning/models/notification_model.dart';
 
 class UserRepository {
   late APIManager _apiManager;

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:inspiry_learning/globals/app_utils.dart';
+import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:inspiry_learning/repositories/attachment_repositories.dart';
 
 class Attachment {
@@ -54,13 +54,6 @@ class Attachment {
   }
 
   Future<bool> download() async {
-    print("hsdbsbdsv");
-    print(name);
-    print(path);
-    print(downloadUrl);
-    print("hsdbsbdsv");
-
-    //image download
     if (downloadUrl == null) return false;
     _path = await Utils.downloadFile(downloadUrl!, name, path);
     return _path != null;
