@@ -24,21 +24,17 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
   for (var i = 0; i < allnotification!.length; i++) {
     if (allnotification[i].isRead == false) {
       isreadlenght++;
-      print(isreadlenght);
     }
   }
+
   Future<void> _singlenotificationread(String? selectednotification) async {
     SingleNotificationRead? _singlenotify;
-
-    print(selectednotification);
     _singlenotify = await AllNotifactionRepository()
         .singlenotificationread(selectednotification);
   }
 
   Future<void> _allnotificationread(String? userId) async {
     AllNotificationRead? _allnotifyread;
-
-    print(userId);
     _allnotifyread =
         await AllNotifactionRepository().allnotificationread(userId);
   }
@@ -63,7 +59,6 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
             ),
             IconButton(
                 onPressed: () async {
-                  print(ActiveUser.instance.user!.userId!.toString());
                   _allnotificationread(
                       ActiveUser.instance.user!.userId!.toString());
                 },
@@ -106,7 +101,6 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
                         ),
                       ),
                       SizedBox(height: 8.h),
-
                       isreadlenght == 0
                           ? Container()
                           : Expanded(
@@ -189,8 +183,6 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
                                           ),
                               ),
                             ),
-                      //Seen\\
-
                       Padding(
                         padding: EdgeInsets.all(16.w),
                         child: Align(
@@ -263,14 +255,6 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
                                               ),
                                             ),
                                           ),
-                                          // Text(
-                                          //   allnotification[index].message,
-                                          //   style: TextStyle(
-                                          //     fontSize: 12.sp,
-                                          //     fontWeight: FontWeight.w500,
-                                          //     color: AppColors.teal900,
-                                          //   ),
-                                          // ),
                                         ],
                                       ),
                                     )
