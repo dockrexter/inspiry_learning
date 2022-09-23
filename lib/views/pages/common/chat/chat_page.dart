@@ -55,6 +55,16 @@ class _ChatPageState extends State<ChatPage> {
           assignmentId: assignment!.id);
     }
 
+    // void _scrollDown() async {
+    //   if (_scrollController.hasClients) {
+    //     await _scrollController.animateTo(
+    //       _scrollController.position.maxScrollExtent,
+    //       duration: const Duration(seconds: 2),
+    //       curve: Curves.fastOutSlowIn,
+    //     );
+    //   }
+    // }
+
     // SocketManager().connect();
     //   SocketManager().joinRoom(
     //       userId: ActiveUser.instance.user!.userId!,
@@ -188,29 +198,29 @@ class _ChatPageState extends State<ChatPage> {
               ),
               child: Column(
                 children: [
-                  
-                    Padding(
-                      padding:
-                          EdgeInsets.only(right: 16.w, left: 16.w, top: 10.h),
-                      child: Row(
-                        mainAxisAlignment: _isAdmin ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () => AppRouter.push(
-                              context,
-                              AssignmentDetailsPage(assignment: assignment),
-                            ),
-                            child: Text(
-                              AppStrings.assignmentDetails,
-                              textAlign: TextAlign.center,
-                              style:
-                                  AppStyle.textstylepoppinssemibold14.copyWith(
-                                color: AppColors.teal400,
-                                decoration: TextDecoration.underline,
-                              ),
+                  Padding(
+                    padding:
+                        EdgeInsets.only(right: 16.w, left: 16.w, top: 10.h),
+                    child: Row(
+                      mainAxisAlignment: _isAdmin
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () => AppRouter.push(
+                            context,
+                            AssignmentDetailsPage(assignment: assignment),
+                          ),
+                          child: Text(
+                            AppStrings.assignmentDetails,
+                            textAlign: TextAlign.center,
+                            style: AppStyle.textstylepoppinssemibold14.copyWith(
+                              color: AppColors.teal400,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
-                          if (_isAdmin)
+                        ),
+                        if (_isAdmin)
                           InkWell(
                             onTap: _showBottomQuatationSheet,
                             child: Text(
@@ -223,9 +233,9 @@ class _ChatPageState extends State<ChatPage> {
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                      ],
                     ),
+                  ),
                   if (_isAdmin) Divider(color: AppColors.teal400, height: 12.h),
                   Expanded(
                     child: _isLoadingMessagesFromDB
@@ -484,6 +494,7 @@ class _ChatPageState extends State<ChatPage> {
     }
     _isLoadingMessagesFromDB = false;
     setState(() {});
+    _scrollToEnd();
   }
 
   void _handelMessage(data) {

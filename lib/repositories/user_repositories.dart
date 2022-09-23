@@ -36,7 +36,9 @@ class UserRepository {
         await Utils.addTokenToBackend();
         return user;
       }
-      Utils.showToast(response["message"]);
+      if (response["message"] != "") {
+        Utils.showToast(response["message"]);
+      }
       return null;
     }
     Utils.showToast(AppStrings.somethingWentWrong);

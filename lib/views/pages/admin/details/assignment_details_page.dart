@@ -151,6 +151,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
     return Padding(
       padding: EdgeInsets.only(right: 10.w),
       child: CircleAvatar(
+        radius: 28.r,
         backgroundColor: AppColors.gray100,
         backgroundImage:
             (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
@@ -187,20 +188,23 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                         _buildThumbnils(imagesPath[i + j]),
                         IconButton(
                           onPressed: () async {
-                            var random = Random();
+                            // var random = Random();
                             String _downloadurl = imagesPath[i + j];
+                            String filename = _downloadurl.split('/').last;
+                            print(filename);
 
-                            String split = imagesPath[i + j].split("/").last;
-                            String rendomnmbr = split.split(".").last;
+                            // String split = imagesPath[i + j].split("/").last;
+                            // String rendomnmbr = split.split(".").last;
 
                             String? file = await Utils.downloadFile(
                               _downloadurl,
-                              rendomnmbr +
-                                  random.nextInt(10).toString() +
-                                  imagesPath[i + j]
-                                      .split('.')
-                                      .last
-                                      .toLowerCase(),
+                              filename,
+                              // rendomnmbr +
+                              //     random.nextInt(10).toString() +
+                              //     imagesPath[i + j]
+                              //         .split('.')
+                              //         .last
+                              //         .toLowerCase(),
                               null,
                             );
 
