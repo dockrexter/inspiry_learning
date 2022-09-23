@@ -26,6 +26,7 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
       isreadlenght++;
     }
   }
+
   Future<void> _singlenotificationread(String? selectednotification) async {
     SingleNotificationRead? _singlenotify;
 
@@ -82,9 +83,7 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
               color: AppColors.white,
               borderRadius: BorderRadius.all(Radius.circular(20.r)),
             ),
-            child: allnotification == null
-                ? const Center(child: CircularProgressIndicator())
-                : Column(
+            child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
@@ -185,7 +184,6 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
                                           ),
                               ),
                             ),
-                      //Seen\\
 
                       Padding(
                         padding: EdgeInsets.all(16.w),

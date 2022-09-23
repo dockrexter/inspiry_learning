@@ -240,10 +240,9 @@ class _ChatPageState extends State<ChatPage> {
                             : SizedBox(
                                 height: 1000,
                                 child: ListView.builder(
-                                  controller: _scrollController,
-                                  // reverse: true,
                                   shrinkWrap: true,
-                                  physics: AlwaysScrollableScrollPhysics(),
+                                  controller: _scrollController,
+                                  physics: const AlwaysScrollableScrollPhysics(),
                                   itemCount: _messages.length + 1,
                                   itemBuilder: (context, index) => index <
                                           _messages.length
