@@ -70,7 +70,7 @@ class CustomCard extends StatelessWidget {
                 children: [
                   Text(
                     assignment.subject!.length > 20
-                        ? assignment.subject!.substring(0, 22) + '...'
+                        ? assignment.subject!.substring(0, 16) + '...'
                         : assignment.subject!,
                     style: AppStyle.textstylepoppinssemibold14,
                   ),

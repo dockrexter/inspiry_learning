@@ -1,21 +1,15 @@
-import 'package:flutter/cupertino.dart';
-
-class AppStrings extends ChangeNotifier {
-  // ValueNotifier<int> notificationCounterValueNotifer = ValueNotifier(0);
-  // void updatecountervalue() {
-  //   ++notificationCounterValueNotifer.value;
-  //   notificationCounterValueNotifer.notifyListeners();
-  // }
-
+class AppStrings {
   // App Title
   static const String appTitle = "Inspiry Learning";
 
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
-  static const String baseUrl = "https://inspirylearning.com/backend";
-  static const String socketbaseUrl = "https://inspirylearning.com";
+  // static const String baseUrl = "https://inspirylearning.com/backend";
+  static const String baseUrl = "http://192.168.100.125:8080";
+  // static const String socketbaseUrl = "https://inspirylearning.com";
+  static const String socketbaseUrl = baseUrl;
   static const String termsAndConditionsUrl =
-      "https://inspiry-learning.surge.sh/termsandconditions";
+      "https://inspirylearning.com/termsandconditions";
 
   // Login Page
   static const String login = "Login";

@@ -32,13 +32,11 @@ class UserRepository {
     if (response != null) {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         var user = User.fromJson(response["data"]);
+        ActiveUser.instance.user ??= user;
         if (rememberMe) await user.save();
-        await Utils.addTokenToBackend();
         return user;
       }
-      if (response["message"] != "") {
-        Utils.showToast(response["message"]);
-      }
+      Utils.showToast(response["message"]);
       return null;
     }
     Utils.showToast(AppStrings.somethingWentWrong);

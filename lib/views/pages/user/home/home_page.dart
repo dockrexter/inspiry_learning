@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> with ChangeNotifier {
   void initState() {
     super.initState();
     _getAssignments();
+    Utils.addTokenToBackend();
   }
 
   Future<void> _handleLogout() async {

@@ -36,9 +36,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
   void initState() {
     super.initState();
     _getAssignments();
-    _getAllNotification();
-
     _getOtherDueAssignments();
+    Utils.addTokenToBackend();
   }
 
   @override
