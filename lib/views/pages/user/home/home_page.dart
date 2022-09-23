@@ -2,22 +2,22 @@ import 'dart:async';
 
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/models/all_notification_model.dart';
-import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/user_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/assignment_model.dart';
+import 'package:inspiry_learning/views/widgets/custom_card.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/models/all_notification_model.dart';
+import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/repositories/allnotification_repo.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
-import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
+import 'package:inspiry_learning/views/widgets/custom_notifications_popup.dart';
 import 'package:inspiry_learning/views/pages/common/setting/account_setting_page.dart';
-import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/views/pages/user/submission/assignment_submission_form.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
-import 'package:inspiry_learning/views/widgets/custom_card.dart';
-
-import '../../../widgets/custom_notifications_popup.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> with ChangeNotifier {
     super.initState();
     _getAssignments();
     _getAllNotification();
-    // Utils.addTokenToBackend();
   }
 
   Future<void> _getAllNotification() async {
@@ -119,10 +118,6 @@ class _HomePageState extends State<HomePage> with ChangeNotifier {
                               size: 26,
                             ),
                           ),
-                          // child: Image.asset(
-                          //   AppAssets.bellIcon,
-                          //   scale: 4,
-                          // ),
                         ),
                         SizedBox(width: 18.w),
                         InkWell(
@@ -137,11 +132,30 @@ class _HomePageState extends State<HomePage> with ChangeNotifier {
                         ),
                         SizedBox(width: 18.w),
                         InkWell(
-                          onTap: () async {
-                            await Utils.removeTokenToBackend();
-                            await User.remove();
-                            AppRouter.makeFirst(context, const UserInfoPage());
-                          },
+                          onTap: () async => await showDialog(
+                          context: context,
+                          builder: (context) => CupertinoAlertDialog(
+                            title: const Text("logout"),
+                            content: const Text("Please Confirm Logout"),
+                            actions: [
+                              CupertinoDialogAction(
+                                child: const Text("Yes"),
+                                onPressed: () async {
+                                  await Utils.removeTokenToBackend();
+                                  await User.remove();
+                                  AppRouter.makeFirst(
+                                      context, const UserInfoPage());
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                child: const Text("No"),
+                                onPressed: () async {
+                                  AppRouter.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                           child: const Icon(
                             Icons.logout,
                             color: AppColors.black,

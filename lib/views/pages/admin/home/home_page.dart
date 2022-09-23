@@ -135,7 +135,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           context: context,
                           builder: (context) => CupertinoAlertDialog(
                             title: const Text("logout"),
-                            content: const Text("Please You Want That?"),
+                            content: const Text("Please Confirm Logout"),
                             actions: [
                               CupertinoDialogAction(
                                 child: const Text("Yes"),
