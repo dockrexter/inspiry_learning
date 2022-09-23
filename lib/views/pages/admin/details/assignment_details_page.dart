@@ -169,12 +169,12 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
               (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
                   ? NetworkImage(AppStrings.baseUrl + path, scale: 5.0)
                   : (extension == 'doc' || extension == 'docx')
-                      ? const Icon(Icons.article) as ImageProvider
+                      ? const AssetImage(AppAssets.docIcon)
                       : (extension == 'pdf')
-                          ? const Icon(Icons.picture_as_pdf) as ImageProvider
+                          ? const AssetImage(AppAssets.pdfIcon)
                           : (extension == 'zip')
-                              ? const Icon(Icons.folder_zip) as ImageProvider
-                              : const Icon(Icons.filter_none) as ImageProvider,
+                              ? const AssetImage(AppAssets.docIcon)
+                              : const AssetImage(AppAssets.docIcon) as ImageProvider,
         ),
       ),
       child: _isDownLoading

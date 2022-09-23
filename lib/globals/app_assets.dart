@@ -2,6 +2,8 @@ class AppAssets {
   // Images
   static const String lock = 'assets/images/img_lock.png';
   static const String frame = 'assets/images/img_frame.png';
+  static const String pdfIcon = 'assets/images/pdf_icon.png';
+  static const String docIcon = 'assets/images/doc_icon.png';
   static const String msgbox = 'assets/images/img_msgbox.png';
   static const String docThumbnil = 'assets/images/doc_icon.png';
   static const String pdfThumbnil = 'assets/images/pdf_icon.png';
