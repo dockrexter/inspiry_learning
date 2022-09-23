@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
@@ -19,16 +18,20 @@ class AssignmentDetailsPage extends StatefulWidget {
 }
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
+  bool _isLoading = false;
+  bool _isDownLoading = false;
   List<Attachment>? _attachments;
-    final _isAdmin = UserTypeHelper.isAdmin();
+  final _isAdmin = UserTypeHelper.isAdmin();
 
-  void getAttachments() {
-    AttachmentRepository()
-        .getAttachment(widget.assignment!.id)
-        .then((attachments) {
-      setState(() {
-        _attachments = attachments;
-      });
+  void getAttachments() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _attachments =
+        await AttachmentRepository().getAttachment(widget.assignment!.id);
+
+    setState(() {
+      _isLoading = false;
     });
   }
 
@@ -92,8 +95,10 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                   _isAdmin ? CustomCard2(
-                        assignment: widget.assignment, onSelected: (_) {}) : SizedBox(width: ScreenSize.width),
+                    _isAdmin
+                        ? CustomCard2(
+                            assignment: widget.assignment, onSelected: (_) {})
+                        : SizedBox(width: ScreenSize.width),
                     SizedBox(height: 20.h),
                     Padding(
                       padding: EdgeInsets.only(left: 16.w),
@@ -109,7 +114,8 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                           SizedBox(height: 8.h),
                           Text(
                             widget.assignment!.summary ?? '',
-                            style: AppStyle.textstylepoppinsregular14.copyWith(color: AppColors.bluegray90099),
+                            style: AppStyle.textstylepoppinsregular14
+                                .copyWith(color: AppColors.bluegray90099),
                           ),
                           SizedBox(height: 16.h),
                           Text(
@@ -119,15 +125,18 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                             ),
                           ),
                           SizedBox(height: 14.h),
+                          if (_isLoading)
+                            const PlayStoreShimmer(
+                              padding: EdgeInsets.zero,
+                            ),
                           if (_attachments != null)
                             ..._buildImagesGrid(
                               context,
-                              // imagesPath: [],
                               imagesPath: _attachments!
                                   .map((e) => e.downloadUrl!)
                                   .toList(),
                             )
-                          else
+                          else if (!_isLoading)
                             Text(
                               AppStrings.noAttachments,
                               style: AppStyle.textstylepoppinsregular12,
@@ -148,23 +157,32 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
 
   Widget _buildThumbnils(String path) {
     final extension = path.split('.').last.toLowerCase();
-    return Padding(
-      padding: EdgeInsets.only(right: 10.w),
-      child: CircleAvatar(
-        radius: 28.r,
-        backgroundColor: AppColors.gray100,
-        backgroundImage:
-            (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
-                ? NetworkImage(AppStrings.baseUrl + path, scale: 5.0)
-                : (extension == 'doc' || extension == 'docx')
-                    ? const Icon(Icons.article) as ImageProvider
-                    : (extension == 'pdf')
-                        ? const Icon(Icons.picture_as_pdf) as ImageProvider
-                        : (extension == 'zip')
-                            ? const Icon(Icons.folder_zip) as ImageProvider
-                            : const Icon(Icons.filter_none) as ImageProvider,
-        child: const SizedBox(),
+    return Container(
+      height: 80,
+      width: 80,
+      decoration: BoxDecoration(
+        color: AppColors.gray100,
+        borderRadius: BorderRadius.circular(12.0),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image:
+              (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
+                  ? NetworkImage(AppStrings.baseUrl + path, scale: 5.0)
+                  : (extension == 'doc' || extension == 'docx')
+                      ? const Icon(Icons.article) as ImageProvider
+                      : (extension == 'pdf')
+                          ? const Icon(Icons.picture_as_pdf) as ImageProvider
+                          : (extension == 'zip')
+                              ? const Icon(Icons.folder_zip) as ImageProvider
+                              : const Icon(Icons.filter_none) as ImageProvider,
+        ),
       ),
+      child: _isDownLoading
+          ? const CircularProgressIndicator.adaptive(
+              backgroundColor: Colors.teal,
+              valueColor: AlwaysStoppedAnimation(AppColors.yellow701),
+            )
+          : const SizedBox(),
     );
   }
 
@@ -185,28 +203,26 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                     padding: EdgeInsets.only(left: j == 0 ? 0 : 8.w),
                     child: Stack(
                       children: [
-                        _buildThumbnils(imagesPath[i + j]),
+                        Opacity(
+                          opacity: _isDownLoading ? 0.5 : 1.0,
+                          child: _buildThumbnils(imagesPath[i + j]),
+                        ),
                         IconButton(
                           onPressed: () async {
-                            // var random = Random();
                             String _downloadurl = imagesPath[i + j];
                             String filename = _downloadurl.split('/').last;
-                            print(filename);
 
-                            // String split = imagesPath[i + j].split("/").last;
-                            // String rendomnmbr = split.split(".").last;
-
+                            setState(() {
+                              _isDownLoading = true;
+                            });
                             String? file = await Utils.downloadFile(
                               _downloadurl,
                               filename,
-                              // rendomnmbr +
-                              //     random.nextInt(10).toString() +
-                              //     imagesPath[i + j]
-                              //         .split('.')
-                              //         .last
-                              //         .toLowerCase(),
                               null,
                             );
+                            setState(() {
+                              _isDownLoading = false;
+                            });
 
                             final res = await Utils.openFile(file!);
 

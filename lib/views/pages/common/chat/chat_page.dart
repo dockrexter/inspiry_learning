@@ -1,20 +1,20 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:inspiry_learning/models/message_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
-import 'package:inspiry_learning/models/message_model.dart';
+import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/views/widgets/message_widget.dart';
 import 'package:inspiry_learning/models/single_assaignment_model.dart';
+import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 import 'package:inspiry_learning/views/pages/admin/details/assignment_details_page.dart';
-import 'package:inspiry_learning/views/widgets/custom_button.dart';
-import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
-import 'package:inspiry_learning/views/widgets/message_widget.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
@@ -54,21 +54,6 @@ class _ChatPageState extends State<ChatPage> {
           userId: ActiveUser.instance.user!.userId!,
           assignmentId: assignment!.id);
     }
-
-    // void _scrollDown() async {
-    //   if (_scrollController.hasClients) {
-    //     await _scrollController.animateTo(
-    //       _scrollController.position.maxScrollExtent,
-    //       duration: const Duration(seconds: 2),
-    //       curve: Curves.fastOutSlowIn,
-    //     );
-    //   }
-    // }
-
-    // SocketManager().connect();
-    //   SocketManager().joinRoom(
-    //       userId: ActiveUser.instance.user!.userId!,
-    //       assignmentId: assignment!.id);
 
     SocketManager().onOnline(_handelOnline);
     SocketManager().onTyping(_handelTyping);
@@ -252,15 +237,19 @@ class _ChatPageState extends State<ChatPage> {
                                   style: AppStyle.textstylepoppinsbold17,
                                 ),
                               )
-                            : ListView.builder(
-                                controller: _scrollController,
-                                // reverse: true,
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: _messages.length + 1,
-                                itemBuilder: (context, index) => index <
-                                        _messages.length
-                                    ? MessageWidget(message: _messages[index])
-                                    : SizedBox(height: 20.h),
+                            : SizedBox(
+                                height: 1000,
+                                child: ListView.builder(
+                                  controller: _scrollController,
+                                  // reverse: true,
+                                  shrinkWrap: true,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  itemCount: _messages.length + 1,
+                                  itemBuilder: (context, index) => index <
+                                          _messages.length
+                                      ? MessageWidget(message: _messages[index])
+                                      : SizedBox(height: 20.h),
+                                ),
                               ),
                   ),
                   SizedBox(height: 52.h),
@@ -493,8 +482,8 @@ class _ChatPageState extends State<ChatPage> {
       }
     }
     _isLoadingMessagesFromDB = false;
-    setState(() {});
     _scrollToEnd();
+    setState(() {});
   }
 
   void _handelMessage(data) {
@@ -504,10 +493,15 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _scrollToEnd({bool updateState = true}) {
-    if (_scrollController.hasClients) {
-      _scrollController
-          .jumpTo(_scrollController.position.maxScrollExtent + 60.0);
-      if (updateState) setState(() {});
-    }
+    Future.delayed(const Duration(milliseconds: 3), () async {
+      if (_scrollController.hasClients) {
+        await _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: (_messages.length * 0.085).ceil()),
+          curve: Curves.fastOutSlowIn,
+        );
+        if (updateState) setState(() {});
+      }
+    });
   }
 }

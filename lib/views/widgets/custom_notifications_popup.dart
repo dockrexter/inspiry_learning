@@ -1,12 +1,12 @@
-import "package:flutter/cupertino.dart";
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
+import "package:flutter/cupertino.dart";
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
+import 'package:inspiry_learning/repositories/allnotification_repo.dart';
 import 'package:inspiry_learning/models/all_notification_read_model.dart';
 import 'package:inspiry_learning/models/single_notification_read_model.dart';
-import 'package:inspiry_learning/repositories/allnotification_repo.dart';
-import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 
 class CustomNotification extends StatelessWidget {
   const CustomNotification({Key? key}) : super(key: key);
@@ -26,15 +26,16 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
       isreadlenght++;
     }
   }
-
   Future<void> _singlenotificationread(String? selectednotification) async {
     SingleNotificationRead? _singlenotify;
+
     _singlenotify = await AllNotifactionRepository()
         .singlenotificationread(selectednotification);
   }
 
   Future<void> _allnotificationread(String? userId) async {
     AllNotificationRead? _allnotifyread;
+
     _allnotifyread =
         await AllNotifactionRepository().allnotificationread(userId);
   }
@@ -101,6 +102,7 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
                         ),
                       ),
                       SizedBox(height: 8.h),
+
                       isreadlenght == 0
                           ? Container()
                           : Expanded(
@@ -183,6 +185,8 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
                                           ),
                               ),
                             ),
+                      //Seen\\
+
                       Padding(
                         padding: EdgeInsets.all(16.w),
                         child: Align(
@@ -255,6 +259,7 @@ void customNotificationsPopup(BuildContext context, {List? allnotification}) {
                                               ),
                                             ),
                                           ),
+  
                                         ],
                                       ),
                                     )

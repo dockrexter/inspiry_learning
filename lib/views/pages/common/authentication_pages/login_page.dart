@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: ScreenSize.height * 0.16,
             child: Padding(
-              padding: EdgeInsets.only(top: 20.h, left: 20.h),
+              padding: EdgeInsets.only(top: 50.h, left: 20.h),
               child: Row(
                 children: [
                   IconButton(

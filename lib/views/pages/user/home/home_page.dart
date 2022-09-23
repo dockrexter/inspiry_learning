@@ -27,7 +27,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with ChangeNotifier {
+  bool _isLoading = false;
   List<Assignment>? assignments;
+  bool _isNotificationLoding = false;
   List<AllNotificationData>? allnotification;
   String? assignmentid;
   final Box _countBox = Hive.box('notificationcounter');
@@ -36,11 +38,22 @@ class _HomePageState extends State<HomePage> with ChangeNotifier {
   void initState() {
     super.initState();
     _getAssignments();
-    _getAllNotification();
+  }
+
+  Future<void> _handleLogout() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Utils.removeTokenToBackend();
+    await User.remove();
+    AppRouter.makeFirst(context, const UserInfoPage());
   }
 
   Future<void> _getAllNotification() async {
+    _isNotificationLoding = true;
+    setState(() {});
     allnotification = await AllNotifactionRepository().getallNotification();
+    _isNotificationLoding = false;
     setState(() {});
   }
 
@@ -70,135 +83,141 @@ class _HomePageState extends State<HomePage> with ChangeNotifier {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Column(
+      body: Stack(
         children: [
-          SafeArea(
-            child: SizedBox(
-              height: ScreenSize.height * 0.1,
-              child: Padding(
-                padding: EdgeInsets.only(top: 20.h, left: 22.w, right: 22.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          AppStrings.hello,
-                          style: AppStyle.textstylepoppinsbold24.copyWith(
-                            color: AppColors.yellow701,
-                          ),
-                        ),
-                        SizedBox(width: 6.w),
-                        Text(
-                          (ActiveUser.instance.user?.firstname ??
-                                  AppStrings.marley) +
-                              AppStrings.exclamation,
-                          style: AppStyle.textstylepoppinsbold24.copyWith(
-                            color: AppColors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            await _getAllNotification();
-                            customNotificationsPopup(context,
-                                allnotification: allnotification);
-                          },
-                          child: Badge(
-                            position: BadgePosition.topEnd(top: -5, end: -5),
-                            animationDuration:
-                                const Duration(milliseconds: 300),
-                            animationType: BadgeAnimationType.slide,
-                            badgeContent: notificationCounter(),
-                            child: const Icon(
-                              Icons.notifications,
-                              size: 26,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 18.w),
-                        InkWell(
-                          onTap: () {
-                            AppRouter.push(
-                                context, const AccountSettingsPage());
-                          },
-                          child: Image.asset(
-                            AppAssets.settingIcon,
-                            scale: 4,
-                          ),
-                        ),
-                        SizedBox(width: 18.w),
-                        InkWell(
-                          onTap: () async => await showDialog(
-                          context: context,
-                          builder: (context) => CupertinoAlertDialog(
-                            title: const Text("logout"),
-                            content: const Text("Please Confirm Logout"),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Yes"),
-                                onPressed: () async {
-                                  await Utils.removeTokenToBackend();
-                                  await User.remove();
-                                  AppRouter.makeFirst(
-                                      context, const UserInfoPage());
-                                },
+          if (_isLoading) const Center(child: CircularProgressIndicator()),
+          Opacity(
+            opacity: _isLoading ? 0.35 : 1.0,
+            child: Column(
+              children: [
+                SafeArea(
+                  child: SizedBox(
+                    height: ScreenSize.height * 0.1,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(top: 20.h, left: 22.w, right: 22.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                AppStrings.hello,
+                                style: AppStyle.textstylepoppinsbold24.copyWith(
+                                  color: AppColors.yellow701,
+                                ),
                               ),
-                              CupertinoDialogAction(
-                                child: const Text("No"),
-                                onPressed: () async {
-                                  AppRouter.pop(context);
-                                },
+                              SizedBox(width: 6.w),
+                              Text(
+                                (ActiveUser.instance.user?.firstname ??
+                                        AppStrings.marley) +
+                                    AppStrings.exclamation,
+                                style: AppStyle.textstylepoppinsbold24.copyWith(
+                                  color: AppColors.black,
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                          child: const Icon(
-                            Icons.logout,
-                            color: AppColors.black,
+                          Row(
+                            children: [
+                              _isNotificationLoding
+                                  ? const CircularProgressIndicator.adaptive()
+                                  : InkWell(
+                                      onTap: () async {
+                                        await _getAllNotification();
+                                        customNotificationsPopup(context,
+                                            allnotification: allnotification);
+                                      },
+                                      child: Badge(
+                                        position: BadgePosition.topEnd(
+                                            top: -5, end: -5),
+                                        animationDuration:
+                                            const Duration(milliseconds: 300),
+                                        animationType: BadgeAnimationType.slide,
+                                        badgeContent: notificationCounter(),
+                                        child: const Icon(
+                                          Icons.notifications,
+                                          size: 26,
+                                        ),
+                                      ),
+                                    ),
+                              SizedBox(width: 18.w),
+                              InkWell(
+                                onTap: () {
+                                  AppRouter.push(
+                                      context, const AccountSettingsPage());
+                                },
+                                child: Image.asset(
+                                  AppAssets.settingIcon,
+                                  scale: 4,
+                                ),
+                              ),
+                              SizedBox(width: 18.w),
+                              InkWell(
+                                onTap: () async => await showDialog(
+                                  context: context,
+                                  builder: (context) => CupertinoAlertDialog(
+                                    title: const Text("logout"),
+                                    content:
+                                        const Text("Please Confirm Logout"),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text("Yes"),
+                                        onPressed: () {
+                                          _handleLogout();
+                                          AppRouter.pop(context);
+                                        },
+                                      ),
+                                      CupertinoDialogAction(
+                                        child: const Text("No"),
+                                        onPressed: () => AppRouter.pop(context),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.logout,
+                                  color: AppColors.black,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Divider(
-            color: AppColors.black.withOpacity(0.08),
-            thickness: 1,
-          ),
-          SizedBox(height: 12.h),
-          Text(AppStrings.submittedFormList,
-              style: AppStyle.textstylepoppinsmedium11),
-          Expanded(
-            child: RefreshIndicator(
-              displacement: 10.h,
-              onRefresh: () async {
-                await _getAssignments();
-                await _getAllNotification();
-              },
-              child: assignments == null
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: assignments!.length,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => CustomCard(
-                        assignment: assignments![index],
-                        onPressed: () => AppRouter.push(
-                          context,
-                          ChatPage(assignment: assignments![index]),
-                        ),
+                        ],
                       ),
                     ),
+                  ),
+                ),
+                Divider(
+                  color: AppColors.black.withOpacity(0.08),
+                  thickness: 1,
+                ),
+                SizedBox(height: 12.h),
+                Text(AppStrings.submittedFormList,
+                    style: AppStyle.textstylepoppinsmedium11),
+                Expanded(
+                  child: RefreshIndicator(
+                    displacement: 10.h,
+                    onRefresh: () async => await _getAssignments(),
+                    child: assignments == null
+                        ? const Center(child: CircularProgressIndicator.adaptive())
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: assignments!.length,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) => CustomCard(
+                              assignment: assignments![index],
+                              onPressed: () => AppRouter.push(
+                                context,
+                                ChatPage(assignment: assignments![index]),
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+                SizedBox(height: 36.h),
+              ],
             ),
           ),
-          SizedBox(height: 36.h),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -24,6 +24,7 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
+  bool _isLoading = false;
   DateTime _selectedDate = DateTime.now();
   List<Assignment>? assignments, otherDueAssignments;
   List<AllNotificationData>? allnotification;
@@ -41,13 +42,22 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 
   Future<void> _getAllNotification() async {
     allnotification = await AllNotifactionRepository().getallNotification();
     setState(() {});
+  }
+
+  Future<void> _handleLogout() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Utils.removeTokenToBackend();
+    await User.remove();
+    AppRouter.makeFirst(context, const UserInfoPage());
   }
 
   Widget notificationCounter() {
@@ -71,126 +81,134 @@ class _AdminHomePageState extends State<AdminHomePage> {
     final height = ScreenSize.height;
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: Column(
+      body: Stack(
         children: [
-          Container(
-            height: height * 0.16,
-            color: AppColors.teal400,
-            padding: EdgeInsets.only(top: 12.h, left: 22.w, right: 22.w),
-            child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        AppStrings.hello,
-                        style: AppStyle.textstylepoppinsbold24.copyWith(
-                          color: AppColors.yellow701,
-                        ),
-                      ),
-                      SizedBox(width: 6.w),
-                      Text(
-                        (ActiveUser.instance.user?.firstname ??
-                                AppStrings.marley) +
-                            AppStrings.exclamation,
-                        style: AppStyle.textstylepoppinsbold24.copyWith(
-                          color: AppColors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          await _getAllNotification();
-                          customNotificationsPopup(context,
-                              allnotification: allnotification);
-                        },
-                        child: Badge(
-                          position: BadgePosition.topEnd(top: -5, end: -5),
-                          animationDuration: const Duration(milliseconds: 300),
-                          animationType: BadgeAnimationType.slide,
-                          badgeContent: notificationCounter(),
-                          child: const Icon(
-                            Icons.notifications,
-                            size: 26,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 18.w),
-                      InkWell(
-                        onTap: () => AppRouter.push(
-                            context, const AccountSettingsPage()),
-                        child: Image.asset(
-                          AppAssets.settingIcon,
-                          color: AppColors.white,
-                          scale: 4,
-                        ),
-                      ),
-                      SizedBox(width: 18.w),
-                      InkWell(
-                        onTap: () async => await showDialog(
-                          context: context,
-                          builder: (context) => CupertinoAlertDialog(
-                            title: const Text("logout"),
-                            content: const Text("Please Confirm Logout"),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Yes"),
-                                onPressed: () async {
-                                  await Utils.removeTokenToBackend();
-                                  await User.remove();
-                                  AppRouter.makeFirst(
-                                      context, const UserInfoPage());
-                                },
+          if (_isLoading) const Center(child: CircularProgressIndicator()),
+          Opacity(
+            opacity: _isLoading ? 0.35 : 1.0,
+            child: Column(
+              children: [
+                Container(
+                  height: height * 0.16,
+                  color: AppColors.teal400,
+                  padding: EdgeInsets.only(top: 12.h, left: 22.w, right: 22.w),
+                  child: SafeArea(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              AppStrings.hello,
+                              style: AppStyle.textstylepoppinsbold24.copyWith(
+                                color: AppColors.yellow701,
                               ),
-                              CupertinoDialogAction(
-                                child: const Text("No"),
-                                onPressed: () async {
-                                  AppRouter.pop(context);
-                                },
+                            ),
+                            SizedBox(width: 6.w),
+                            Text(
+                              (ActiveUser.instance.user?.firstname ??
+                                      AppStrings.marley) +
+                                  AppStrings.exclamation,
+                              style: AppStyle.textstylepoppinsbold24.copyWith(
+                                color: AppColors.white,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        child: const Icon(
-                          Icons.logout,
-                          color: AppColors.white,
+                        Row(
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                await _getAllNotification();
+                                customNotificationsPopup(context,
+                                    allnotification: allnotification);
+                              },
+                              child: Badge(
+                                position:
+                                    BadgePosition.topEnd(top: -5, end: -5),
+                                animationDuration:
+                                    const Duration(milliseconds: 300),
+                                animationType: BadgeAnimationType.slide,
+                                badgeContent: notificationCounter(),
+                                child: const Icon(
+                                  Icons.notifications,
+                                  size: 26,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 18.w),
+                            InkWell(
+                              onTap: () => AppRouter.push(
+                                  context, const AccountSettingsPage()),
+                              child: Image.asset(
+                                AppAssets.settingIcon,
+                                color: AppColors.white,
+                                scale: 4,
+                              ),
+                            ),
+                            SizedBox(width: 18.w),
+                            InkWell(
+                              onTap: () async => await showDialog(
+                                context: context,
+                                builder: (context) => CupertinoAlertDialog(
+                                  title: const Text("logout"),
+                                  content: const Text("Please Confirm Logout"),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      child: const Text("Yes"),
+                                      onPressed: () {
+                                        _handleLogout();
+                                        AppRouter.pop(context);
+                                      },
+                                    ),
+                                    CupertinoDialogAction(
+                                      child: const Text("No"),
+                                      onPressed: () => AppRouter.pop(context),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.logout,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: assignments == null
-                ? const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  )
-                : RefreshIndicator(
-                    displacement: 10.h,
-                    onRefresh: () async {
-                      await _getAssignments(
-                          month: _selectedDate.month, year: _selectedDate.year);
-                      if (Utils.compare2Dates(_selectedDate, DateTime.now())) {
-                        await _getOtherDueAssignments();
-                      }
-                    },
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: Column(
-                        children: [
-                          _buildCalendar(),
-                          _buildAssignments(),
-                          SizedBox(height: 80.h),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
+                ),
+                Expanded(
+                  child: assignments == null
+                      ? const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        )
+                      : RefreshIndicator(
+                          displacement: 10.h,
+                          onRefresh: () async {
+                            await _getAssignments(
+                                month: _selectedDate.month,
+                                year: _selectedDate.year);
+                            if (Utils.compare2Dates(
+                                _selectedDate, DateTime.now())) {
+                              await _getOtherDueAssignments();
+                            }
+                          },
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: Column(
+                              children: [
+                                _buildCalendar(),
+                                _buildAssignments(),
+                                SizedBox(height: 80.h),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
