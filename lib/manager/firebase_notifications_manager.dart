@@ -1,10 +1,9 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-
-import '../globals/app_strings.dart';
-import '../main.dart';
+import 'package:inspiry_learning/main.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FBNotificationManager extends ChangeNotifier {
   static Future<void> initialize(
@@ -36,6 +35,7 @@ class FBNotificationManager extends ChangeNotifier {
 
       showNotification(message, flutterLocalNotificationsPlugin, false);
     });
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       await Hive.initFlutter();
       await Hive.openBox('notificationcounter');
