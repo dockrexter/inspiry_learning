@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/manager/socket_manager.dart';
+import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/models/message_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inspiry_learning/manager/socket_manager.dart';
 import 'package:inspiry_learning/repositories/payment_repositories.dart';
 
 class MessageWidget extends StatefulWidget {

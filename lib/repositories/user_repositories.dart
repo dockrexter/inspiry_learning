@@ -134,4 +134,19 @@ class UserRepository {
     Utils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
+
+  Future<bool> removeUser({required String password}) async {
+    final response = await _apiManager.post(ApiEndpoints.removeUser, data: {
+      "password": password,
+    });
+    if (response != null) {
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        return true;
+      }
+      Utils.showToast(response["message"]);
+      return false;
+    }
+    Utils.showToast(AppStrings.somethingWentWrong);
+    return false;
+  }
 }

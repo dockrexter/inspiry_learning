@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
+import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 
 class ForgotPasswordPage extends StatefulWidget {

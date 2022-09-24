@@ -1,6 +1,6 @@
 import 'package:badges/badges.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:inspiry_learning/models/user_model.dart';

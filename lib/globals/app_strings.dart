@@ -102,6 +102,10 @@ class AppStrings {
   // Assignment Details Page
   static const String assignmentDetailsTitle = "Assignment Details";
 
+  // Setting Page
+  static const String confirm = "Confirm";
+  static const String deleteAccount = "Delete Account";
+
   // Android Notifications
   static const String notificationId = "high_importance_channel";
   static const String notificationName = "High Importance Notifications";

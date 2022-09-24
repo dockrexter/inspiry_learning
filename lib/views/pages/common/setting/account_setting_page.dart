@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
+import 'package:inspiry_learning/models/user_model.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
@@ -16,6 +18,7 @@ class AccountSettingsPage extends StatefulWidget {
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
   bool _isLoading = false;
+  bool _isUserRemoving = false;
   bool isAdmin = UserTypeHelper.isAdmin();
 
   var user = ActiveUser.instance.user;
@@ -176,6 +179,36 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                               onPressed: () async =>
                                   await _saveBtnClickHandler(),
                             ),
+                      _isUserRemoving
+                          ? const CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.yellow701,
+                              ),
+                            )
+                          : CustomButton(
+                              AppStrings.deleteAccount,
+                              color: AppColors.red300,
+                              onPressed: () async {
+                                final password = await _deleteBtnClickHandler();
+                                if (password != null) {
+                                  setState(() {
+                                    _isUserRemoving = true;
+                                  });
+                                  final canRemove = await UserRepository()
+                                      .removeUser(password: password);
+                                  if (canRemove) {
+                                    await Utils.removeTokenToBackend();
+                                    await User.remove();
+                                    AppRouter.makeFirst(
+                                        context, const UserInfoPage());
+                                  } else {
+                                    setState(() {
+                                      _isUserRemoving = false;
+                                    });
+                                  }
+                                }
+                              },
+                            ),
                     ],
                   ),
                 ),
@@ -221,7 +254,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       lastname: _lastNameController.text,
       phone: _phoneController.text,
     );
-    if (user == null){
+    if (user == null) {
       Utils.showToast(AppStrings.somethingWentWrong);
       setState(() => _isLoading = false);
       return;
@@ -231,5 +264,46 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     if (ActiveUser.instance.user != null) {
       AppRouter.pop(context);
     }
+  }
+
+  Future<String?> _deleteBtnClickHandler() async {
+    String? password;
+    final _passwordController = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          width: 30.w,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InputTextField(
+                AppStrings.enterPassword,
+                controller: _passwordController,
+                keyboardType: TextInputType.name,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            child: Text(
+              AppStrings.confirm,
+              style: AppStyle.textstylepoppinsbold14
+                  .copyWith(color: AppColors.white),
+            ),
+            color: AppColors.greenA700,
+            onPressed: () {
+              if (_passwordController.text.isNotEmpty) {
+                password = _passwordController.text;
+              }
+              _passwordController.dispose();
+              AppRouter.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+    return password;
   }
 }
