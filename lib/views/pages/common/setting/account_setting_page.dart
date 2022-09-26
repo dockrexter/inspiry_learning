@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
-import 'package:inspiry_learning/models/user_model.dart';
-import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
+import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/views/pages/admin/subadmin/add_sub_admin_page.dart';
 import 'package:inspiry_learning/views/pages/common/setting/change_password_page.dart';
 
@@ -25,11 +25,13 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   late TextEditingController _phoneController;
   late TextEditingController _lastNameController;
+  late TextEditingController _passwordController;
   late TextEditingController _firstNameController;
 
   @override
   void initState() {
     super.initState();
+    _passwordController = TextEditingController();
     _phoneController = TextEditingController(text: user?.phone);
     _lastNameController = TextEditingController(text: user?.lastname);
     _firstNameController = TextEditingController(text: user?.firstname);
@@ -38,6 +40,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   @override
   void dispose() {
     _phoneController.dispose();
+    _passwordController.dispose();
     _lastNameController.dispose();
     _firstNameController.dispose();
     super.dispose();
@@ -268,7 +271,6 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   Future<String?> _deleteBtnClickHandler() async {
     String? password;
-    final _passwordController = TextEditingController();
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -297,7 +299,6 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               if (_passwordController.text.isNotEmpty) {
                 password = _passwordController.text;
               }
-              _passwordController.dispose();
               AppRouter.pop(context);
             },
           ),

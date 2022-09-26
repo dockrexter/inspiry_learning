@@ -63,10 +63,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         height: style.height,
         child: OutlinedButton(
           style: OutlinedButton.styleFrom(
-            padding: style.padding,
+            foregroundColor: style.primaryColor, padding: style.padding,
             backgroundColor: style.backgroundColor,
             elevation: style.elevation,
-            primary: style.primaryColor,
             shape: null, // style.shape
           ),
           onPressed: _toggleDropdown,

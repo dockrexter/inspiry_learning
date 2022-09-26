@@ -4,8 +4,10 @@ class AppStrings {
 
   static const String exclamation = "!";
   static const String regexEmailValidation = "[a-zA-Z0-9@.]";
-  static const String baseUrl = "https://inspirylearning.com/backend";
-  static const String socketbaseUrl = "https://inspirylearning.com";
+  //static const String baseUrl = "https://inspirylearning.com/backend";
+  static const String baseUrl = "http://192.168.100.180:8000";
+  //static const String socketbaseUrl = "https://inspirylearning.com";
+  static const String socketbaseUrl = baseUrl;
   static const String termsAndConditionsUrl =
       "https://inspirylearning.com/termsandconditions";
 
