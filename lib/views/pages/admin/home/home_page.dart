@@ -9,6 +9,7 @@ import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
 import 'package:inspiry_learning/models/all_notification_model.dart';
+import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/repositories/allnotification_repo.dart';
 import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
@@ -26,8 +27,9 @@ class AdminHomePage extends StatefulWidget {
 class _AdminHomePageState extends State<AdminHomePage> {
   bool _isLoading = false;
   DateTime _selectedDate = DateTime.now();
-  List<Assignment>? assignments, otherDueAssignments;
   List<AllNotificationData>? allnotification;
+  List<Assignment>? assignments, otherDueAssignments;
+  final _assigneeController = TextEditingController();
   final Box _countBox = Hive.box('notificationcounter');
 
   static const _narrowWeekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -35,13 +37,14 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   void initState() {
     super.initState();
+    Utils.addTokenToBackend();
     _getAssignments();
     _getOtherDueAssignments();
-    Utils.addTokenToBackend();
   }
 
   @override
   void dispose() {
+    _assigneeController.dispose();
     super.dispose();
   }
 
@@ -258,6 +261,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 } else if (index <= filteredAssignments.length) {
                   return CustomCard2(
                     assignment: filteredAssignments[index - 1],
+                    updateAssignee: (id, assignTo) async {
+                      await _updateAssignee(id, assignTo);
+                      await _getAssignments();
+                      await _getOtherDueAssignments();
+                      setState(() {});
+                    },
                     onSelected: (int status) async {
                       var assignment = assignments![Utils.findIndexByID(
                           assignments, filteredAssignments[index - 1].id)];
@@ -266,10 +275,15 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       assignment.status = WorkStatus.values[status];
                       setState(() {});
                     },
-                    onPressed: () => AppRouter.push(
-                      context,
-                      ChatPage(assignment: filteredAssignments[index - 1]),
-                    ),
+                    onPressed: () async {
+                      await AppRouter.push(
+                        context,
+                        ChatPage(assignment: filteredAssignments[index - 1]),
+                      );
+                      await _getAssignments();
+                      await _getOtherDueAssignments();
+                      setState(() {});
+                    },
                   );
                 } else if (index == filteredAssignments.length + 1) {
                   return otherDueAssignments!.isEmpty
@@ -287,6 +301,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 return CustomCard2(
                   assignment: otherDueAssignments![
                       index - filteredAssignments.length - 2],
+                  updateAssignee: (id, assignTo) async {
+                    await _updateAssignee(id, assignTo);
+                    await _getAssignments();
+                    await _getOtherDueAssignments();
+                    setState(() {});
+                  },
                   onSelected: (int status) async {
                     var assignment = assignments![Utils.findIndexByID(
                         assignments,
@@ -298,12 +318,15 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     assignment.status = WorkStatus.values[status];
                     setState(() {});
                   },
-                  onPressed: () => AppRouter.push(
-                    context,
-                    ChatPage(
-                        assignment: otherDueAssignments![
-                            index - filteredAssignments.length - 2]),
-                  ),
+                  onPressed: () async {
+                    await AppRouter.push(
+                      context,
+                      ChatPage(assignment: filteredAssignments[index - 1]),
+                    );
+                    await _getAssignments();
+                    await _getOtherDueAssignments();
+                    setState(() {});
+                  },
                 );
               },
             );
@@ -315,6 +338,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => CustomCard2(
         assignment: filteredAssignments[index],
+        updateAssignee: (id, assignTo) async {
+          await _updateAssignee(id, assignTo);
+          await _getAssignments();
+          await _getOtherDueAssignments();
+          setState(() {});
+        },
         onSelected: (int status) async {
           var assignment = assignments![
               Utils.findIndexByID(assignments, filteredAssignments[index].id)];
@@ -323,10 +352,15 @@ class _AdminHomePageState extends State<AdminHomePage> {
           assignment.status = WorkStatus.values[status];
           setState(() {});
         },
-        onPressed: () => AppRouter.push(
-          context,
-          ChatPage(assignment: filteredAssignments[index]),
-        ),
+        onPressed: () async {
+          await AppRouter.push(
+            context,
+            ChatPage(assignment: filteredAssignments[index - 1]),
+          );
+          await _getAssignments();
+          await _getOtherDueAssignments();
+          setState(() {});
+        },
       ),
     );
   }
@@ -414,6 +448,42 @@ class _AdminHomePageState extends State<AdminHomePage> {
         icon,
         size: 20,
         color: AppColors.teal400,
+      ),
+    );
+  }
+
+  Future<void> _updateAssignee(int? assignmentId, String? assignTo) async {
+    if (assignmentId == null) return;
+    _assigneeController.text = assignTo ?? AppStrings.marley;
+    await showDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        content: SizedBox(
+          width: 30.w,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            InputTextField(
+              "",
+              controller: _assigneeController,
+              keyboardType: TextInputType.name,
+            ),
+          ]),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              AppStrings.done,
+              style: AppStyle.textstylepoppinsbold14
+                  .copyWith(color: AppColors.greenA700),
+            ),
+            onPressed: () async {
+              if (_assigneeController.text.isNotEmpty) {
+                await AssignmentRepository()
+                    .updateAssignee(assignmentId, _assigneeController.text);
+              }
+              AppRouter.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }

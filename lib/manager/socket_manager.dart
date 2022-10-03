@@ -61,8 +61,20 @@ class SocketManager {
     socket.on("message", handler);
   }
 
+  void onMessageId(dynamic Function(dynamic) handler) {
+    socket.on("messageID", handler);
+  }
+
+  void onPaymentUpdate(dynamic Function(dynamic) handler) {
+    socket.on("paymentUpdate", handler);
+  }
+
   void sendMessage(dynamic data) {
     socket.emit("sendMessage", data);
+  }
+
+  void sendPaymentStatus(){
+    socket.emit("paymentStatus");
   }
 
   void emitTyping(dynamic data) {

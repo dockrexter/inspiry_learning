@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/models/attachment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_card.dart';
+import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/repositories/attachment_repositories.dart';
+import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 
 class AssignmentDetailsPage extends StatefulWidget {
   const AssignmentDetailsPage({Key? key, required this.assignment})
@@ -22,6 +25,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
   bool _isDownLoading = false;
   List<Attachment>? _attachments;
   final _isAdmin = UserTypeHelper.isAdmin();
+  final _assigneeController = TextEditingController();
 
   void getAttachments() async {
     setState(() {
@@ -39,6 +43,12 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
   void initState() {
     super.initState();
     getAttachments();
+  }
+
+  @override
+  void dispose() {
+    _assigneeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -97,7 +107,13 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                   children: [
                     _isAdmin
                         ? CustomCard2(
-                            assignment: widget.assignment, onSelected: (_) {})
+                            assignment: widget.assignment,
+                            onSelected: (_) {},
+                            updateAssignee: (id, assignTo) async {
+                              await _updateAssignee(id, assignTo);
+                              setState(() {});
+                            },
+                          )
                         : SizedBox(width: ScreenSize.width),
                     SizedBox(height: 20.h),
                     Padding(
@@ -174,7 +190,8 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                           ? const AssetImage(AppAssets.pdfIcon)
                           : (extension == 'zip')
                               ? const AssetImage(AppAssets.docIcon)
-                              : const AssetImage(AppAssets.docIcon) as ImageProvider,
+                              : const AssetImage(AppAssets.docIcon)
+                                  as ImageProvider,
         ),
       ),
       child: _isDownLoading
@@ -241,5 +258,42 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
       );
     }
     return imagesGrid;
+  }
+
+  Future<void> _updateAssignee(int? assignmentId, String? assignTo) async {
+    if (assignmentId == null) return;
+    _assigneeController.text = assignTo ?? AppStrings.marley;
+    await showDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        content: SizedBox(
+          width: 30.w,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            InputTextField(
+              "",
+              controller: _assigneeController,
+              keyboardType: TextInputType.name,
+            ),
+          ]),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              AppStrings.done,
+              style: AppStyle.textstylepoppinsbold14
+                  .copyWith(color: AppColors.greenA700),
+            ),
+            onPressed: () async {
+              if (_assigneeController.text.isNotEmpty) {
+                await AssignmentRepository()
+                    .updateAssignee(assignmentId, _assigneeController.text);
+              }
+              widget.assignment?.assignTo = _assigneeController.text;
+              AppRouter.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

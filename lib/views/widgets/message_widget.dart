@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inspiry_learning/globals/app_style.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/globals/app_colors.dart';
+import 'package:inspiry_learning/globals/app_router.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/models/message_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -176,9 +178,32 @@ class _MessageWidgetState extends State<MessageWidget> {
                               _buildCustomButtons(
                                 text: AppStrings.reject,
                                 color: AppColors.red300,
-                                onTap: () async => await PaymentRepository()
-                                    .rejectPayment(
-                                        messageId: widget.message.id!),
+                                onTap: () async => await showDialog(
+                                  context: context,
+                                  builder: (context) => CupertinoAlertDialog(
+                                    title: const Text("Reject Payment"),
+                                    content: const Text(
+                                        "Please Confirm Payment Rejection"),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text("Yes"),
+                                        onPressed: () async {
+                                          if (widget.message.id != null) {
+                                            await PaymentRepository()
+                                                .rejectPayment(
+                                                    messageId:
+                                                        widget.message.id!);
+                                          }
+                                          AppRouter.pop(context);
+                                        },
+                                      ),
+                                      CupertinoDialogAction(
+                                        child: const Text("No"),
+                                        onPressed: () => AppRouter.pop(context),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),

@@ -59,6 +59,8 @@ class _ChatPageState extends State<ChatPage> {
     SocketManager().onTyping(_handelTyping);
     SocketManager().onMessage(_handelMessage);
     SocketManager().onDBChat(_handelMessages);
+    SocketManager().onMessageId(_handelMessageID);
+    SocketManager().onPaymentUpdate(_handelPaymentUpdate);
 
     _messageController.addListener(() {
       if (_messageController.text.isNotEmpty) {
@@ -242,7 +244,8 @@ class _ChatPageState extends State<ChatPage> {
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   controller: _scrollController,
-                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
                                   itemCount: _messages.length + 1,
                                   itemBuilder: (context, index) => index <
                                           _messages.length
@@ -472,6 +475,19 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {});
   }
 
+  void _handelPaymentUpdate(data) {
+    if (data != null) {
+      _messages.clear();
+      for (var message in data) {
+        final msg = Message.fromJson(message);
+        msg.fromDB = true;
+        _messages.add(msg);
+      }
+    }
+    _isLoadingMessagesFromDB = false;
+    setState(() {});
+  }
+
   void _handelMessages(data) {
     if (data != null) {
       for (var message in data) {
@@ -489,6 +505,11 @@ class _ChatPageState extends State<ChatPage> {
     _messages.add(Message.fromJson(data));
     setState(() {});
     _scrollToEnd();
+  }
+
+  void _handelMessageID(data) {
+    _messages.last.id = data["id"];
+    setState(() {});
   }
 
   void _scrollToEnd({bool updateState = true}) {

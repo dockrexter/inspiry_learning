@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/views/widgets/custom_dropdown.dart';
-import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
-import 'package:inspiry_learning/repositories/assignment_repositories.dart';
 
 class CustomCard extends StatelessWidget {
   const CustomCard({Key? key, required this.assignment, this.onPressed})
@@ -116,11 +114,13 @@ class CustomCard2 extends StatelessWidget {
     this.onPressed,
     required this.assignment,
     required this.onSelected,
+    required this.updateAssignee,
   }) : super(key: key);
 
   final Function onSelected;
-  final VoidCallback? onPressed;
   final Assignment? assignment;
+  final VoidCallback? onPressed;
+  final Function(int?, String?) updateAssignee;
 
   @override
   Widget build(BuildContext context) {
@@ -160,8 +160,7 @@ class CustomCard2 extends StatelessWidget {
                   width: ScreenSize.width * 0.17,
                   height: ScreenSize.width * 0.075,
                   child: InkWell(
-                    onTap: () =>
-                        _showTextInputDialog(context, assignment!.assignTo),
+                    onTap: () => updateAssignee(assignment?.id, assignment?.assignTo),
                     child: Container(
                       width: 55.w,
                       height: 20.h,
@@ -253,44 +252,6 @@ class CustomCard2 extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showTextInputDialog(BuildContext context, String? assignTo) {
-    final assigneeController =
-        TextEditingController(text: assignTo ?? AppStrings.marley);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: SizedBox(
-          width: 30.w,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            InputTextField(
-              "",
-              controller: assigneeController,
-              keyboardType: TextInputType.name,
-            ),
-          ]),
-        ),
-        actions: [
-          MaterialButton(
-            child: Text(
-              AppStrings.done,
-              style: AppStyle.textstylepoppinsbold14
-                  .copyWith(color: AppColors.white),
-            ),
-            color: AppColors.greenA700,
-            onPressed: () async {
-              if (assigneeController.text.isNotEmpty) {
-                await AssignmentRepository()
-                    .updateAssignee(assignment!.id, assigneeController.text);
-              }
-              assigneeController.dispose();
-              AppRouter.pop(context);
-            },
-          ),
-        ],
       ),
     );
   }
