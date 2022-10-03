@@ -513,7 +513,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _scrollToEnd({bool updateState = true}) {
-    Future.delayed(const Duration(milliseconds: 3), () async {
+    Future.delayed(const Duration(seconds: 1), () async {
       if (_scrollController.hasClients) {
         await _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
