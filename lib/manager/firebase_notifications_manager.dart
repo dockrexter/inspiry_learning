@@ -1,26 +1,16 @@
 import 'package:hive_flutter/adapters.dart';
-import 'package:inspiry_learning/main.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FBNotificationManager {
+  static String lastMessage = "";
+
   static Future<void> initialize(
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    var androidInitialize =
-        const AndroidInitializationSettings('notification_icon');
-    var iOSInitialize = const IOSInitializationSettings();
-    var initializationsSettings =
-        InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+      FlutterLocalNotificationsPlugin localNotificationsPlugin) async {
+    await Hive.initFlutter();
     await Hive.openBox('notificationcounter');
     final Box _countBox = Hive.box('notificationcounter');
-    flutterLocalNotificationsPlugin.initialize(initializationsSettings,
-        onSelectNotification: (String? payload) async {
-      try {
-        if (payload != null && payload.isNotEmpty) {}
-      } catch (_) {}
-      return;
-    });
 
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     _firebaseMessaging.getToken().then((String? token) {
@@ -28,38 +18,23 @@ class FBNotificationManager {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      int count = _countBox.get('count', defaultValue: 0);
-      _countBox.put('count', ++count);
-
-      showNotification(message, flutterLocalNotificationsPlugin, false);
+      final body = message.data['body']!;
+      if (lastMessage != body) {
+        lastMessage = body;
+        int count = _countBox.get('count', defaultValue: 0);
+        _countBox.put('count', ++count);
+      }
+      await showBigTextNotification(message, localNotificationsPlugin);
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      int count = _countBox.get('count', defaultValue: 0);
-      _countBox.put('count', ++count);
-      showNotification(message, flutterLocalNotificationsPlugin, false);
-      try {
-        if (message.notification?.titleLocKey != null &&
-            message.notification!.titleLocKey!.isNotEmpty) {}
-      } catch (_) {}
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async =>
+        await showBigTextNotification(message, localNotificationsPlugin));
   }
 
-  static Future<void> showNotification(RemoteMessage message,
-      FlutterLocalNotificationsPlugin fln, bool data) async {
-    String? _title;
-    String? _body;
-    String _orderID;
-
-    _title = message.data['title']!;
-    _body = message.data['body']!;
-    _orderID = 'ff';
-
-    await showBigTextNotification(_title, _body, _orderID, fln);
-  }
-
-  static Future<void> showTextNotification(String title, String body,
-      String orderID, FlutterLocalNotificationsPlugin fln) async {
+  static Future<void> showTextNotification(
+      RemoteMessage message, FlutterLocalNotificationsPlugin fln) async {
+    final title = message.data['title']!;
+    final body = message.data['body']!;
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       AppStrings.notificationId,
@@ -71,11 +46,13 @@ class FBNotificationManager {
     );
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body, platformChannelSpecifics, payload: orderID);
+    await fln.show(0, title, body, platformChannelSpecifics, payload: "_");
   }
 
-  static Future<void> showBigTextNotification(String? title, String? body,
-      String orderID, FlutterLocalNotificationsPlugin fln) async {
+  static Future<void> showBigTextNotification(
+      RemoteMessage message, FlutterLocalNotificationsPlugin fln) async {
+    final title = message.data['title']!;
+    final body = message.data['body']!;
     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
         body ?? "",
         htmlFormatBigText: true,
@@ -93,18 +70,6 @@ class FBNotificationManager {
             );
     NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body, platformChannelSpecifics, payload: orderID);
+    await fln.show(0, title, body, platformChannelSpecifics, payload: "_");
   }
-}
-
-Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
-  await Hive.openBox('notificationcounter');
-  final Box _countBox = Hive.box('notificationcounter');
-  int count = _countBox.get('count', defaultValue: 0);
-  _countBox.put('count', ++count);
-  FBNotificationManager.showNotification(
-    message,
-    flutterLocalNotificationsPlugin!,
-    false,
-  );
 }

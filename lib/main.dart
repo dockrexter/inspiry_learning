@@ -67,8 +67,18 @@ class _HandleNotificationState extends State<HandleNotification> {
   @override
   void initState() {
     super.initState();
+    const androidInitialize =
+        AndroidInitializationSettings('notification_icon');
+    const iOSInitialize = IOSInitializationSettings();
+    const initializationsSettings =
+        InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+    flutterLocalNotificationsPlugin!.initialize(initializationsSettings);
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
-    FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async =>
+        await FBNotificationManager.showBigTextNotification(
+          message,
+          flutterLocalNotificationsPlugin!,
+        ));
   }
 
   @override

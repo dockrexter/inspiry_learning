@@ -321,7 +321,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   onPressed: () async {
                     await AppRouter.push(
                       context,
-                      ChatPage(assignment: filteredAssignments[index - 1]),
+                      ChatPage(
+                          assignment: otherDueAssignments![
+                              index - filteredAssignments.length - 2]),
                     );
                     await _getAssignments();
                     await _getOtherDueAssignments();
@@ -355,7 +357,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         onPressed: () async {
           await AppRouter.push(
             context,
-            ChatPage(assignment: filteredAssignments[index - 1]),
+            ChatPage(assignment: filteredAssignments[index]),
           );
           await _getAssignments();
           await _getOtherDueAssignments();
