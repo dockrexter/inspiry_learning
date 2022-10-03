@@ -12,6 +12,7 @@ class FBNotificationManager {
     var iOSInitialize = const IOSInitializationSettings();
     var initializationsSettings =
         InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+    await Hive.openBox('notificationcounter');
     final Box _countBox = Hive.box('notificationcounter');
     flutterLocalNotificationsPlugin.initialize(initializationsSettings,
         onSelectNotification: (String? payload) async {
@@ -27,8 +28,6 @@ class FBNotificationManager {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      await Hive.initFlutter();
-      await Hive.openBox('notificationcounter');
       int count = _countBox.get('count', defaultValue: 0);
       _countBox.put('count', ++count);
 
@@ -36,8 +35,6 @@ class FBNotificationManager {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      await Hive.initFlutter();
-      await Hive.openBox('notificationcounter');
       int count = _countBox.get('count', defaultValue: 0);
       _countBox.put('count', ++count);
       showNotification(message, flutterLocalNotificationsPlugin, false);
@@ -101,7 +98,6 @@ class FBNotificationManager {
 }
 
 Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
-  await Hive.initFlutter();
   await Hive.openBox('notificationcounter');
   final Box _countBox = Hive.box('notificationcounter');
   int count = _countBox.get('count', defaultValue: 0);

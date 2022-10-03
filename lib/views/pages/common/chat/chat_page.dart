@@ -515,11 +515,12 @@ class _ChatPageState extends State<ChatPage> {
   void _scrollToEnd({bool updateState = true}) {
     Future.delayed(const Duration(seconds: 1), () async {
       if (_scrollController.hasClients) {
-        await _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: Duration(seconds: (_messages.length * 0.085).ceil()),
-          curve: Curves.fastOutSlowIn,
-        );
+        // await _scrollController.animateTo(
+        //   _scrollController.position.maxScrollExtent,
+        //   duration: Duration(seconds: (_messages.length * 0.1).ceil()),
+        //   curve: Curves.fastOutSlowIn,
+        // );
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         if (updateState) setState(() {});
       }
     });
