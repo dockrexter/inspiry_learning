@@ -13,7 +13,8 @@ class FBNotificationManager {
     final Box _countBox = Hive.box('notificationcounter');
 
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-    await _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
     _firebaseMessaging.getToken().then((String? token) {
       assert(token != null);
     });
@@ -54,6 +55,9 @@ class FBNotificationManager {
       RemoteMessage message, FlutterLocalNotificationsPlugin fln) async {
     final title = message.data['title']!;
     final body = message.data['body']!;
+    final assignmentId = title == "New Message"
+        ? message.data['assignmentId']!.toString()
+        : null;
     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
         body ?? "",
         htmlFormatBigText: true,
@@ -71,6 +75,7 @@ class FBNotificationManager {
             );
     NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body, platformChannelSpecifics, payload: "_");
+    await fln.show(0, title, body, platformChannelSpecifics,
+        payload: assignmentId);
   }
 }
