@@ -321,8 +321,16 @@ class _ChatPageState extends State<ChatPage> {
               child: CustomButton(
                 AppStrings.done,
                 onPressed: () {
+                  if (Utils.checkIsAnyFieldIsEmpty(controllers: [
+                    priceController,
+                    descriptionController,
+                  ])) {
+                    Utils.showToast(AppStrings.allFieldsAreRequired);
+                    return;
+                  }
                   if (priceController.text.isNotEmpty &&
-                      descriptionController.text.isNotEmpty) {
+                      descriptionController.text.isNotEmpty &&
+                      int.parse(priceController.text) > 0) {
                     _sendMessage(
                       Message(
                         paymentStatus: 0,
@@ -331,7 +339,7 @@ class _ChatPageState extends State<ChatPage> {
                         userId: ActiveUser.instance.user!.userId!,
                         paymentAmount: double.tryParse(priceController.text),
                         message:
-                            "Title: ${widget.assignment!.subject} Charges: ${priceController.text} Description: ${descriptionController.text}",
+                            "Title: ${widget.assignment!.subject} Charges: \$${priceController.text} \nDescription: ${descriptionController.text}",
                       ),
                     );
                     _messageController.clear();
