@@ -194,6 +194,8 @@ class _MessageWidgetState extends State<MessageWidget> {
                                                 .rejectPayment(
                                                     messageId:
                                                         widget.message.id!);
+                                            widget.message.paymentStatus = 2;
+                                            setState(() {});
                                           }
                                           SocketManager().sendPaymentStatus();
                                           AppRouter.pop(context);

@@ -72,7 +72,7 @@ class _HandleNotificationState extends State<HandleNotification> {
     const iOSInitialize = IOSInitializationSettings();
     const initializationsSettings =
         InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-    flutterLocalNotificationsPlugin!.initialize(initializationsSettings);
+    flutterLocalNotificationsPlugin!.initialize(initializationsSettings, onSelectNotification: (_){});
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
     FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async =>
         await FBNotificationManager.showBigTextNotification(
