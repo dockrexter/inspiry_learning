@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
+import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
 import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
 import 'package:inspiry_learning/manager/firebase_notifications_manager.dart';
@@ -72,7 +73,14 @@ class _HandleNotificationState extends State<HandleNotification> {
     const iOSInitialize = IOSInitializationSettings();
     const initializationsSettings =
         InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-    flutterLocalNotificationsPlugin!.initialize(initializationsSettings);
+    flutterLocalNotificationsPlugin!.initialize(initializationsSettings,
+        onSelectNotification: (payload) {
+      if (payload != null) {
+        if (payload.isNotEmpty) {
+          AppRouter.push(context, ChatPage(assaignmentid: payload));
+        }
+      }
+    });
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
     FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async =>
         await FBNotificationManager.showBigTextNotification(
