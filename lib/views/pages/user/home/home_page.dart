@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _getAssignments();
     Utils.addTokenToBackend();
+    _getAssignments();
   }
 
   Future<void> _handleLogout() async {

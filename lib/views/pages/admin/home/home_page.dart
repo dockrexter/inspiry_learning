@@ -308,8 +308,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     setState(() {});
                   },
                   onSelected: (int status) async {
-                    var assignment = assignments![Utils.findIndexByID(
-                        assignments,
+                    var assignment = otherDueAssignments![Utils.findIndexByID(
+                        otherDueAssignments,
                         otherDueAssignments![
                                 index - filteredAssignments.length - 2]
                             .id)];

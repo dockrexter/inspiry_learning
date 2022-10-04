@@ -13,6 +13,7 @@ class FBNotificationManager {
     final Box _countBox = Hive.box('notificationcounter');
 
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+    await _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
     _firebaseMessaging.getToken().then((String? token) {
       assert(token != null);
     });

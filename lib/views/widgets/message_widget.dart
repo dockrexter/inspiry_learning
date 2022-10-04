@@ -173,6 +173,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                                     if (url != null) {
                                       await Utils.launchURL(url);
                                     }
+                                    SocketManager().sendPaymentStatus();
                                   },
                                 ),
                               _buildCustomButtons(
@@ -194,6 +195,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                                                     messageId:
                                                         widget.message.id!);
                                           }
+                                          SocketManager().sendPaymentStatus();
                                           AppRouter.pop(context);
                                         },
                                       ),
