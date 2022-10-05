@@ -57,21 +57,16 @@ class _MyAppState extends State<MyApp> {
         final title = widget.message!.data['title']!;
         if (title == "New Message") {
           String? payload = widget.message!.data['assignmentId'];
-          Future.delayed(
-            const Duration(seconds: 1),
-            () async {
-              if (payload != null) {
-                if (payload.isNotEmpty) {
-                  await AppRouter.push(
-                    context,
-                    ChatPage(
-                      assaignmentid: payload,
-                    ),
-                  );
-                }
+          Future.delayed(const Duration(seconds: 1), () async {
+            if (payload != null) {
+              if (payload.isNotEmpty) {
+                await AppRouter.push(
+                  context,
+                  ChatPage(assaignmentid: payload),
+                );
               }
-            },
-          );
+            }
+          });
         }
       }
     });
@@ -105,7 +100,7 @@ class _HandleNotificationState extends State<HandleNotification> {
   void initState() {
     super.initState();
     const androidInitialize =
-        AndroidInitializationSettings('notification_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iOSInitialize = IOSInitializationSettings();
     const initializationsSettings =
         InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
@@ -118,11 +113,6 @@ class _HandleNotificationState extends State<HandleNotification> {
       }
     });
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
-    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async =>
-        await FBNotificationManager.showBigTextNotification(
-          message,
-          flutterLocalNotificationsPlugin!,
-        ));
   }
 
   @override

@@ -1,7 +1,17 @@
+import 'package:inspiry_learning/main.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  await FBNotificationManager.showBigTextNotification(
+    message,
+    flutterLocalNotificationsPlugin!,
+  );
+}
 
 class FBNotificationManager {
   static String lastMessage = "";
@@ -11,6 +21,8 @@ class FBNotificationManager {
     await Hive.initFlutter();
     await Hive.openBox('notificationcounter');
     final Box _countBox = Hive.box('notificationcounter');
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     await _firebaseMessaging.setForegroundNotificationPresentationOptions(
@@ -54,7 +66,7 @@ class FBNotificationManager {
       playSound: true,
       channelShowBadge: true,
       priority: Priority.max,
-      importance: Importance.max,
+      importance: Importance.high,
       icon: "@mipmap/ic_launcher",
       styleInformation: bigTextStyleInformation,
       visibility: NotificationVisibility.public,
