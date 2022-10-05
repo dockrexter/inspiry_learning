@@ -11,7 +11,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
 import 'package:inspiry_learning/repositories/fcmtoken_repositories.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 enum WorkStatus {
   compleated,
@@ -108,24 +107,6 @@ class Utils {
       fontSize: 16.0,
       toastLength: Toast.LENGTH_SHORT,
       backgroundColor: AppColors.gray800,
-    );
-  }
-
-  static Future<void> showNotification(
-      {String? title, String? body, bool playSound = true}) async {
-    return await FlutterLocalNotificationsPlugin().show(
-      1,
-      title,
-      body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          AppStrings.notificationId,
-          AppStrings.notificationName,
-          playSound: playSound,
-          color: AppColors.teal400,
-          channelDescription: AppStrings.notificationDescription,
-        ),
-      ),
     );
   }
 

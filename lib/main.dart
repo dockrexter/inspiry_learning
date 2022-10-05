@@ -8,8 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/views/pages/user/home/home_page.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
-import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
+import 'package:inspiry_learning/views/pages/common/chat/chat_page.dart';
 import 'package:inspiry_learning/manager/shared_preferences_manager.dart';
 import 'package:inspiry_learning/manager/firebase_notifications_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -29,17 +29,53 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   ActiveUser.instance.user = await User.getUser();
+  final message = await FirebaseMessaging.instance.getInitialMessage();
 
   runApp(
     ScreenUtilInit(
-      builder: (context, _) => const MyApp(),
+      builder: (context, _) => MyApp(message: message),
       designSize: const Size(375, 812),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  const MyApp({super.key, this.message});
+
+  final RemoteMessage? message;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.message != null) {
+        final title = widget.message!.data['title']!;
+        if (title == "New Message") {
+          String? payload = widget.message!.data['assignmentId'];
+          Future.delayed(
+            const Duration(seconds: 1),
+            () async {
+              if (payload != null) {
+                if (payload.isNotEmpty) {
+                  await AppRouter.push(
+                    context,
+                    ChatPage(
+                      assaignmentid: payload,
+                    ),
+                  );
+                }
+              }
+            },
+          );
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

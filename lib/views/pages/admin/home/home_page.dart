@@ -26,6 +26,7 @@ class AdminHomePage extends StatefulWidget {
 
 class _AdminHomePageState extends State<AdminHomePage> {
   bool _isLoading = false;
+  bool _isNotificationLoading = false;
   DateTime _selectedDate = DateTime.now();
   List<AllNotificationData>? allnotification;
   List<Assignment>? assignments, otherDueAssignments;
@@ -49,7 +50,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   Future<void> _getAllNotification() async {
+    _isNotificationLoading = true;
+    setState(() {});
     allnotification = await AllNotifactionRepository().getallNotification();
+    _isNotificationLoading = false;
     setState(() {});
   }
 
@@ -119,25 +123,30 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         ),
                         Row(
                           children: [
-                            InkWell(
-                              onTap: () async {
-                                await _getAllNotification();
-                                customNotificationsPopup(context,
-                                    allnotification: allnotification);
-                              },
-                              child: Badge(
-                                position:
-                                    BadgePosition.topEnd(top: -5, end: -5),
-                                animationDuration:
-                                    const Duration(milliseconds: 300),
-                                animationType: BadgeAnimationType.slide,
-                                badgeContent: notificationCounter(),
-                                child: const Icon(
-                                  Icons.notifications,
-                                  size: 26,
-                                ),
-                              ),
-                            ),
+                            _isNotificationLoading
+                                ? const CircularProgressIndicator.adaptive(
+                                    valueColor: AlwaysStoppedAnimation(
+                                        AppColors.yellow701),
+                                  )
+                                : InkWell(
+                                    onTap: () async {
+                                      await _getAllNotification();
+                                      customNotificationsPopup(context,
+                                          allnotification: allnotification);
+                                    },
+                                    child: Badge(
+                                      position: BadgePosition.topEnd(
+                                          top: -5, end: -5),
+                                      animationDuration:
+                                          const Duration(milliseconds: 300),
+                                      animationType: BadgeAnimationType.slide,
+                                      badgeContent: notificationCounter(),
+                                      child: const Icon(
+                                        Icons.notifications,
+                                        size: 26,
+                                      ),
+                                    ),
+                                  ),
                             SizedBox(width: 18.w),
                             InkWell(
                               onTap: () => AppRouter.push(

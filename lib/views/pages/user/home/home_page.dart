@@ -29,9 +29,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   List<Assignment>? assignments;
-  bool _isNotificationLoding = false;
+  bool _isNotificationLoading = false;
   List<AllNotificationData>? allnotification;
-  String? assignmentid;
   final Box _countBox = Hive.box('notificationcounter');
 
   @override
@@ -51,10 +50,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getAllNotification() async {
-    _isNotificationLoding = true;
+    _isNotificationLoading = true;
     setState(() {});
     allnotification = await AllNotifactionRepository().getallNotification();
-    _isNotificationLoding = false;
+    _isNotificationLoading = false;
     setState(() {});
   }
 
@@ -121,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Row(
                             children: [
-                              _isNotificationLoding
+                              _isNotificationLoading
                                   ? const CircularProgressIndicator.adaptive()
                                   : InkWell(
                                       onTap: () async {
@@ -200,7 +199,8 @@ class _HomePageState extends State<HomePage> {
                     displacement: 10.h,
                     onRefresh: () async => await _getAssignments(),
                     child: assignments == null
-                        ? const Center(child: CircularProgressIndicator.adaptive())
+                        ? const Center(
+                            child: CircularProgressIndicator.adaptive())
                         : ListView.builder(
                             shrinkWrap: true,
                             itemCount: assignments!.length,
