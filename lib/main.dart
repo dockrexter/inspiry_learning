@@ -17,88 +17,73 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 final FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  await FBNotificationManager.showBigTextNotification(
+    message,
+    flutterLocalNotificationsPlugin!,
+  );
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await Hive.initFlutter();
   await Hive.openBox('notificationcounter');
   Hive.box('notificationcounter').put('count', 0);
 
-  await Firebase.initializeApp();
   await SharedPreferencesManager.instance.initPrefrences();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   ActiveUser.instance.user = await User.getUser();
-  final message = await FirebaseMessaging.instance.getInitialMessage();
 
   runApp(
     ScreenUtilInit(
-      builder: (context, _) => MyApp(message: message),
+      builder: (context, _) => const MyApp(),
       designSize: const Size(375, 812),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, this.message});
-
-  final RemoteMessage? message;
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (widget.message != null) {
-        final title = widget.message!.data['title']!;
-        if (title == "New Message") {
-          String? payload = widget.message!.data['assignmentId'];
-          Future.delayed(const Duration(seconds: 1), () async {
-            if (payload != null) {
-              if (payload.isNotEmpty) {
-                await AppRouter.push(
-                  context,
-                  ChatPage(assaignmentid: payload),
-                );
-              }
-            }
-          });
-        }
+  void _setupInteractedMessage() {
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null && message.data["title"] == "New Message") {
+        AppRouter.push(
+            context, ChatPage(assaignmentid: message.data["assignmentId"]));
       }
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    ScreenSize.width = MediaQuery.of(context).size.width;
-    ScreenSize.height = MediaQuery.of(context).size.height;
-    UserTypeHelper.initUserType();
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      title: AppStrings.appTitle,
-      home: const HandleNotification(),
-    );
-  }
-}
-
-class HandleNotification extends StatefulWidget {
-  const HandleNotification({Key? key}) : super(key: key);
-  @override
-  State<HandleNotification> createState() => _HandleNotificationState();
-}
-
-class _HandleNotificationState extends State<HandleNotification> {
-  @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _setupInteractedMessage());
+
+    flutterLocalNotificationsPlugin!
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(const AndroidNotificationChannel(
+          AppStrings.notificationId,
+          AppStrings.notificationName,
+          description: AppStrings.notificationDescription,
+          importance: Importance.max,
+          playSound: true,
+          showBadge: true,
+        ));
+
     const androidInitialize =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     const iOSInitialize = IOSInitializationSettings();
@@ -117,11 +102,22 @@ class _HandleNotificationState extends State<HandleNotification> {
 
   @override
   Widget build(BuildContext context) {
-    return ActiveUser.instance.user == null ||
-            ActiveUser.instance.user?.token == null
-        ? const UserInfoPage()
-        : UserTypeHelper.isAdmin()
-            ? const AdminHomePage()
-            : const HomePage();
+    ScreenSize.width = MediaQuery.of(context).size.width;
+    ScreenSize.height = MediaQuery.of(context).size.height;
+    UserTypeHelper.initUserType();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      title: AppStrings.appTitle,
+      home: ActiveUser.instance.user == null ||
+              ActiveUser.instance.user?.token == null
+          ? const UserInfoPage()
+          : UserTypeHelper.isAdmin()
+              ? const AdminHomePage()
+              : const HomePage(),
+    );
   }
 }
