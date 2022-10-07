@@ -58,6 +58,7 @@ class AppUtils {
   }
 
   static String fromatTime(DateTime dateTime) {
+    dateTime = dateTime.toLocal();
     String hour = dateTime.hour.toString().padLeft(2, '0');
     String minute = dateTime.minute.toString().padLeft(2, '0');
     if (dateTime.hour < 12) {
