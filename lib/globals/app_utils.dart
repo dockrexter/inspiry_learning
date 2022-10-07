@@ -31,7 +31,7 @@ class ActiveUser {
   User? user;
 }
 
-class Utils {
+class AppUtils {
   static get role => UserTypeHelper.isAdmin() ? "admin" : "user";
 
   static Future<void> launchURL(String url) async {

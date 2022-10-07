@@ -38,7 +38,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   void initState() {
     super.initState();
-    Utils.addTokenToBackend();
+    AppUtils.addTokenToBackend();
     _getAssignments();
     _getOtherDueAssignments();
   }
@@ -61,7 +61,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     setState(() {
       _isLoading = true;
     });
-    await Utils.removeTokenToBackend();
+    await AppUtils.removeTokenToBackend();
     await User.remove();
     AppRouter.makeFirst(context, const UserInfoPage());
   }
@@ -201,7 +201,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             await _getAssignments(
                                 month: _selectedDate.month,
                                 year: _selectedDate.year);
-                            if (Utils.compare2Dates(
+                            if (AppUtils.compare2Dates(
                                 _selectedDate, DateTime.now())) {
                               await _getOtherDueAssignments();
                             }
@@ -239,10 +239,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   Widget _buildAssignments() {
     final filteredAssignments = assignments!
-        .where((e) => Utils.compare2Dates(e.deadline!, _selectedDate))
+        .where((e) => AppUtils.compare2Dates(e.deadline!, _selectedDate))
         .toList();
 
-    if (Utils.compare2Dates(_selectedDate, DateTime.now())) {
+    if (AppUtils.compare2Dates(_selectedDate, DateTime.now())) {
       return otherDueAssignments == null
           ? Padding(
               padding: EdgeInsets.only(top: 40.h),
@@ -277,7 +277,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       setState(() {});
                     },
                     onSelected: (int status) async {
-                      var assignment = assignments![Utils.findIndexByID(
+                      var assignment = assignments![AppUtils.findIndexByID(
                           assignments, filteredAssignments[index - 1].id)];
                       await AssignmentRepository()
                           .updateAssignmentStatus(assignment.id, status);
@@ -317,7 +317,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     setState(() {});
                   },
                   onSelected: (int status) async {
-                    var assignment = otherDueAssignments![Utils.findIndexByID(
+                    var assignment = otherDueAssignments![AppUtils.findIndexByID(
                         otherDueAssignments,
                         otherDueAssignments![
                                 index - filteredAssignments.length - 2]
@@ -357,7 +357,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         },
         onSelected: (int status) async {
           var assignment = assignments![
-              Utils.findIndexByID(assignments, filteredAssignments[index].id)];
+              AppUtils.findIndexByID(assignments, filteredAssignments[index].id)];
           await AssignmentRepository()
               .updateAssignmentStatus(assignment.id, status);
           assignment.status = WorkStatus.values[status];
@@ -441,8 +441,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
           _getAssignments(month: dt.month, year: dt.year);
         },
         onDaySelected: (dt, _) => setState(() => _selectedDate = dt),
-        holidayPredicate: (dt) => Utils.selectedDates(assignments!, dt),
-        selectedDayPredicate: (dt) => Utils.compare2Dates(dt, _selectedDate),
+        holidayPredicate: (dt) => AppUtils.selectedDates(assignments!, dt),
+        selectedDayPredicate: (dt) => AppUtils.compare2Dates(dt, _selectedDate),
       ),
     );
   }

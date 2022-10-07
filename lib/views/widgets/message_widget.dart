@@ -80,10 +80,10 @@ class _MessageWidgetState extends State<MessageWidget> {
               }
               if (widget.message.attachment!.path != null) {
                 String path = widget.message.attachment!.path!;
-                final res = await Utils.openFile(path);
+                final res = await AppUtils.openFile(path);
 
                 if (res.message != "done") {
-                  Utils.showToast(res.message);
+                  AppUtils.showToast(res.message);
                 }
               }
             },
@@ -128,7 +128,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                     children: [
                       if (widget.message.timeStamp != null)
                         Text(
-                          Utils.fromatTime(widget.message.timeStamp!),
+                          AppUtils.fromatTime(widget.message.timeStamp!),
                           style: AppStyle.textstylepoppinsmedium10.copyWith(
                             color: AppColors.black90075,
                           ),
@@ -158,7 +158,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                                   color: AppColors.primary,
                                   icon: Icons.send,
                                   onTap: () async {
-                                    Utils.showToast(
+                                    AppUtils.showToast(
                                         AppStrings.initialingPaymentProcess);
                                     final url = await PaymentRepository()
                                         .payWithPapal(
@@ -171,7 +171,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                                             amount:
                                                 widget.message.paymentAmount!);
                                     if (url != null) {
-                                      await Utils.launchURL(url);
+                                      await AppUtils.launchURL(url);
                                     }
                                     SocketManager().sendPaymentStatus();
                                   },
@@ -266,7 +266,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    Utils.converBytes(widget.message.attachment!.size) +
+                    AppUtils.converBytes(widget.message.attachment!.size) +
                         " . " +
                         widget.message.attachment!.extension!.toUpperCase(),
                     style: AppStyle.textstylepoppinsmedium12.copyWith(
@@ -277,7 +277,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                     children: [
                       if (widget.message.timeStamp != null)
                         Text(
-                          Utils.fromatTime(widget.message.timeStamp!),
+                          AppUtils.fromatTime(widget.message.timeStamp!),
                           style: AppStyle.textstylepoppinsmedium12.copyWith(
                             color: AppColors.gray80099,
                           ),

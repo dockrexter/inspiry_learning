@@ -36,10 +36,10 @@ class UserRepository {
         if (rememberMe) await user.save();
         return user;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -53,14 +53,14 @@ class UserRepository {
         var user = User.fromJson(response["data"]);
         if (!addSubAdmin) {
           await user.save();
-          await Utils.addTokenToBackend();
+          await AppUtils.addTokenToBackend();
         }
         return user;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -70,14 +70,14 @@ class UserRepository {
       data: user.toJsonForUpdate(),
     );
     if (response != null) {
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         await user.save();
         return user;
       }
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -90,13 +90,13 @@ class UserRepository {
       "newPassword": newPassword,
     });
     if (response != null) {
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
       }
       return false;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
 
@@ -113,10 +113,10 @@ class UserRepository {
                 ))
             .toList();
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -128,10 +128,10 @@ class UserRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return false;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
 
@@ -143,10 +143,10 @@ class UserRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return false;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
 }

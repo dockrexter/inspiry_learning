@@ -158,7 +158,7 @@ class _AssignmentFormSubmissionPageState
 
   Future<void> _submitAndProceed() async {
     if (_subjectController.text.isEmpty) {
-      Utils.showToast(AppStrings.subjectRequired);
+      AppUtils.showToast(AppStrings.subjectRequired);
       return;
     }
     setState(() => _isLoading = true);
@@ -182,7 +182,7 @@ class _AssignmentFormSubmissionPageState
     if (result) {
       _buildDialog(context);
     } else {
-      Utils.showToast(AppStrings.somethingWentWrong);
+      AppUtils.showToast(AppStrings.somethingWentWrong);
     }
   }
 

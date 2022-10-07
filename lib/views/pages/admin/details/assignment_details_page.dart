@@ -232,7 +232,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                             setState(() {
                               _isDownLoading = true;
                             });
-                            String? file = await Utils.downloadFile(
+                            String? file = await AppUtils.downloadFile(
                               _downloadurl,
                               filename,
                               null,
@@ -241,10 +241,10 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                               _isDownLoading = false;
                             });
 
-                            final res = await Utils.openFile(file!);
+                            final res = await AppUtils.openFile(file!);
 
                             if (res.message != "done") {
-                              Utils.showToast(res.message);
+                              AppUtils.showToast(res.message);
                             }
                           },
                           icon: const SizedBox(),

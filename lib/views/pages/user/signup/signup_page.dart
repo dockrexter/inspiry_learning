@@ -150,7 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               SizedBox(width: 6.w),
                               GestureDetector(
-                                onTap: () async => await Utils.launchURL(
+                                onTap: () async => await AppUtils.launchURL(
                                     AppStrings.termsAndConditionsUrl),
                                 child: Text(
                                   AppStrings.termsAndConditions,
@@ -205,23 +205,23 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _signUpBtnClickHandler() async {
     if (_isLoading) return;
-    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allFieldsAreRequired);
+    if (AppUtils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      AppUtils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
-    if (!Utils.isPasswordMatched(
+    if (!AppUtils.isPasswordMatched(
         controllers: [_passwordController, _confirmPasswordController])) {
-      Utils.showToast(AppStrings.passwordDoesNotMatch);
+      AppUtils.showToast(AppStrings.passwordDoesNotMatch);
       return;
     }
     if (_passwordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordMustBe6Characters);
+      AppUtils.showToast(AppStrings.passwordMustBe6Characters);
       return;
     }
     setState(() => _isLoading = true);
     ActiveUser.instance.user = await UserRepository().signUp(
       user: User(
-        role: Utils.role,
+        role: AppUtils.role,
         email: _emailController.text,
         password: _passwordController.text,
         lastname: _lastNameController.text,
@@ -231,7 +231,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
     setState(() => _isLoading = false);
     if (ActiveUser.instance.user != null) {
-      Utils.clearAllFields(controllers: getControllers());
+      AppUtils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(context, const HomePage());
     }
   }

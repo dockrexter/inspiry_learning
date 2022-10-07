@@ -28,10 +28,10 @@ class AllNotifactionRepository {
             SingleNotificationRead.fromJson(response);
         return assignments;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -46,10 +46,10 @@ class AllNotifactionRepository {
             AllNotificationRead.fromJson(response);
         return assignments;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -63,10 +63,10 @@ class AllNotifactionRepository {
             .toList();
         return notification;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return [];
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return [];
   }
 }

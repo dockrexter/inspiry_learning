@@ -31,10 +31,10 @@ class AssignmentRepository {
             AssignmentDetail.fromJson(response['data']);
         return assignments;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -47,10 +47,10 @@ class AssignmentRepository {
             .toList();
         return assignments;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return [];
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return [];
   }
 
@@ -66,10 +66,10 @@ class AssignmentRepository {
             .toList();
         return assignments;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return [];
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return [];
   }
 
@@ -85,10 +85,10 @@ class AssignmentRepository {
             .toList();
         return assignments;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return [];
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return [];
   }
 
@@ -112,10 +112,10 @@ class AssignmentRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return false;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
 
@@ -128,7 +128,7 @@ class AssignmentRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return false;
     }
     return false;
@@ -143,7 +143,7 @@ class AssignmentRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return false;
     }
     return false;

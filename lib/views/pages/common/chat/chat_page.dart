@@ -321,11 +321,11 @@ class _ChatPageState extends State<ChatPage> {
               child: CustomButton(
                 AppStrings.done,
                 onPressed: () {
-                  if (Utils.checkIsAnyFieldIsEmpty(controllers: [
+                  if (AppUtils.checkIsAnyFieldIsEmpty(controllers: [
                     priceController,
                     descriptionController,
                   ])) {
-                    Utils.showToast(AppStrings.allFieldsAreRequired);
+                    AppUtils.showToast(AppStrings.allFieldsAreRequired);
                     return;
                   }
                   if (priceController.text.isNotEmpty &&

@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Utils.addTokenToBackend();
+    AppUtils.addTokenToBackend();
     _getAssignments();
   }
 
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _isLoading = true;
     });
-    await Utils.removeTokenToBackend();
+    await AppUtils.removeTokenToBackend();
     await User.remove();
     AppRouter.makeFirst(context, const UserInfoPage());
   }

@@ -37,10 +37,10 @@ class PaymentRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return response["data"]["url"];
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return null;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return null;
   }
 
@@ -54,10 +54,10 @@ class PaymentRepository {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         return true;
       }
-      Utils.showToast(response["message"]);
+      AppUtils.showToast(response["message"]);
       return false;
     }
-    Utils.showToast(AppStrings.somethingWentWrong);
+    AppUtils.showToast(AppStrings.somethingWentWrong);
     return false;
   }
 }

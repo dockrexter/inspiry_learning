@@ -200,7 +200,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                                   final canRemove = await UserRepository()
                                       .removeUser(password: password);
                                   if (canRemove) {
-                                    await Utils.removeTokenToBackend();
+                                    await AppUtils.removeTokenToBackend();
                                     await User.remove();
                                     AppRouter.makeFirst(
                                         context, const UserInfoPage());
@@ -247,8 +247,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   Future<void> _saveBtnClickHandler() async {
     if (_isLoading) return;
-    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allFieldsAreRequired);
+    if (AppUtils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      AppUtils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
     setState(() => _isLoading = true);
@@ -258,7 +258,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       phone: _phoneController.text,
     );
     if (user == null) {
-      Utils.showToast(AppStrings.somethingWentWrong);
+      AppUtils.showToast(AppStrings.somethingWentWrong);
       setState(() => _isLoading = false);
       return;
     }

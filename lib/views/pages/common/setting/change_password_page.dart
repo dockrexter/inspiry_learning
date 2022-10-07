@@ -138,21 +138,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   Future<void> _changePasswordBtnClickHandler() async {
     if (_isLoading) return;
-    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allFieldsAreRequired);
+    if (AppUtils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      AppUtils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
-    if (!Utils.isPasswordMatched(
+    if (!AppUtils.isPasswordMatched(
         controllers: [_newPasswordController, _confirmPasswordController])) {
-      Utils.showToast(AppStrings.passwordDoesNotMatch);
+      AppUtils.showToast(AppStrings.passwordDoesNotMatch);
       return;
     }
     if (_newPasswordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordMustBe6Characters);
+      AppUtils.showToast(AppStrings.passwordMustBe6Characters);
       return;
     }
     if (ActiveUser.instance.user == null || ActiveUser.instance.user?.userId == null) {
-      Utils.showToast(AppStrings.somethingWentWrong);
+      AppUtils.showToast(AppStrings.somethingWentWrong);
       return;
     }
     setState(() => _isLoading = true);
@@ -162,7 +162,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     );
     setState(() => _isLoading = false);
     if (status) {
-      Utils.clearAllFields(controllers: getControllers());
+      AppUtils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(context,
           UserTypeHelper.isAdmin() ? const AdminHomePage() : const HomePage());
     }

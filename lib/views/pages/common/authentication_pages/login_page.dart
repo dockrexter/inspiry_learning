@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 SizedBox(width: 6.w),
                                 GestureDetector(
-                                  onTap: () async => await Utils.launchURL(
+                                  onTap: () async => await AppUtils.launchURL(
                                       AppStrings.termsAndConditionsUrl),
                                   child: Text(
                                     AppStrings.termsAndConditions,
@@ -220,12 +220,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _loginBtnClickHandler() async {
     if (_isLoading) return;
-    if (Utils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
-      Utils.showToast(AppStrings.allFieldsAreRequired);
+    if (AppUtils.checkIsAnyFieldIsEmpty(controllers: getControllers())) {
+      AppUtils.showToast(AppStrings.allFieldsAreRequired);
       return;
     }
     if (_passwordController.text.length < 6) {
-      Utils.showToast(AppStrings.passwordMustBe6Characters);
+      AppUtils.showToast(AppStrings.passwordMustBe6Characters);
       return;
     }
     setState(() => _isLoading = true);
@@ -233,11 +233,11 @@ class _LoginPageState extends State<LoginPage> {
       email: _emailController.text,
       password: _passwordController.text,
       rememberMe: _rememberMe,
-      role: Utils.role,
+      role: AppUtils.role,
     );
     setState(() => _isLoading = false);
     if (ActiveUser.instance.user != null) {
-      Utils.clearAllFields(controllers: getControllers());
+      AppUtils.clearAllFields(controllers: getControllers());
       AppRouter.makeFirst(
         context,
         _isAdmin ? const AdminHomePage() : const HomePage(),

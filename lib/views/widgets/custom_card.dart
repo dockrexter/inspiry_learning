@@ -40,7 +40,7 @@ class CustomCard extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  Utils.convertDateToString(assignment.deadline!),
+                  AppUtils.convertDateToString(assignment.deadline!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
@@ -50,7 +50,7 @@ class CustomCard extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  Utils.convertDateToString(assignment.createdDate!),
+                  AppUtils.convertDateToString(assignment.createdDate!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
               ],
@@ -78,7 +78,7 @@ class CustomCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          Utils.getStatus(assignment.status),
+                          AppUtils.getStatus(assignment.status),
                           style: AppStyle.textstylepoppinsmedium10,
                         ),
                         Icon(
@@ -152,7 +152,7 @@ class CustomCard2 extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  Utils.convertDateToString(assignment!.deadline!),
+                  AppUtils.convertDateToString(assignment!.deadline!),
                   style: AppStyle.textstylepoppinsregular10,
                 ),
                 const Spacer(),
@@ -213,7 +213,7 @@ class CustomCard2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          Utils.getStatus(assignment!.status),
+                          AppUtils.getStatus(assignment!.status),
                           style: AppStyle.textstylepoppinsmedium10,
                         ),
                         CustomDropdown(
@@ -224,7 +224,7 @@ class CustomCard2 extends StatelessWidget {
                           child: Text(AppStrings.status,
                               style: AppStyle.textstylepoppinssemibold10),
                           onChange: (s, i) {
-                            onSelected(Utils.getWorkStatus(s as String).index);
+                            onSelected(AppUtils.getWorkStatus(s as String).index);
                           },
                           icon: const Icon(Icons.arrow_drop_down, size: 18),
                           dropdownStyle: DropdownStyle(
