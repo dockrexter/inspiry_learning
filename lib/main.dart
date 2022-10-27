@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null && message.data["title"] == "New Message") {
         Future.delayed(
-          const Duration(seconds: 2),
+          const Duration(seconds: 5),
           () => AppRouter.push(
             context,
             ChatPage(assaignmentid: message.data["assignmentId"]),
@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
       if (payload != null) {
         if (payload.isNotEmpty) {
           Future.delayed(
-            const Duration(seconds: 2),
+            const Duration(seconds: 5),
             () => AppRouter.push(context, ChatPage(assaignmentid: payload)),
           );
         }
