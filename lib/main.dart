@@ -59,8 +59,13 @@ class _MyAppState extends State<MyApp> {
   void _setupInteractedMessage() {
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null && message.data["title"] == "New Message") {
-        AppRouter.push(
-            context, ChatPage(assaignmentid: message.data["assignmentId"]));
+        Future.delayed(
+          const Duration(seconds: 2),
+          () => AppRouter.push(
+            context,
+            ChatPage(assaignmentid: message.data["assignmentId"]),
+          ),
+        );
       }
     });
   }
@@ -93,7 +98,10 @@ class _MyAppState extends State<MyApp> {
         onSelectNotification: (payload) {
       if (payload != null) {
         if (payload.isNotEmpty) {
-          AppRouter.push(context, ChatPage(assaignmentid: payload));
+          Future.delayed(
+            const Duration(seconds: 2),
+            () => AppRouter.push(context, ChatPage(assaignmentid: payload)),
+          );
         }
       }
     });

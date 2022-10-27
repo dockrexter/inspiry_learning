@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FBNotificationManager {
-  static String lastMessage = "";
+  // static String lastMessage = "";
 
   static Future<void> initialize(
       FlutterLocalNotificationsPlugin localNotificationsPlugin) async {
@@ -20,12 +20,11 @@ class FBNotificationManager {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      final body = message.data['body']!;
-      if (lastMessage != body) {
-        lastMessage = body;
-        int count = _countBox.get('count', defaultValue: 0);
-        _countBox.put('count', ++count);
-      }
+      // final body = message.data['body']!;
+      // if (lastMessage != body) {
+      // lastMessage = body;
+      int count = _countBox.get('count', defaultValue: 0);
+      _countBox.put('count', ++count);
       await showBigTextNotification(message, localNotificationsPlugin);
     });
 
