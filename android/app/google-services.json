@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "559676178215",
+    "project_id": "inspiry-learning-fcm",
+    "storage_bucket": "inspiry-learning-fcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559676178215:android:9447349d02b7075471f302",
+        "android_client_info": {
+          "package_name": "com.example.inspiry_learning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559676178215-962hhtt4ep9mr32bf3qjqp560gpem7ak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBedmCbDlDvKclHpKTEqWWGU8t2XMkVC5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559676178215-962hhtt4ep9mr32bf3qjqp560gpem7ak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
