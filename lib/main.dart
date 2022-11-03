@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -23,6 +24,34 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     message,
     flutterLocalNotificationsPlugin!,
   );
+}
+
+void _onDidReceiveNotificationResponse(NotificationResponse response) async {
+  if (response.payload != null) {
+    if (response.payload!.isNotEmpty) {
+      await Get.to(() => ChatPage(assaignmentid: response.payload));
+    }
+  }
+}
+
+@pragma('vm:entry-point')
+void _onDidReceiveBackgroundNotificationResponse(
+    NotificationResponse response) async {
+  if (response.payload != null) {
+    if (response.payload!.isNotEmpty) {
+      await Get.to(() => ChatPage(assaignmentid: response.payload));
+    }
+  }
+}
+
+void _onDidReceiveLocalNotification(id, msg, _, __) async {
+  await Hive.initFlutter();
+  await Hive.openBox('notificationcounter');
+  final Box _countBox = Hive.box('notificationcounter');
+  int count = _countBox.get('count', defaultValue: 0);
+  _countBox.put('count', ++count);
+  await FBNotificationManager.showBigTextNotification(
+      msg, flutterLocalNotificationsPlugin!);
 }
 
 Future<void> main() async {
@@ -56,26 +85,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  void _setupInteractedMessage() {
-    FirebaseMessaging.instance.getInitialMessage().then((message) {
-      if (message != null && message.data["title"] == "New Message") {
-        Future.delayed(
-          const Duration(seconds: 5),
-          () => AppRouter.push(
-            context,
-            ChatPage(assaignmentid: message.data["assignmentId"]),
-          ),
-        );
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _setupInteractedMessage());
 
     flutterLocalNotificationsPlugin!
         .resolvePlatformSpecificImplementation<
@@ -89,22 +101,23 @@ class _MyAppState extends State<MyApp> {
           showBadge: true,
         ));
 
-    const androidInitialize =
+    const androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iOSInitialize = IOSInitializationSettings();
-    const initializationsSettings =
-        InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-    flutterLocalNotificationsPlugin!.initialize(initializationsSettings,
-        onSelectNotification: (payload) {
-      if (payload != null) {
-        if (payload.isNotEmpty) {
-          Future.delayed(
-            const Duration(seconds: 5),
-            () => AppRouter.push(context, ChatPage(assaignmentid: payload)),
-          );
-        }
-      }
-    });
+    const iosInitializationSettings = DarwinInitializationSettings(
+      requestCriticalPermission: true,
+      onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
+    );
+
+    const initializationsSettings = InitializationSettings(
+        android: androidInitializationSettings, iOS: iosInitializationSettings);
+
+    flutterLocalNotificationsPlugin!.initialize(
+      initializationsSettings,
+      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse:
+          _onDidReceiveBackgroundNotificationResponse,
+    );
+
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
   }
 
@@ -113,7 +126,7 @@ class _MyAppState extends State<MyApp> {
     ScreenSize.width = MediaQuery.of(context).size.width;
     ScreenSize.height = MediaQuery.of(context).size.height;
     UserTypeHelper.initUserType();
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.teal,
