@@ -22,9 +22,6 @@ class FBNotificationManager {
       _countBox.put('count', ++count);
       await showBigTextNotification(message, localNotificationsPlugin);
     });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async =>
-        await showBigTextNotification(message, localNotificationsPlugin));
   }
 
   static Future<void> showBigTextNotification(

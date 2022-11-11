@@ -18,6 +18,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 final FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   await FBNotificationManager.showBigTextNotification(
@@ -50,11 +51,15 @@ void _onDidReceiveBackgroundNotificationResponse(
 }
 
 void _onDidReceiveLocalNotification(id, title, body, payload) async {
-  if (payload != null) {
-    if (payload!.isNotEmpty) {
-      await Get.to(() => ChatPage(assaignmentid: payload));
-    }
-  }
+  await Hive.initFlutter();
+  await Hive.openBox('notificationcounter');
+  final Box _countBox = Hive.box('notificationcounter');
+  int count = _countBox.get('count', defaultValue: 0);
+  _countBox.put('count', ++count);
+  final message = RemoteMessage(
+      data: {"title": title, "body": body, "assignmentId": payload});
+  await FBNotificationManager.showBigTextNotification(
+      message, flutterLocalNotificationsPlugin!);
 }
 
 Future<void> main() async {
@@ -121,6 +126,19 @@ class _MyAppState extends State<MyApp> {
     );
 
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) async {
+    final title = message.data['title'];
+    if (title == null) return;
+    final assignmentId =
+        title == "New Message" ? message.data['assignmentId'].toString() : null;
+    if (assignmentId != null) {
+      if (assignmentId.isNotEmpty) {
+        await Get.to(() => ChatPage(assaignmentid: assignmentId));
+      }
+    }
   }
 
   @override
