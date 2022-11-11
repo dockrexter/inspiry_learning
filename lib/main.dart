@@ -30,18 +30,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void _onDidReceiveNotificationResponse(NotificationResponse response) async {
   if (response.payload != null) {
     if (response.payload!.isNotEmpty) {
-      await Get.to(() => ChatPage(assaignmentid: response.payload));
-    }
-  }
-}
-
-@pragma('vm:entry-point')
-void _onDidReceiveBackgroundNotificationResponse(
-    NotificationResponse response) async {
-  if (response.payload != null) {
-    if (response.payload!.isNotEmpty) {
-      Future.delayed(
-        const Duration(seconds: 2),
+      await Future.delayed(
+        const Duration(milliseconds: 200),
         () async => await Get.to(
           () => ChatPage(assaignmentid: response.payload),
         ),
@@ -50,6 +40,27 @@ void _onDidReceiveBackgroundNotificationResponse(
   }
 }
 
+@pragma('vm:entry-point')
+Future<dynamic> _onDidReceiveBackgroundNotificationResponse(
+    RemoteMessage? message) async {
+  if (message == null) return;
+  final title = message.data['title'];
+  if (title == null) return;
+  final assignmentId =
+      title == "New Message" ? message.data['assignmentId'].toString() : null;
+  if (assignmentId != null) {
+    if (assignmentId.isNotEmpty) {
+      await Future.delayed(
+        const Duration(seconds: 5),
+        () async => await Get.to(
+          () => ChatPage(assaignmentid: assignmentId),
+        ),
+      );
+    }
+  }
+}
+
+//  Only applicable to iOS versions older than 10.
 void _onDidReceiveLocalNotification(id, title, body, payload) async {
   await Hive.initFlutter();
   await Hive.openBox('notificationcounter');
@@ -121,22 +132,28 @@ class _MyAppState extends State<MyApp> {
     flutterLocalNotificationsPlugin!.initialize(
       initializationsSettings,
       onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
-      onDidReceiveBackgroundNotificationResponse:
-          _onDidReceiveBackgroundNotificationResponse,
     );
 
     FBNotificationManager.initialize(flutterLocalNotificationsPlugin!);
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleOnMessageOpenedApp);
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then(_onDidReceiveBackgroundNotificationResponse);
   }
 
-  void _handleMessage(RemoteMessage message) async {
+  Future<void> _handleOnMessageOpenedApp(RemoteMessage message) async {
     final title = message.data['title'];
     if (title == null) return;
     final assignmentId =
         title == "New Message" ? message.data['assignmentId'].toString() : null;
     if (assignmentId != null) {
       if (assignmentId.isNotEmpty) {
-        await Get.to(() => ChatPage(assaignmentid: assignmentId));
+        await Future.delayed(
+          const Duration(seconds: 2),
+          () async => await Get.to(
+            () => ChatPage(assaignmentid: assignmentId),
+          ),
+        );
       }
     }
   }
