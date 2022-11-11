@@ -31,7 +31,7 @@ void _onDidReceiveNotificationResponse(NotificationResponse response) async {
   if (response.payload != null) {
     if (response.payload!.isNotEmpty) {
       await Future.delayed(
-        const Duration(milliseconds: 200),
+        const Duration(milliseconds: 100),
         () async => await Get.to(
           () => ChatPage(assaignmentid: response.payload),
         ),
@@ -51,7 +51,7 @@ Future<dynamic> _onDidReceiveBackgroundNotificationResponse(
   if (assignmentId != null) {
     if (assignmentId.isNotEmpty) {
       await Future.delayed(
-        const Duration(seconds: 5),
+        const Duration(seconds: 2),
         () async => await Get.to(
           () => ChatPage(assaignmentid: assignmentId),
         ),
@@ -61,17 +61,17 @@ Future<dynamic> _onDidReceiveBackgroundNotificationResponse(
 }
 
 //  Only applicable to iOS versions older than 10.
-void _onDidReceiveLocalNotification(id, title, body, payload) async {
-  await Hive.initFlutter();
-  await Hive.openBox('notificationcounter');
-  final Box _countBox = Hive.box('notificationcounter');
-  int count = _countBox.get('count', defaultValue: 0);
-  _countBox.put('count', ++count);
-  final message = RemoteMessage(
-      data: {"title": title, "body": body, "assignmentId": payload});
-  await FBNotificationManager.showBigTextNotification(
-      message, flutterLocalNotificationsPlugin!);
-}
+// void _onDidReceiveLocalNotification(id, title, body, payload) async {
+//   await Hive.initFlutter();
+//   await Hive.openBox('notificationcounter');
+//   final Box _countBox = Hive.box('notificationcounter');
+//   int count = _countBox.get('count', defaultValue: 0);
+//   _countBox.put('count', ++count);
+//   final message = RemoteMessage(
+//       data: {"title": title, "body": body, "assignmentId": payload});
+//   await FBNotificationManager.showBigTextNotification(
+//       message, flutterLocalNotificationsPlugin!);
+// }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -122,9 +122,7 @@ class _MyAppState extends State<MyApp> {
 
     const androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosInitializationSettings = DarwinInitializationSettings(
-      onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
-    );
+    const iosInitializationSettings = DarwinInitializationSettings();
 
     const initializationsSettings = InitializationSettings(
         android: androidInitializationSettings, iOS: iosInitializationSettings);
@@ -149,7 +147,7 @@ class _MyAppState extends State<MyApp> {
     if (assignmentId != null) {
       if (assignmentId.isNotEmpty) {
         await Future.delayed(
-          const Duration(seconds: 2),
+          const Duration(seconds: 1),
           () async => await Get.to(
             () => ChatPage(assaignmentid: assignmentId),
           ),
