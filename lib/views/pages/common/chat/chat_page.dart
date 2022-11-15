@@ -109,8 +109,8 @@ class _ChatPageState extends State<ChatPage> {
       backgroundColor: AppColors.primary,
       body: Column(
         children: [
-          SizedBox(
-            height: ScreenSize.height * 0.16,
+          Padding(
+            padding: EdgeInsets.only(top: 12.h),
             child: SafeArea(
               child: Row(
                 children: [
@@ -136,6 +136,14 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
           ),
+          if (assignment != null)
+            Text(
+              'Assignment: ${assignment?.subject}',
+              style: AppStyle.textstylepoppinsregular14.copyWith(
+                color: AppColors.white,
+              ),
+            ),
+          SizedBox(height: 12.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

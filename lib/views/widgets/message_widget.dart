@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/app_style.dart';
-import 'package:inspiry_learning/globals/app_utils.dart';
-import 'package:inspiry_learning/globals/app_colors.dart';
-import 'package:inspiry_learning/globals/app_router.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/models/message_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/manager/socket_manager.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/repositories/payment_repositories.dart';
 
 class MessageWidget extends StatefulWidget {
@@ -152,7 +148,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              if (!widget.message.isMe)
+                              if ((!widget.message.isMe) && UserTypeHelper.isUser())
                                 _buildCustomButtons(
                                   text: AppStrings.pay,
                                   color: AppColors.primary,

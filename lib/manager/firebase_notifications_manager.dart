@@ -1,8 +1,8 @@
+import 'dart:io' show Platform;
 import 'package:hive_flutter/adapters.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'dart:io' show Platform;
 
 class FBNotificationManager {
   static Future<void> initialize(
@@ -21,10 +21,9 @@ class FBNotificationManager {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       int count = _countBox.get('count', defaultValue: 0);
       _countBox.put('count', ++count);
-     if (Platform.isAndroid){
-       await showBigTextNotification(message, localNotificationsPlugin);
-     }
-     
+      if (Platform.isAndroid) {
+        await showBigTextNotification(message, localNotificationsPlugin);
+      }
     });
   }
 

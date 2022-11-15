@@ -202,6 +202,7 @@ class _HomePageState extends State<HomePage> {
                         ? const Center(
                             child: CircularProgressIndicator.adaptive())
                         : ListView.builder(
+                            reverse: true,
                             shrinkWrap: true,
                             itemCount: assignments!.length,
                             physics: const AlwaysScrollableScrollPhysics(),

@@ -60,19 +60,6 @@ Future<dynamic> _onDidReceiveBackgroundNotificationResponse(
   }
 }
 
-//  Only applicable to iOS versions older than 10.
-// void _onDidReceiveLocalNotification(id, title, body, payload) async {
-//   await Hive.initFlutter();
-//   await Hive.openBox('notificationcounter');
-//   final Box _countBox = Hive.box('notificationcounter');
-//   int count = _countBox.get('count', defaultValue: 0);
-//   _countBox.put('count', ++count);
-//   final message = RemoteMessage(
-//       data: {"title": title, "body": body, "assignmentId": payload});
-//   await FBNotificationManager.showBigTextNotification(
-//       message, flutterLocalNotificationsPlugin!);
-// }
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
