@@ -148,7 +148,8 @@ class _MessageWidgetState extends State<MessageWidget> {
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              if ((!widget.message.isMe) && UserTypeHelper.isUser())
+                              if ((!widget.message.isMe) &&
+                                  UserTypeHelper.isUser())
                                 _buildCustomButtons(
                                   text: AppStrings.pay,
                                   color: AppColors.primary,
@@ -167,9 +168,15 @@ class _MessageWidgetState extends State<MessageWidget> {
                                             amount:
                                                 widget.message.paymentAmount!);
                                     if (url != null) {
+                                      if (url
+                                          .toLowerCase()
+                                          .contains('success')) {
+                                        widget.message.paymentStatus = 1;
+                                      }
                                       await AppUtils.launchURL(url);
                                     }
                                     SocketManager().sendPaymentStatus();
+                                    setState(() {});
                                   },
                                 ),
                               _buildCustomButtons(
