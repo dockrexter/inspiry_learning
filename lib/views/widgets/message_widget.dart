@@ -114,7 +114,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    widget.message.message!,
+                    widget.message.type == MessageType.offer ? "Charges: \$${widget.message.paymentAmount} \nDescription: ${widget.message.message}" : widget.message.message!,
                     style: AppStyle.textstylepoppinsmedium14.copyWith(
                       color: AppColors.black90087,
                     ),

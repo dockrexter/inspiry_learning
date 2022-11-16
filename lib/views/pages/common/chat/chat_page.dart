@@ -347,7 +347,7 @@ class _ChatPageState extends State<ChatPage> {
                         userId: ActiveUser.instance.user!.userId!,
                         paymentAmount: double.tryParse(priceController.text),
                         message:
-                            "Title: ${widget.assignment!.subject} \nCharges: \$${priceController.text} \nDescription: ${descriptionController.text}",
+                            descriptionController.text,
                       ),
                     );
                     _messageController.clear();
