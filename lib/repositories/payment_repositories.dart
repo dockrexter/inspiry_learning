@@ -32,6 +32,7 @@ class PaymentRepository {
       "description": description,
       "messageId": messageId,
       "assignmentId": assignmentId,
+      "mobile": true,
     });
     if (response != null) {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
