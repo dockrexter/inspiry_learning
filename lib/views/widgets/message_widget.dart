@@ -143,7 +143,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                     ? const Text("Rejected",
                         style: TextStyle(color: AppColors.red300))
                     : widget.message.paymentStatus == 1
-                        ? const Text("Payed",
+                        ? const Text("Paid",
                             style: TextStyle(color: AppColors.primary))
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
