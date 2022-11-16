@@ -168,11 +168,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                                             amount:
                                                 widget.message.paymentAmount!);
                                     if (url != null) {
-                                      if (url
-                                          .toLowerCase()
-                                          .contains('success')) {
-                                        widget.message.paymentStatus = 1;
-                                      }
+                                      widget.message.paymentStatus = 1;
                                       await AppUtils.launchURL(url);
                                     }
                                     SocketManager().sendPaymentStatus();
