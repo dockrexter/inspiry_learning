@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                                 onTap: () async => await showDialog(
                                   context: context,
                                   builder: (context) => CupertinoAlertDialog(
-                                    title: const Text("logout"),
+                                    title: const Text("Logout"),
                                     content:
                                         const Text("Please Confirm Logout"),
                                     actions: [
@@ -167,6 +167,7 @@ class _HomePageState extends State<HomePage> {
                                           _handleLogout();
                                           AppRouter.pop(context);
                                         },
+                                        isDestructiveAction: true,
                                       ),
                                       CupertinoDialogAction(
                                         child: const Text("No"),

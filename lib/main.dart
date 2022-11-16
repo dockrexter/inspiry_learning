@@ -129,8 +129,12 @@ class _MyAppState extends State<MyApp> {
   Future<void> _handleOnMessageOpenedApp(RemoteMessage message) async {
     final title = message.data['title'];
     if (title == null) return;
-    final assignmentId =
-        title == "New Message" ? message.data['assignmentId'].toString() : null;
+    if (title == 'Assignment Status') {
+      return await Get.forceAppUpdate();
+    }
+    final assignmentId = (title == "New Message" || title == "New Assignment")
+        ? message.data['assignmentId'].toString()
+        : null;
     if (assignmentId != null) {
       if (assignmentId.isNotEmpty) {
         await Future.delayed(

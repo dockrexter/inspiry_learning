@@ -20,13 +20,15 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _fullNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _fullNameController.dispose();
+    _lastNameController.dispose();
+    _firstNameController.dispose();
     super.dispose();
   }
 
@@ -87,9 +89,15 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                         ),
                       ),
                       InputTextField(
-                        AppStrings.fullName,
+                        AppStrings.firstName,
                         icon: const Icon(Icons.person),
-                        controller: _fullNameController,
+                        controller: _firstNameController,
+                        keyboardType: TextInputType.name,
+                      ),
+                      InputTextField(
+                        AppStrings.lastName,
+                        icon: const Icon(Icons.person),
+                        controller: _lastNameController,
                         keyboardType: TextInputType.name,
                       ),
                       InputTextField(
@@ -133,10 +141,11 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
   }
 
   dynamic getControllers() => [
-    _emailController,
-    _passwordController,
-    _fullNameController,
-  ];
+        _emailController,
+        _passwordController,
+        _lastNameController,
+        _firstNameController,
+      ];
 
   Future<void> _registerBtnClickHandler() async {
     if (_isLoading) return;
@@ -149,19 +158,14 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
       return;
     }
     setState(() => _isLoading = true);
-    var fullName = _fullNameController.text;
-    List<String> splitted = [fullName];
-    if (fullName.contains(' ')) {
-      splitted = fullName.split(' ');
-    }
     final user = await UserRepository().signUp(
       user: User(
         phone: '',
         role: AppUtils.role,
-        firstname: splitted[0],
+        firstname: _firstNameController.text,
         email: _emailController.text,
         password: _passwordController.text,
-        lastname: splitted.length > 1 ? splitted[1] : '',
+        lastname: _lastNameController.text,
       ),
       addSubAdmin: true,
     );

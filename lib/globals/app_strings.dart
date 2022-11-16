@@ -96,7 +96,6 @@ class AppStrings {
   static const String continueAsProfessional = "Signin as Professional";
 
   // Sub Admin Page
-  static const String fullName = "Full Name";
   static const String registerSubAdmin = "Register Sub Admin";
 
   // Assignment Details Page

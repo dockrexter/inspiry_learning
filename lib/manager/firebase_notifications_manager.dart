@@ -31,7 +31,7 @@ class FBNotificationManager {
       RemoteMessage message, FlutterLocalNotificationsPlugin fln) async {
     final title = message.data['title']!;
     final body = message.data['body']!;
-    final assignmentId = title == "New Message"
+    final assignmentId = (title == "New Message" || title == "New Assignment")
         ? message.data['assignmentId']!.toString()
         : null;
     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
