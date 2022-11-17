@@ -105,8 +105,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                                 onTap: () => AppRouter.push(
                                   context,
                                   const AddAdminPage(
+                                    title: AppStrings.superAdmin,
                                     adminType: AdminType.superAdmin,
-                                    title: 'Add ${AppStrings.superAdmin}',
                                   ),
                                 ),
                                 child: Container(
@@ -146,8 +146,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                                 onTap: () => AppRouter.push(
                                   context,
                                   const AddAdminPage(
+                                    title: AppStrings.subAdmin,
                                     adminType: AdminType.subAdmin,
-                                    title: 'Add ${AppStrings.subAdmin}',
                                   ),
                                 ),
                                 child: Container(

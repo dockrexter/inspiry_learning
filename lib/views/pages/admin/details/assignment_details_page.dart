@@ -136,31 +136,43 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                             style: AppStyle.textstylepoppinsregular14
                                 .copyWith(color: AppColors.bluegray90099),
                           ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            AppStrings.submittedBy,
-                            style: AppStyle.textstyleinterbold23.copyWith(
-                              color: AppColors.black,
+                          if (UserTypeHelper.isAdmin()) SizedBox(height: 16.h),
+                          if (UserTypeHelper.isAdmin())
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppStrings.submittedBy,
+                                  style: AppStyle.textstyleinterbold23.copyWith(
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  _user == null
+                                      ? 'Name: ...'
+                                      : 'Name: ${_user?.firstname} ${_user?.lastname}',
+                                  style: AppStyle.textstylepoppinsregular14
+                                      .copyWith(color: AppColors.bluegray90099),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  _user == null
+                                      ? 'Email: ...'
+                                      : 'Email: ${_user?.email}',
+                                  style: AppStyle.textstylepoppinsregular14
+                                      .copyWith(color: AppColors.bluegray90099),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  _user == null
+                                      ? 'Phone: ...'
+                                      : 'Phone: ${_user?.phone}',
+                                  style: AppStyle.textstylepoppinsregular14
+                                      .copyWith(color: AppColors.bluegray90099),
+                                ),
+                              ],
                             ),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            _user == null ? 'Name: ...' : 'Name: ${_user?.firstname} ${_user?.lastname}',
-                            style: AppStyle.textstylepoppinsregular14
-                                .copyWith(color: AppColors.bluegray90099),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            _user == null ? 'Email: ...' : 'Email: ${_user?.email}',
-                            style: AppStyle.textstylepoppinsregular14
-                                .copyWith(color: AppColors.bluegray90099),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            _user == null ? 'Phone: ...' : 'Phone: ${_user?.phone}',
-                            style: AppStyle.textstylepoppinsregular14
-                                .copyWith(color: AppColors.bluegray90099),
-                          ),
                           SizedBox(height: 16.h),
                           Text(
                             AppStrings.attachments,

@@ -58,7 +58,7 @@ class _AddAdminPageState extends State<AddAdminPage> {
                   ),
                   const Spacer(),
                   Text(
-                    widget.title,
+                    'Add ${widget.title}',
                     style: AppStyle.textstyleinterbold23.copyWith(
                       color: AppColors.white,
                     ),
@@ -136,7 +136,7 @@ class _AddAdminPageState extends State<AddAdminPage> {
                               ),
                             )
                           : CustomButton(
-                              AppStrings.registerSubAdmin,
+                              '${AppStrings.register} ${widget.title}',
                               onPressed: () async =>
                                   await _registerBtnClickHandler(),
                             ),

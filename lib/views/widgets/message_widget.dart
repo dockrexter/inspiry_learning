@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:inspiry_learning/models/message_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/manager/socket_manager.dart';
@@ -117,30 +117,27 @@ class _MessageWidgetState extends State<MessageWidget> {
                     Row(
                       children: [
                         Text(
-                          'user:',
-                          style: AppStyle.textstylepoppinsmedium10.copyWith(
-                            color: AppColors.black90090,
-                          ),
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
                           '${widget.message.userName}',
                           style: AppStyle.textstylepoppinsmedium10.copyWith(
-                            color: AppColors.greenA700,
+                            color: AppColors.greenA700.withOpacity(0.5),
                           ),
                         ),
-                        SizedBox(width: 5.w),
                         Text(
-                          'role:',
+                          '(',
                           style: AppStyle.textstylepoppinsmedium10.copyWith(
-                            color: AppColors.black90090,
+                            color: AppColors.black.withOpacity(0.4),
                           ),
                         ),
-                        SizedBox(width: 5.w),
                         Text(
                           '${widget.message.userRole}',
                           style: AppStyle.textstylepoppinsmedium10.copyWith(
-                            color: AppColors.greenA700,
+                            color: AppColors.greenA700.withOpacity(0.5),
+                          ),
+                        ),
+                        Text(
+                          ')',
+                          style: AppStyle.textstylepoppinsmedium10.copyWith(
+                            color: AppColors.black.withOpacity(0.4),
                           ),
                         ),
                       ],
@@ -250,34 +247,31 @@ class _MessageWidgetState extends State<MessageWidget> {
         : Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              if (!widget.message.isMe)
+              if (!widget.message.isMe && UserTypeHelper.isAdmin())
                 Row(
                   children: [
                     Text(
-                      'user:',
-                      style: AppStyle.textstylepoppinsmedium10.copyWith(
-                        color: AppColors.black90090,
-                      ),
-                    ),
-                    SizedBox(width: 5.w),
-                    Text(
                       '${widget.message.userName}',
                       style: AppStyle.textstylepoppinsmedium10.copyWith(
-                        color: AppColors.greenA700,
+                        color: AppColors.greenA700.withOpacity(0.5),
                       ),
                     ),
-                    SizedBox(width: 5.w),
                     Text(
-                      'role:',
+                      '(',
                       style: AppStyle.textstylepoppinsmedium10.copyWith(
-                        color: AppColors.black90090,
+                        color: AppColors.black.withOpacity(0.4),
                       ),
                     ),
-                    SizedBox(width: 5.w),
                     Text(
                       '${widget.message.userRole}',
                       style: AppStyle.textstylepoppinsmedium10.copyWith(
-                        color: AppColors.greenA700,
+                        color: AppColors.greenA700.withOpacity(0.5),
+                      ),
+                    ),
+                    Text(
+                      ')',
+                      style: AppStyle.textstylepoppinsmedium10.copyWith(
+                        color: AppColors.black.withOpacity(0.4),
                       ),
                     ),
                   ],
