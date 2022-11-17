@@ -132,7 +132,7 @@ class _MyAppState extends State<MyApp> {
     // if (title == 'Assignment Status') {
     //   return await Get.forceAppUpdate();
     // }
-    final assignmentId = (title == "New Message" || title == "New Assignment")
+    final assignmentId = title != 'Assignment Status'
         ? message.data['assignmentId'].toString()
         : null;
     if (assignmentId != null) {
