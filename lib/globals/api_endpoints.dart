@@ -15,10 +15,10 @@ class ApiEndpoints {
   static const String getAllNotification = '/api/users/getAllNotifications';
   static const String readSingleNotification =
       '/api/users/singleNotificationReaded';
-  static const String allSingleNotificationread = '/api/users/notificationReaded';
+  static const String allSingleNotificationread =
+      '/api/users/notificationReaded';
   static const String getAssignments = '/api/assignments/getUserAssignments';
-  static const String getAssignmentsSingledetail =
-      '/api/assignments/getAssignmentById';
+  static const String getAssignmentById = '/api/assignments/getAssignmentById';
   static const String updateAssignmentStatus = '/api/assignments/updateStatus';
   static const String createAssignment =
       '/api/assignments/createUserAssignment';

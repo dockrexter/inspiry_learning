@@ -13,6 +13,8 @@ class Message {
   int userId;
   bool fromDB;
   String? message;
+  String? userName;
+  String? userRole;
   int assignmentId;
   MessageType type;
   int? paymentStatus;
@@ -25,6 +27,8 @@ class Message {
     required this.userId,
     required this.assignmentId,
     this.message,
+    this.userName,
+    this.userRole,
     this.timeStamp,
     this.attachment,
     this.paymentStatus,
@@ -34,7 +38,10 @@ class Message {
   })  : isMe = userId == ActiveUser.instance.user!.userId,
         assert(message != null || attachment != null,
             'Message or Attachment must be provided') {
+    final user = ActiveUser.instance.user;
+    userRole ??= user?.role;
     timeStamp ??= DateTime.now();
+    userName ??= '${user?.firstname} ${user?.lastname}';
   }
 
   factory Message.fromJson(dynamic json) {
@@ -42,6 +49,8 @@ class Message {
       id: json["id"] as int?,
       userId: json["userId"] as int,
       message: json["message"] as String?,
+      userName: json["userName"] as String?,
+      userRole: json["userRole"] as String?,
       paymentStatus: json["paymentStatus"] as int?,
       paymentAmount: double.tryParse(json["amount"].toString()) ??
           int.tryParse(json["amount"].toString())?.toDouble(),
@@ -64,6 +73,8 @@ class Message {
       'userId': userId,
       'message': message,
       'type': type.index,
+      'userRole': userRole,
+      'userName': userName,
       'amount': paymentAmount,
       'paymentStatus': paymentStatus,
       'assignmentId': assignmentId,

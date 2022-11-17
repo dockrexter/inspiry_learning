@@ -99,6 +99,7 @@ class AppStrings {
   static const String registerSubAdmin = "Register Sub Admin";
 
   // Assignment Details Page
+  static const String submittedBy = "Submitted By";
   static const String assignmentDetailsTitle = "Assignment Details";
 
   // Setting Page

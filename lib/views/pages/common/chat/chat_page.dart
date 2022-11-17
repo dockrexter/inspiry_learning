@@ -85,7 +85,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _getAssignmentsdetails() async {
     assignmentdetail = await AssignmentRepository()
-        .getassignmentdetail(assaignmentId: widget.assaignmentid);
+        .getAssignmentById(int.parse(widget.assaignmentid ?? '0'));
     assignment = Assignment(
         id: assignmentdetail!.id,
         assignTo: assignmentdetail!.assignTo,

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:inspiry_learning/globals/app_utils.dart';
+import 'package:inspiry_learning/models/user_model.dart';
 import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/manager/api_manager.dart';
 import 'package:inspiry_learning/globals/api_endpoints.dart';
@@ -19,17 +20,35 @@ class AssignmentRepository {
   AssignmentRepository._internal() {
     _apiManager = APIManager();
   }
-  /* Assignment Detail */
-  Future<AssignmentDetail?> getassignmentdetail({String? assaignmentId}) async {
+
+  Future<AssignmentDetail?> getAssignmentById(int assaignmentId) async {
     final response = await _apiManager.post(
-      ApiEndpoints.getAssignmentsSingledetail,
+      ApiEndpoints.getAssignmentById,
       data: {"assignment_id": assaignmentId},
     );
     if (response != null) {
       if (response["status"] == "ok" && response["statusCode"] == 200) {
         final AssignmentDetail assignments =
-            AssignmentDetail.fromJson(response['data']);
+            AssignmentDetail.fromJson(response['data']['assignments']);
         return assignments;
+      }
+      AppUtils.showToast(response["message"]);
+      return null;
+    }
+    AppUtils.showToast(AppStrings.somethingWentWrong);
+    return null;
+  }
+
+    Future<User?> getUserByAssignmentId(int assaignmentId) async {
+    final response = await _apiManager.post(
+      ApiEndpoints.getAssignmentById,
+      data: {"assignment_id": assaignmentId},
+    );
+    if (response != null) {
+      if (response["status"] == "ok" && response["statusCode"] == 200) {
+        final user =
+            User.fromJson(response['data']['user']);
+        return user;
       }
       AppUtils.showToast(response["message"]);
       return null;

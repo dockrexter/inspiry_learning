@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
+import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/assignment_model.dart';
@@ -21,19 +22,21 @@ class AssignmentDetailsPage extends StatefulWidget {
 }
 
 class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
+  User? _user;
   bool _isLoading = false;
   bool _isDownLoading = false;
   List<Attachment>? _attachments;
   final _isAdmin = UserTypeHelper.isAdmin();
   final _assigneeController = TextEditingController();
 
-  void getAttachments() async {
+  void _getAttachments() async {
     setState(() {
       _isLoading = true;
     });
     _attachments =
         await AttachmentRepository().getAttachment(widget.assignment!.id);
-
+    _user = await AssignmentRepository()
+        .getUserByAssignmentId(widget.assignment!.id);
     setState(() {
       _isLoading = false;
     });
@@ -42,7 +45,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
   @override
   void initState() {
     super.initState();
-    getAttachments();
+    _getAttachments();
   }
 
   @override
@@ -135,9 +138,34 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                           ),
                           SizedBox(height: 16.h),
                           Text(
+                            AppStrings.submittedBy,
+                            style: AppStyle.textstyleinterbold23.copyWith(
+                              color: AppColors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            _user == null ? 'Name: ...' : 'Name: ${_user?.firstname} ${_user?.lastname}',
+                            style: AppStyle.textstylepoppinsregular14
+                                .copyWith(color: AppColors.bluegray90099),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            _user == null ? 'Email: ...' : 'Email: ${_user?.email}',
+                            style: AppStyle.textstylepoppinsregular14
+                                .copyWith(color: AppColors.bluegray90099),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            _user == null ? 'Phone: ...' : 'Phone: ${_user?.phone}',
+                            style: AppStyle.textstylepoppinsregular14
+                                .copyWith(color: AppColors.bluegray90099),
+                          ),
+                          SizedBox(height: 16.h),
+                          Text(
                             AppStrings.attachments,
                             style: AppStyle.textstylepoppinssemibold12.copyWith(
-                              fontSize: 16.sp,
+                              fontSize: 23.sp,
                             ),
                           ),
                           SizedBox(height: 14.h),
