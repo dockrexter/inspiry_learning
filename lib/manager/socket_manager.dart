@@ -14,6 +14,7 @@ class SocketManager {
     "path": "/newSocket",
     "transports": ["websocket"],
     "autoConnect": false,
+    "upgrade": false,
     "forceNew": true,
   }).connect();
 
