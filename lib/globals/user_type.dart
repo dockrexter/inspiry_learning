@@ -22,8 +22,8 @@ class UserTypeHelper{
     userType = type;
   }
 
-  static void setAdminTypeAsSubAdmin() {
-    adminType = AdminType.subAdmin;
+  static void setAdminType(AdminType type) {
+    adminType = type;
   }
 
   static void continueAsUser({bool save_ = true}){

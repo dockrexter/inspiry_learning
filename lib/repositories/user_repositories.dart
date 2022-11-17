@@ -33,8 +33,10 @@ class UserRepository {
         var user = User.fromJson(response["data"]);
         ActiveUser.instance.user ??= user;
         if (rememberMe) await user.save();
-        if (UserTypeHelper.isAdmin() && user.role == 'subadmin'){
-          UserTypeHelper.setAdminTypeAsSubAdmin();
+        if (UserTypeHelper.isAdmin()) {
+          UserTypeHelper.setAdminType(user.role == 'subadmin'
+              ? AdminType.subAdmin
+              : AdminType.superAdmin);
         }
         return user;
       }
