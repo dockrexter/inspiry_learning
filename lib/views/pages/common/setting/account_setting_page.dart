@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
