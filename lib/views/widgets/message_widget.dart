@@ -89,7 +89,7 @@ class _MessageWidgetState extends State<MessageWidget> {
             : MainAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(widget.message.message == null ? 10 : 16),
+            padding: EdgeInsets.all(widget.message.message == null ? 10 : 12),
             margin: const EdgeInsets.all(16),
             constraints: const BoxConstraints(maxWidth: 250),
             decoration: BoxDecoration(
@@ -113,8 +113,43 @@ class _MessageWidgetState extends State<MessageWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (!widget.message.isMe)
+                    Row(
+                      children: [
+                        Text(
+                          'user:',
+                          style: AppStyle.textstylepoppinsmedium10.copyWith(
+                            color: AppColors.black90090,
+                          ),
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          '${widget.message.userName}',
+                          style: AppStyle.textstylepoppinsmedium10.copyWith(
+                            color: AppColors.greenA700,
+                          ),
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          'role:',
+                          style: AppStyle.textstylepoppinsmedium10.copyWith(
+                            color: AppColors.black90090,
+                          ),
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          '${widget.message.userRole}',
+                          style: AppStyle.textstylepoppinsmedium10.copyWith(
+                            color: AppColors.greenA700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  SizedBox(height: 10.h),
                   Text(
-                    widget.message.type == MessageType.offer ? "Charges: \$${widget.message.paymentAmount} \nDescription: ${widget.message.message}" : widget.message.message!,
+                    widget.message.type == MessageType.offer
+                        ? "Charges: \$${widget.message.paymentAmount} \nDescription: ${widget.message.message}"
+                        : widget.message.message!,
                     style: AppStyle.textstylepoppinsmedium14.copyWith(
                       color: AppColors.black90087,
                     ),
@@ -215,6 +250,39 @@ class _MessageWidgetState extends State<MessageWidget> {
         : Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              if (!widget.message.isMe)
+                Row(
+                  children: [
+                    Text(
+                      'user:',
+                      style: AppStyle.textstylepoppinsmedium10.copyWith(
+                        color: AppColors.black90090,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      '${widget.message.userName}',
+                      style: AppStyle.textstylepoppinsmedium10.copyWith(
+                        color: AppColors.greenA700,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      'role:',
+                      style: AppStyle.textstylepoppinsmedium10.copyWith(
+                        color: AppColors.black90090,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      '${widget.message.userRole}',
+                      style: AppStyle.textstylepoppinsmedium10.copyWith(
+                        color: AppColors.greenA700,
+                      ),
+                    ),
+                  ],
+                ),
+              SizedBox(height: 10.h),
               Container(
                 padding: const EdgeInsets.all(12),
                 constraints: const BoxConstraints(maxWidth: 240),
