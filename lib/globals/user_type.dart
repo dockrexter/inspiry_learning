@@ -5,8 +5,14 @@ enum UserType{
   admin,
 }
 
+enum AdminType{
+  subAdmin,
+  superAdmin,
+}
+
 class UserTypeHelper{
   static UserType userType = UserType.user;
+  static AdminType adminType = AdminType.superAdmin;
 
   static UserType getUserType(){
     return userType;
@@ -14,6 +20,10 @@ class UserTypeHelper{
 
   static void setUserType(UserType type){
     userType = type;
+  }
+
+  static void setAdminTypeAsSubAdmin() {
+    adminType = AdminType.subAdmin;
   }
 
   static void continueAsUser({bool save_ = true}){
@@ -32,6 +42,10 @@ class UserTypeHelper{
 
   static bool isAdmin(){
     return userType == UserType.admin;
+  }
+
+  static bool isSuperAdmin() {
+    return adminType == AdminType.superAdmin;
   }
 
   static bool initUserType(){

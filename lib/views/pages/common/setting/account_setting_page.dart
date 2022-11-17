@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspiry_learning/globals/user_type.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inspiry_learning/globals/global_exports.dart';
@@ -6,7 +7,7 @@ import 'package:inspiry_learning/views/widgets/custom_button.dart';
 import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/common/user_info_page.dart';
-import 'package:inspiry_learning/views/pages/admin/subadmin/add_sub_admin_page.dart';
+import 'package:inspiry_learning/views/pages/admin/addadmin/add_admin_page.dart';
 import 'package:inspiry_learning/views/pages/common/setting/change_password_page.dart';
 
 class AccountSettingsPage extends StatefulWidget {
@@ -96,40 +97,96 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      if (isAdmin)
+                      if (isAdmin && UserTypeHelper.isSuperAdmin())
                         Center(
-                            child: InkWell(
-                          onTap: () =>
-                              AppRouter.push(context, const AddSubAdminPage()),
-                          child: Container(
-                            height: 48.h,
-                            width: ScreenSize.width * 0.6,
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              border: Border.all(
-                                width: 2.w,
-                                color: AppColors.teal400,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                onTap: () => AppRouter.push(
+                                  context,
+                                  const AddAdminPage(
+                                    adminType: AdminType.superAdmin,
+                                    title: 'Add ${AppStrings.superAdmin}',
+                                  ),
+                                ),
+                                child: Container(
+                                  height: 48.h,
+                                  width: ScreenSize.width * 0.4,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    border: Border.all(
+                                      width: 2.w,
+                                      color: AppColors.teal400,
+                                    ),
+                                    borderRadius: BorderRadius.circular(14.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        maxRadius: 12.r,
+                                        backgroundColor: AppColors.teal400,
+                                        child: const Icon(
+                                          Icons.add,
+                                          color: AppColors.white,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Text(
+                                        AppStrings.superAdmin,
+                                        style: AppStyle.textstylepoppinsmedium14
+                                            .copyWith(color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              borderRadius: BorderRadius.circular(14.r),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  maxRadius: 14.r,
-                                  backgroundColor: AppColors.teal400,
-                                  child: const Icon(Icons.add,
-                                      color: AppColors.white),
+                              InkWell(
+                                onTap: () => AppRouter.push(
+                                  context,
+                                  const AddAdminPage(
+                                    adminType: AdminType.subAdmin,
+                                    title: 'Add ${AppStrings.subAdmin}',
+                                  ),
                                 ),
-                                SizedBox(width: 10.w),
-                                Text(
-                                  AppStrings.addSubAdmin,
-                                  style: AppStyle.textstylepoppinsbold17,
+                                child: Container(
+                                  height: 48.h,
+                                  width: ScreenSize.width * 0.4,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    border: Border.all(
+                                      width: 2.w,
+                                      color: AppColors.teal400,
+                                    ),
+                                    borderRadius: BorderRadius.circular(14.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        maxRadius: 12.r,
+                                        backgroundColor: AppColors.teal400,
+                                        child: const Icon(
+                                          Icons.add,
+                                          color: AppColors.white,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Text(
+                                        AppStrings.subAdmin,
+                                        style: AppStyle.textstylepoppinsmedium14
+                                            .copyWith(color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        )),
+                        ),
                       Center(
                         child: Image.asset(
                           AppAssets.frame,

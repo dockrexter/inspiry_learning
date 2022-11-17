@@ -66,7 +66,8 @@ class AppStrings {
   // Account Setting Page
   static const String save = "Save";
   static const String questionMark = "?";
-  static const String addSubAdmin = "Add Sub Admin";
+  static const String subAdmin = "Sub Admin";
+  static const String superAdmin = "Super Admin";
   static const String changePassword = "Change Password";
   static const String accountSetting = "Account Settings";
 

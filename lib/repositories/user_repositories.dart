@@ -1,8 +1,7 @@
-import 'package:inspiry_learning/globals/app_utils.dart';
 import 'package:inspiry_learning/models/user_model.dart';
 import 'package:inspiry_learning/manager/api_manager.dart';
-import 'package:inspiry_learning/globals/app_strings.dart';
 import 'package:inspiry_learning/globals/api_endpoints.dart';
+import 'package:inspiry_learning/globals/global_exports.dart';
 import 'package:inspiry_learning/models/notification_model.dart';
 
 class UserRepository {
@@ -34,6 +33,9 @@ class UserRepository {
         var user = User.fromJson(response["data"]);
         ActiveUser.instance.user ??= user;
         if (rememberMe) await user.save();
+        if (UserTypeHelper.isAdmin() && user.role == 'subadmin'){
+          UserTypeHelper.setAdminTypeAsSubAdmin();
+        }
         return user;
       }
       AppUtils.showToast(response["message"]);

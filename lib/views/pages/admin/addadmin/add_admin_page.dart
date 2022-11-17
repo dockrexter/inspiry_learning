@@ -8,20 +8,24 @@ import 'package:inspiry_learning/repositories/user_repositories.dart';
 import 'package:inspiry_learning/views/widgets/custom_text_field.dart';
 import 'package:inspiry_learning/views/pages/admin/home/home_page.dart';
 
-class AddSubAdminPage extends StatefulWidget {
-  const AddSubAdminPage({Key? key}) : super(key: key);
+class AddAdminPage extends StatefulWidget {
+  const AddAdminPage({super.key, required this.title, required this.adminType});
+
+  final String title;
+  final AdminType adminType;
 
   @override
-  State<AddSubAdminPage> createState() => _AddSubAdminPageState();
+  State<AddAdminPage> createState() => _AddAdminPageState();
 }
 
-class _AddSubAdminPageState extends State<AddSubAdminPage> {
+class _AddAdminPageState extends State<AddAdminPage> {
   bool _isLoading = false;
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
 
   @override
   void dispose() {
@@ -29,6 +33,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
     _passwordController.dispose();
     _lastNameController.dispose();
     _firstNameController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -53,7 +58,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                   ),
                   const Spacer(),
                   Text(
-                    AppStrings.addSubAdmin,
+                    widget.title,
                     style: AppStyle.textstyleinterbold23.copyWith(
                       color: AppColors.white,
                     ),
@@ -101,6 +106,12 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
                         keyboardType: TextInputType.name,
                       ),
                       InputTextField(
+                        AppStrings.phoneNumber,
+                        icon: const Icon(Icons.phone),
+                        controller: _phoneNumberController,
+                        keyboardType: TextInputType.phone,
+                      ),
+                      InputTextField(
                         AppStrings.enterEmailAddress,
                         icon: const Icon(Icons.email),
                         controller: _emailController,
@@ -145,6 +156,7 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
         _passwordController,
         _lastNameController,
         _firstNameController,
+        _phoneNumberController,
       ];
 
   Future<void> _registerBtnClickHandler() async {
@@ -160,12 +172,12 @@ class _AddSubAdminPageState extends State<AddSubAdminPage> {
     setState(() => _isLoading = true);
     final user = await UserRepository().signUp(
       user: User(
-        phone: '',
-        role: AppUtils.role,
-        firstname: _firstNameController.text,
         email: _emailController.text,
+        phone: _phoneNumberController.text,
         password: _passwordController.text,
         lastname: _lastNameController.text,
+        firstname: _firstNameController.text,
+        role: widget.adminType == AdminType.subAdmin ? 'subadmin' : 'admin',
       ),
       addSubAdmin: true,
     );
