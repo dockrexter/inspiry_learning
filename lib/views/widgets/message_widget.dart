@@ -113,7 +113,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (!widget.message.isMe)
+                  if (!widget.message.isMe  && UserTypeHelper.isAdmin())
                     Row(
                       children: [
                         Text(
