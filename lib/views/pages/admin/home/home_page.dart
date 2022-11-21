@@ -61,7 +61,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     setState(() {
       _isLoading = true;
     });
-    await AppUtils.removeTokenToBackend();
+    await AppUtils.removeTokenFromBackend();
     await User.remove();
     AppRouter.makeFirst(context, const UserInfoPage());
   }

@@ -114,6 +114,7 @@ class AppStrings {
       "This channel is used for important notifications";
 
   // Toast Messages
+  static const String browserNotFound = "browser not found";
   static const String subjectRequired = "subject is required";
   static const String somethingWentWrong = "something went wrong";
   static const String allFieldsAreRequired = "all fields are required";

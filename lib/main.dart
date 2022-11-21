@@ -47,7 +47,7 @@ Future<dynamic> _onDidReceiveBackgroundNotificationResponse(
   final title = message.data['title'];
   if (title == null) return;
   final assignmentId =
-      title == "New Message" ? message.data['assignmentId'].toString() : null;
+      title != 'Assignment Status' ? message.data['assignmentId'].toString() : null;
   if (assignmentId != null) {
     if (assignmentId.isNotEmpty) {
       await Future.delayed(

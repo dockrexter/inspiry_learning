@@ -34,10 +34,12 @@ class ActiveUser {
 class AppUtils {
   static get role => UserTypeHelper.isAdmin() ? "admin" : "user";
 
-  static Future<void> launchURL(String url) async {
+  static Future<bool> launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
+      return true;
     }
+    return false;
   }
 
   static Future<OpenResult> openFile(String path) async {
@@ -102,7 +104,7 @@ class AppUtils {
     }
   }
 
-  static showToast(String message) {
+  static void showToast(String message) {
     Fluttertoast.showToast(
       msg: message,
       fontSize: 16.0,
@@ -132,8 +134,8 @@ class AppUtils {
         .contains(true);
   }
 
-  static convertDateToString(DateTime date) {
-    return "${date.day}-${date.month}-${date.year.toString().substring(2)}";
+  static String convertDateToString(DateTime date) {
+    return '${date.day}-${date.month}-${date.year.toString().substring(2)}';
   }
 
   static int findIndexByID(dynamic list, int id) {
@@ -152,7 +154,7 @@ class AppUtils {
     }
   }
 
-  static Future<void> removeTokenToBackend() async {
+  static Future<void> removeTokenFromBackend() async {
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
       await FcmTokenRepository().removeToken(token: token);
@@ -192,13 +194,13 @@ class AppUtils {
     }
 
     var dir =
-        Directory(directory.path + (isUploaded ? "/Uploads" : "/Downloads"));
+        Directory(directory.path + (isUploaded ? '/Uploads' : '/Downloads'));
 
     if (!await dir.exists()) {
       return null;
     }
 
-    var file = File(dir.path + "/$name");
+    var file = File('${dir.path}/$name');
 
     if (!await file.exists()) {
       return null;
@@ -215,7 +217,7 @@ class AppUtils {
       return null;
     }
 
-    var dir = Directory(directory.path + "/Uploads");
+    var dir = Directory(directory.path + '/Uploads');
 
     if (!await dir.exists()) {
       dir = await dir.create();
@@ -244,7 +246,7 @@ class AppUtils {
         } else {
           return null;
         }
-      } catch (ex) {
+      } catch (e) {
         return null;
       }
     }
@@ -263,7 +265,7 @@ class AppUtils {
         return null;
       }
 
-      var dir = Directory(directory.path + "/Downloads");
+      var dir = Directory(directory.path + '/Downloads');
 
       if (!await dir.exists()) {
         dir = await dir.create();
@@ -288,7 +290,7 @@ class AppUtils {
           httpClient.close(force: true);
           return file.path;
         }
-      } catch (ex) {
+      } catch (e) {
         httpClient.close(force: true);
         return null;
       } finally {

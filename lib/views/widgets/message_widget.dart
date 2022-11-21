@@ -200,11 +200,11 @@ class _MessageWidgetState extends State<MessageWidget> {
                                             amount:
                                                 widget.message.paymentAmount!);
                                     if (url != null) {
-                                      widget.message.paymentStatus = 1;
-                                      await AppUtils.launchURL(url);
+                                      if (!(await AppUtils.launchURL(url))){
+                                        AppUtils.showToast(AppStrings.browserNotFound);
+                                      }
                                     }
                                     SocketManager().sendPaymentStatus();
-                                    setState(() {});
                                   },
                                 ),
                               _buildCustomButtons(

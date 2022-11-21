@@ -256,7 +256,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                                   final canRemove = await UserRepository()
                                       .removeUser(password: password);
                                   if (canRemove) {
-                                    await AppUtils.removeTokenToBackend();
+                                    await AppUtils.removeTokenFromBackend();
                                     await User.remove();
                                     AppRouter.makeFirst(
                                         context, const UserInfoPage());
