@@ -1,4 +1,4 @@
-package com.example.inspiry_learning
+package net.inspiry.inspiry_learning
 
 import io.flutter.embedding.android.FlutterActivity
 

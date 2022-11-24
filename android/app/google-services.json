@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:559676178215:android:9447349d02b7075471f302",
         "android_client_info": {
-          "package_name": "com.example.inspiry_learning"
+          "package_name": "net.inspiry.inspiry_learning"
         }
       },
       "oauth_client": [

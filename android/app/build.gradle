@@ -51,9 +51,9 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.inspiry_learning"
-        minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
+        applicationId "net.inspiry.inspiry_learning"
+        minSdkVersion 24
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
