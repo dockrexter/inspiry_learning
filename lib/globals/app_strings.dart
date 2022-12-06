@@ -116,6 +116,7 @@ class AppStrings {
   // Toast Messages
   static const String browserNotFound = "browser not found";
   static const String subjectRequired = "subject is required";
+  static const String dueDateRequired = "due date is required";
   static const String somethingWentWrong = "something went wrong";
   static const String allFieldsAreRequired = "all fields are required";
   static const String passwordDoesNotMatch = "confirm password does not match";

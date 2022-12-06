@@ -114,6 +114,7 @@ class _AssignmentDetailsPageState extends State<AssignmentDetailsPage> {
                             onSelected: (_) {},
                             updateAssignee: (id, assignTo) async {
                               await _updateAssignee(id, assignTo);
+                              widget.assignment?.assignTo = assignTo;
                               setState(() {});
                             },
                           )

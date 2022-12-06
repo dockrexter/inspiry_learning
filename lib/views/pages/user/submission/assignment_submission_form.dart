@@ -20,8 +20,9 @@ class AssignmentFormSubmissionPage extends StatefulWidget {
 
 class _AssignmentFormSubmissionPageState
     extends State<AssignmentFormSubmissionPage> {
+  DateTime? _date;
   bool _isLoading = false;
-  DateTime _date = DateTime.now();
+  bool _isDateSelected = false;
   TimeOfDay _time = TimeOfDay.now();
   final List<PlatformFile> _files = [];
   final _subjectController = TextEditingController();
@@ -161,6 +162,10 @@ class _AssignmentFormSubmissionPageState
       AppUtils.showToast(AppStrings.subjectRequired);
       return;
     }
+    if (_isDateSelected == false || _date == null) {
+      AppUtils.showToast(AppStrings.dueDateRequired);
+      return;
+    }
     setState(() => _isLoading = true);
     final assignment = Assignment(
       id: -1,
@@ -168,11 +173,12 @@ class _AssignmentFormSubmissionPageState
       summary: _summaryController.text,
       status: WorkStatus.newRequest,
       userId: ActiveUser.instance.user?.userId,
-      attachments: _files.map((file) => Attachment.formPlatformFile(file)).toList(),
+      attachments:
+          _files.map((file) => Attachment.formPlatformFile(file)).toList(),
       deadline: DateTime(
-        _date.year,
-        _date.month,
-        _date.day,
+        _date!.year,
+        _date!.month,
+        _date!.day,
         _time.hour,
         _time.minute,
       ),
@@ -321,13 +327,13 @@ class _AssignmentFormSubmissionPageState
   }
 
   Future<void> _openDatePicker() async {
-    final date = await showDatePicker(
+    _isDateSelected = true;
+    _date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 1),
     );
-    _date = date ?? _date;
     setState(() {});
   }
 
@@ -346,7 +352,7 @@ class _AssignmentFormSubmissionPageState
         child: Center(
           child: Text(
             index == 1
-                ? const DefaultMaterialLocalizations().formatShortDate(_date)
+                ? const DefaultMaterialLocalizations().formatShortDate(_date!)
                 : _time.format(context),
             style: AppStyle.textstylepoppinssemibold10,
           ),
